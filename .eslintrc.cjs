@@ -13,5 +13,11 @@ module.exports = {
         peerDependencies: false,
       },
     ],
+    'unicorn/prevent-abbreviations': [
+      2,
+      {
+        ignore: [/.*dev.*/i, /.*params.*/i, /.*props.*/i],
+      },
+    ],
   },
 };
