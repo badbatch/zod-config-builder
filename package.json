@@ -1,7 +1,7 @@
 {
   "name": "zod-config-builder",
   "description": "Build configs with type safety from zod schema.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Dylan Aubrey",
   "license": "MIT",
   "homepage": "https://github.com/badbatch/zod-config-builder",
