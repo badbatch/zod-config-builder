@@ -58,6 +58,7 @@
     "@commitlint/prompt-cli": "^17.6.3",
     "@jest/globals": "^29.5.0",
     "@repodog/babel-config": "^1.0.0",
+    "@repodog/cli": "^1.1.1",
     "@repodog/commitlint-config": "^1.0.0",
     "@repodog/eslint-config": "^1.0.0",
     "@repodog/jest-config": "^1.0.0",
