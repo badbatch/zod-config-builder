@@ -1,35 +1,21 @@
 import { type JSONSchema7 } from 'json-schema';
-import isPlainObject from 'lodash/isPlainObject.js';
 import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import { isValidValue } from './utils/isValidValue.ts';
 
-const isValidValue = (value: unknown, depth = 0): boolean => {
-  if (isPlainObject(value)) {
-    const object = value as Record<string, unknown>;
+const RESERVED_KEYWORDS = new Set(['errors', 'flush', 'fork', 'toJson', 'validate', 'values']);
 
-    if (object.__marker === 'zcb') {
-      return true;
-    }
-
-    if (depth < 1 && Object.values(object).every(v => isValidValue(v, depth + 1))) {
-      return true;
-    }
-
-    return false;
-  }
-
-  if (Array.isArray(value)) {
-    if (value.every(v => isValidValue(v, depth))) {
-      return true;
-    }
-
-    return false;
-  }
-
-  return true;
-};
-
-export const createConfigBuilder = <ZodTypes>(zodSchema: z.ZodSchema) => {
+export const createConfigBuilder = <ZodTypes>(
+  zodSchema: z.ZodSchema,
+  callbacks: Partial<
+    Record<
+      keyof ZodTypes,
+      (c: {
+        [Key in keyof ZodTypes]: ZodTypes[Key];
+      }) => ZodTypes[keyof ZodTypes]
+    >
+  > = {}
+) => {
   const jsonSchema = zodToJsonSchema(zodSchema) as JSONSchema7;
 
   type Config = {
@@ -41,26 +27,58 @@ export const createConfigBuilder = <ZodTypes>(zodSchema: z.ZodSchema) => {
   type ConfigBuilder = {
     [Key in keyof RequiredZodTypes]: (v: ZodTypes[Key] | ((c: Config) => ZodTypes[Key])) => ConfigBuilder;
   } & {
-    config: () => ZodTypes;
-    getErrors: () => ZodError['errors'];
-    passThrough: (v: ZodTypes) => ZodTypes;
+    errors: () => ZodError['errors'];
+    flush: () => ZodTypes;
+    fork: () => ConfigBuilder;
     toJson: () => string;
     validate: () => boolean;
+    values: () => ZodTypes;
   };
 
   type CallbackWithConfig = (c: Config) => ZodTypes[keyof ZodTypes];
 
-  const configCallbacks: Partial<Record<keyof ZodTypes, CallbackWithConfig>> = {};
-  const config = {} as Config;
+  let config = {} as Config;
+  const configCallbacks: Partial<Record<keyof ZodTypes, CallbackWithConfig>> = { ...callbacks };
 
-  Object.defineProperty(config, '__marker', {
+  Object.defineProperty(config, '__zcb', {
     configurable: false,
     enumerable: false,
-    value: 'zcb',
+    value: true,
   });
 
   const configBuilder = {
-    config: () => {
+    errors: () => {
+      try {
+        zodSchema.parse(configBuilder.values());
+        return [];
+      } catch (error: unknown) {
+        return (error as ZodError).errors;
+      }
+    },
+    flush: () => {
+      const values = configBuilder.values();
+      config = {} as Config;
+
+      Object.defineProperty(config, '__zcb', {
+        configurable: false,
+        enumerable: false,
+        value: true,
+      });
+
+      return values;
+    },
+    fork: () => createConfigBuilder<ZodTypes>(zodSchema, callbacks),
+    toJson: () => JSON.stringify(configBuilder.values()),
+    validate: () => {
+      try {
+        zodSchema.parse(configBuilder.values());
+        return true;
+      } catch (error: unknown) {
+        console.error(error);
+        return false;
+      }
+    },
+    values: () => {
       for (const property in configCallbacks) {
         const callback = configCallbacks[property];
 
@@ -71,36 +89,15 @@ export const createConfigBuilder = <ZodTypes>(zodSchema: z.ZodSchema) => {
 
       return config;
     },
-    getErrors: () => {
-      try {
-        zodSchema.parse(configBuilder.config());
-        return [];
-      } catch (error: unknown) {
-        return (error as ZodError).errors;
-      }
-    },
-    passThrough: (v: ZodTypes) => {
-      Object.defineProperty(v, '__marker', {
-        configurable: false,
-        enumerable: false,
-        value: 'zcb',
-      });
-
-      return v;
-    },
-    toJson: () => JSON.stringify(configBuilder.config()),
-    validate: () => {
-      try {
-        zodSchema.parse(configBuilder.config());
-        return true;
-      } catch (error: unknown) {
-        console.error(error);
-        return false;
-      }
-    },
   } as unknown as ConfigBuilder;
 
   for (const propertyName in jsonSchema.properties) {
+    if (RESERVED_KEYWORDS.has(propertyName)) {
+      throw new Error(
+        `${propertyName} is a reserved keyword within the config builder. Please use a different property name.`
+      );
+    }
+
     const castProperty = propertyName as keyof RequiredZodTypes;
     const propertyDefinition = jsonSchema.properties[propertyName];
 
