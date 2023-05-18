@@ -26,14 +26,23 @@ describe('zod-config-builder', () => {
     it('should add the toggle to the config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      config.toggle('FEAT_ALPHA@0.0.1').name('TestSchema');
+      config.toggle('FEAT_ALPHA@0.0.1').name('alpha');
       // @ts-expect-error private property
       expect(config.values().__toggle).toBe('FEAT_ALPHA@0.0.1');
     });
   });
 
   describe('when a user adds a value to the config', () => {
-    describe('And that value is an enum', () => {
+    describe('and the property already has a value', () => {
+      it('should throw an error', async () => {
+        const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+        const config = createConfigBuilder<ConfigType>(configSchema);
+        config.name('alpha');
+        expect(() => config.name('bravo')).toThrow();
+      });
+    });
+
+    describe('and that value is an enum', () => {
       it('should add the value to the config', async () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
@@ -49,7 +58,7 @@ describe('zod-config-builder', () => {
       });
     });
 
-    describe('And that value is an array of enums', () => {
+    describe('and that value is an array of enums', () => {
       it('should add the value to the config', async () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
@@ -65,7 +74,7 @@ describe('zod-config-builder', () => {
       });
     });
 
-    describe('And that value is a record', () => {
+    describe('and that value is a record', () => {
       it('should add the value to the config', async () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
@@ -81,8 +90,8 @@ describe('zod-config-builder', () => {
       });
     });
 
-    describe('And that value is an record of configs', () => {
-      describe('And the configs are valid configs', () => {
+    describe('and that value is an record of configs', () => {
+      describe('and the configs are valid configs', () => {
         it('should add the value to the config', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
@@ -119,7 +128,7 @@ describe('zod-config-builder', () => {
         });
       });
 
-      describe('And the configs are not valid configs', () => {
+      describe('and the configs are not valid configs', () => {
         it('should throw an error', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
@@ -158,8 +167,8 @@ describe('zod-config-builder', () => {
       });
     });
 
-    describe('And that value is an array of configs', () => {
-      describe('And the configs are valid configs', () => {
+    describe('and that value is an array of configs', () => {
+      describe('and the configs are valid configs', () => {
         it('should add the value to the config', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
@@ -209,7 +218,7 @@ describe('zod-config-builder', () => {
         });
       });
 
-      describe('And the configs are not valid configs', () => {
+      describe('and the configs are not valid configs', () => {
         it('should throw an error', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
@@ -231,7 +240,7 @@ describe('zod-config-builder', () => {
       });
     });
 
-    describe('And that value is a derived value', () => {
+    describe('and that value is a derived value', () => {
       it('should add the value to the config automatically', async () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
@@ -258,7 +267,7 @@ describe('zod-config-builder', () => {
             // eslint-disable-next-line jest/no-conditional-in-test
             languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : []
           )
-          .languageCodes(['fr']);
+          .languageCodes(['fr'], true);
 
         expect(config.values()).toEqual({ countryCode: 'GB', languageCodes: ['fr'], locales: ['fr_GB'] });
       });

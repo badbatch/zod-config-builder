@@ -21,10 +21,13 @@ export const createConfigBuilder = <ZodTypes>(
   };
 
   type RequiredZodTypes = Required<ZodTypes>;
-  type DerivedValueCallback = (c: Config) => ZodTypes[keyof ZodTypes];
+  type DerivedValueCallback<K extends keyof ZodTypes = keyof ZodTypes> = (c: Config) => ZodTypes[K];
 
   type ConfigBuilder = {
-    [Key in keyof RequiredZodTypes]: (v: ZodTypes[Key] | ((c: Config) => ZodTypes[Key])) => ConfigBuilder;
+    [Key in keyof RequiredZodTypes]: (
+      value: ZodTypes[Key] | DerivedValueCallback<Key>,
+      override?: boolean
+    ) => ConfigBuilder;
   } & {
     errors: () => ZodError['errors'];
     flush: () => ZodTypes;
@@ -104,18 +107,29 @@ export const createConfigBuilder = <ZodTypes>(
   for (const propertyName in jsonSchema.properties) {
     if (RESERVED_KEYWORDS.has(propertyName)) {
       throw new Error(
-        `${propertyName} is a reserved keyword within the config builder. Please use a different property name.`
+        `${propertyName} is a reserved keyword within the config builder. Please use a different property name. The full list of reserved keywords is: ${[
+          ...RESERVED_KEYWORDS,
+        ].join(', ')}`
       );
     }
 
-    const castProperty = propertyName as keyof RequiredZodTypes;
+    const castProperty = propertyName as keyof ZodTypes;
     const propertyDefinition = jsonSchema.properties[propertyName];
 
     if (typeof propertyDefinition === 'object' && propertyDefinition.default) {
       config[castProperty] = propertyDefinition.default as Config[keyof ZodTypes];
     }
 
-    configBuilder[castProperty] = ((value: ZodTypes[keyof ZodTypes] | DerivedValueCallback) => {
+    configBuilder[castProperty] = ((value: ZodTypes[keyof ZodTypes] | DerivedValueCallback, override?: boolean) => {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      if (!override && config[castProperty] !== undefined) {
+        throw new Error(
+          `A value already exists for ${String(
+            castProperty
+          )}. You may be trying to add a new values before flushing the old one. If you intended to override the existing value, pass in 'true' as the second argument.`
+        );
+      }
+
       let propertyValue: ZodTypes[keyof ZodTypes];
       const MAX_DEPTH = 1;
 
@@ -137,7 +151,7 @@ export const createConfigBuilder = <ZodTypes>(
 
       config[castProperty] = propertyValue;
       return configBuilder;
-    }) as ConfigBuilder[keyof RequiredZodTypes];
+    }) as ConfigBuilder[keyof ZodTypes];
   }
 
   return configBuilder;
