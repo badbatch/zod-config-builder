@@ -9,7 +9,7 @@ import {
   routeSchema,
 } from './__testUtils__/schema.ts';
 
-describe('zod-config-builder', () => {
+describe('createConfigBuilder', () => {
   describe('when a user uses a key in the schema that is a reserved keyword', () => {
     it('should throw an error', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
@@ -19,6 +19,16 @@ describe('zod-config-builder', () => {
       });
 
       expect(() => createConfigBuilder<z.infer<typeof invalidSchema>>(invalidSchema)).toThrow();
+    });
+  });
+
+  describe('when a user disables the config', () => {
+    it('should add the disabled flag to the config', async () => {
+      const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+      const config = createConfigBuilder<ConfigType>(configSchema);
+      config.disable().name('alpha');
+      // @ts-expect-error private property
+      expect(config.values().__disabled).toBe(true);
     });
   });
 
@@ -33,6 +43,47 @@ describe('zod-config-builder', () => {
   });
 
   describe('when a user adds a value to the config', () => {
+    describe('and the property has a default value', () => {
+      describe('and that value is a string', () => {
+        it('should add the default value to the config', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+
+          const extendedSchema = configSchema.extend({
+            description: z.string().optional().default('This is the description.'),
+          });
+
+          const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
+          expect(config.values()).toEqual({ description: 'This is the description.' });
+        });
+      });
+
+      describe('and that value is a record of booleans', () => {
+        it('should add the default value to the config', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+
+          const extendedSchema = configSchema.extend({
+            flags: z.record(z.boolean()).optional().default({ alpha: true, bravo: false, charlie: false }),
+          });
+
+          const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
+          expect(config.values()).toEqual({ flags: { alpha: true, bravo: false, charlie: false } });
+        });
+      });
+
+      describe('and that value is an array of strings', () => {
+        it('should add the default value to the config', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+
+          const extendedSchema = configSchema.extend({
+            colors: z.array(z.string()).optional().default(['red', 'yellow', 'pink', 'green']),
+          });
+
+          const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
+          expect(config.values()).toEqual({ colors: ['red', 'yellow', 'pink', 'green'] });
+        });
+      });
+    });
+
     describe('and the property already has a value', () => {
       it('should throw an error', async () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');

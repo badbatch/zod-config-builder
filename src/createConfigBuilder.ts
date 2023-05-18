@@ -29,6 +29,7 @@ export const createConfigBuilder = <ZodTypes>(
       override?: boolean
     ) => ConfigBuilder;
   } & {
+    disable: () => ConfigBuilder;
     errors: () => ZodError['errors'];
     flush: () => ZodTypes;
     fork: () => ConfigBuilder;
@@ -49,6 +50,15 @@ export const createConfigBuilder = <ZodTypes>(
   const callbacks: Partial<Record<keyof ZodTypes, DerivedValueCallback>> = { ...derivedValueCallbacks };
 
   const configBuilder = {
+    disable: () => {
+      Object.defineProperty(config, '__disabled', {
+        configurable: false,
+        enumerable: false,
+        value: true,
+      });
+
+      return configBuilder;
+    },
     errors: () => {
       try {
         zodSchema.parse(configBuilder.values());
