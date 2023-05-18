@@ -7,11 +7,15 @@ import { timezones } from '../data/timezones.ts';
 
 export const pageSchema = z.object({
   name: z.string(),
+  path: z.string().optional(),
+  queryParams: z.array(z.string()).optional(),
 });
+
+export type PageType = z.infer<typeof pageSchema>;
 
 const baseRouteSchema = z.object({
   aliases: z.array(z.string()).optional(),
-  name: z.string(),
+  page: z.string(),
   path: z.string(),
 });
 
@@ -29,6 +33,8 @@ export const configSchema = z.object({
   distanceUnit: z.enum(distanceUnits).optional(),
   languageCodes: z.array(z.enum(languageCodes)).optional(),
   locales: z.array(z.string().regex(/[a-z]{2}_[A-Z]{2}/)).optional(),
+  name: z.string().optional(),
+  pages: z.record(pageSchema).optional(),
   routes: z.array(routeSchema).optional(),
   timeouts: z.record(z.number()).optional(),
   timezone: z.enum(timezones).optional(),

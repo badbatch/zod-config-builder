@@ -1,9 +1,35 @@
 import kebabCase from 'lodash/kebabCase.js';
-import { type ConfigType, type RouteType, configSchema, routeSchema } from './__testUtils__/schema.ts';
+import { z } from 'zod';
+import {
+  type ConfigType,
+  type PageType,
+  type RouteType,
+  configSchema,
+  pageSchema,
+  routeSchema,
+} from './__testUtils__/schema.ts';
 
 describe('zod-config-builder', () => {
-  describe('when a user adds a key that is a reserved keyword', () => {
-    it.todo('should throw an error');
+  describe('when a user uses a key in the schema that is a reserved keyword', () => {
+    it('should throw an error', async () => {
+      const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+
+      const invalidSchema = z.object({
+        values: z.string(),
+      });
+
+      expect(() => createConfigBuilder<z.infer<typeof invalidSchema>>(invalidSchema)).toThrow();
+    });
+  });
+
+  describe('when a user adds a toggle to the config', () => {
+    it('should add the toggle to the config', async () => {
+      const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+      const config = createConfigBuilder<ConfigType>(configSchema);
+      config.toggle('FEAT_ALPHA@0.0.1').name('TestSchema');
+      // @ts-expect-error private property
+      expect(config.values().__toggle).toBe('FEAT_ALPHA@0.0.1');
+    });
   });
 
   describe('when a user adds a value to the config', () => {
@@ -57,7 +83,78 @@ describe('zod-config-builder', () => {
 
     describe('And that value is an record of configs', () => {
       describe('And the configs are valid configs', () => {
-        it.todo('should add the value to the config');
+        it('should add the value to the config', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+          const config = createConfigBuilder<ConfigType>(configSchema);
+          const page = createConfigBuilder<PageType>(pageSchema);
+
+          config.pages({
+            contactDetails: page.name('contactDetails').flush(),
+            personalDetails: page.name('personalDetails').flush(),
+          });
+
+          expect(config.values()).toEqual({
+            pages: {
+              contactDetails: {
+                name: 'contactDetails',
+              },
+              personalDetails: {
+                name: 'personalDetails',
+              },
+            },
+          });
+        });
+
+        it('should be a valid config', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+          const config = createConfigBuilder<ConfigType>(configSchema);
+          const page = createConfigBuilder<PageType>(pageSchema);
+
+          config.pages({
+            contactDetails: page.name('contactDetails').flush(),
+            personalDetails: page.name('personalDetails').flush(),
+          });
+
+          expect(config.validate()).toBe(true);
+        });
+      });
+
+      describe('And the configs are not valid configs', () => {
+        it('should throw an error', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+          const config = createConfigBuilder<ConfigType>(configSchema);
+
+          expect(() =>
+            config.pages({
+              contactDetails: {
+                name: 'contactDetails',
+              },
+              personalDetails: {
+                name: 'personalDetails',
+              },
+            })
+          ).toThrow();
+        });
+
+        it('should not add the value to the config', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+          const config = createConfigBuilder<ConfigType>(configSchema);
+
+          try {
+            config.pages({
+              contactDetails: {
+                name: 'contactDetails',
+              },
+              personalDetails: {
+                name: 'personalDetails',
+              },
+            });
+          } catch {
+            // no catch
+          }
+
+          expect(config.values()).toEqual({});
+        });
       });
     });
 
@@ -66,26 +163,26 @@ describe('zod-config-builder', () => {
         it('should add the value to the config', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
-          const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ name }) => kebabCase(name) });
+          const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
           const subRoute = route.fork();
 
           config.routes([
-            route.name('personalDetails').flush(),
+            route.page('personalDetails').flush(),
             route
-              .name('contactDetails')
-              .routes([subRoute.name('deliveryAddress').flush(), subRoute.name('billingAddress').flush()])
+              .page('contactDetails')
+              .routes([subRoute.page('deliveryAddress').flush(), subRoute.page('billingAddress').flush()])
               .flush(),
           ]);
 
           expect(config.values()).toEqual({
             routes: [
-              { name: 'personalDetails', path: 'personal-details' },
+              { page: 'personalDetails', path: 'personal-details' },
               {
-                name: 'contactDetails',
+                page: 'contactDetails',
                 path: 'contact-details',
                 routes: [
-                  { name: 'deliveryAddress', path: 'delivery-address' },
-                  { name: 'billingAddress', path: 'billing-address' },
+                  { page: 'deliveryAddress', path: 'delivery-address' },
+                  { page: 'billingAddress', path: 'billing-address' },
                 ],
               },
             ],
@@ -95,15 +192,15 @@ describe('zod-config-builder', () => {
         it('should be a valid config', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
-          const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ name }) => kebabCase(name) });
+          const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
 
           config.routes([
-            route.name('personalDetails').flush(),
+            route.page('personalDetails').flush(),
             route
-              .name('contactDetails')
+              .page('contactDetails')
               .routes(() => {
                 const subRoute = route.fork();
-                return [subRoute.name('deliveryAddress').flush(), subRoute.name('billingAddress').flush()];
+                return [subRoute.page('deliveryAddress').flush(), subRoute.page('billingAddress').flush()];
               })
               .flush(),
           ]);
@@ -116,7 +213,7 @@ describe('zod-config-builder', () => {
         it('should throw an error', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
-          expect(() => config.routes([{ name: 'personalDetails', path: 'personal-details' }])).toThrow();
+          expect(() => config.routes([{ page: 'personalDetails', path: 'personal-details' }])).toThrow();
         });
 
         it('should not add the value to the config', async () => {
@@ -124,7 +221,7 @@ describe('zod-config-builder', () => {
           const config = createConfigBuilder<ConfigType>(configSchema);
 
           try {
-            config.routes([{ name: 'personalDetails', path: 'personal-details' }]);
+            config.routes([{ page: 'personalDetails', path: 'personal-details' }]);
           } catch {
             // no catch
           }

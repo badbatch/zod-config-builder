@@ -7,7 +7,7 @@ const RESERVED_KEYWORDS = new Set(['errors', 'flush', 'fork', 'toJson', 'validat
 
 export const createConfigBuilder = <ZodTypes>(
   zodSchema: z.ZodSchema,
-  callbacks: Partial<
+  derivedValueCallbacks: Partial<
     Record<
       keyof ZodTypes,
       (c: {
@@ -16,13 +16,12 @@ export const createConfigBuilder = <ZodTypes>(
     >
   > = {}
 ) => {
-  const jsonSchema = zodToJsonSchema(zodSchema) as JSONSchema7;
-
   type Config = {
     [Key in keyof ZodTypes]: ZodTypes[Key];
   };
 
   type RequiredZodTypes = Required<ZodTypes>;
+  type DerivedValueCallback = (c: Config) => ZodTypes[keyof ZodTypes];
 
   type ConfigBuilder = {
     [Key in keyof RequiredZodTypes]: (v: ZodTypes[Key] | ((c: Config) => ZodTypes[Key])) => ConfigBuilder;
@@ -31,20 +30,20 @@ export const createConfigBuilder = <ZodTypes>(
     flush: () => ZodTypes;
     fork: () => ConfigBuilder;
     toJson: () => string;
+    toggle: (key: string) => ConfigBuilder;
     validate: () => boolean;
     values: () => ZodTypes;
   };
 
-  type CallbackWithConfig = (c: Config) => ZodTypes[keyof ZodTypes];
-
   let config = {} as Config;
-  const configCallbacks: Partial<Record<keyof ZodTypes, CallbackWithConfig>> = { ...callbacks };
 
   Object.defineProperty(config, '__zcb', {
     configurable: false,
     enumerable: false,
     value: true,
   });
+
+  const callbacks: Partial<Record<keyof ZodTypes, DerivedValueCallback>> = { ...derivedValueCallbacks };
 
   const configBuilder = {
     errors: () => {
@@ -67,8 +66,17 @@ export const createConfigBuilder = <ZodTypes>(
 
       return values;
     },
-    fork: () => createConfigBuilder<ZodTypes>(zodSchema, callbacks),
+    fork: () => createConfigBuilder<ZodTypes>(zodSchema, derivedValueCallbacks),
     toJson: () => JSON.stringify(configBuilder.values()),
+    toggle: (key: string) => {
+      Object.defineProperty(config, '__toggle', {
+        configurable: false,
+        enumerable: false,
+        value: key,
+      });
+
+      return configBuilder;
+    },
     validate: () => {
       try {
         zodSchema.parse(configBuilder.values());
@@ -79,8 +87,8 @@ export const createConfigBuilder = <ZodTypes>(
       }
     },
     values: () => {
-      for (const property in configCallbacks) {
-        const callback = configCallbacks[property];
+      for (const property in callbacks) {
+        const callback = callbacks[property];
 
         if (callback) {
           config[property as keyof ZodTypes] = callback(config);
@@ -90,6 +98,8 @@ export const createConfigBuilder = <ZodTypes>(
       return config;
     },
   } as unknown as ConfigBuilder;
+
+  const jsonSchema = zodToJsonSchema(zodSchema) as JSONSchema7;
 
   for (const propertyName in jsonSchema.properties) {
     if (RESERVED_KEYWORDS.has(propertyName)) {
@@ -105,7 +115,7 @@ export const createConfigBuilder = <ZodTypes>(
       config[castProperty] = propertyDefinition.default as Config[keyof ZodTypes];
     }
 
-    configBuilder[castProperty] = ((value: ZodTypes[keyof ZodTypes] | CallbackWithConfig) => {
+    configBuilder[castProperty] = ((value: ZodTypes[keyof ZodTypes] | DerivedValueCallback) => {
       let propertyValue: ZodTypes[keyof ZodTypes];
       const MAX_DEPTH = 1;
 
@@ -118,9 +128,9 @@ export const createConfigBuilder = <ZodTypes>(
       }
 
       if (typeof value === 'function') {
-        const callbackWithConfig = value as CallbackWithConfig;
-        configCallbacks[castProperty] = callbackWithConfig;
-        propertyValue = callbackWithConfig(config);
+        const derivedValueCallback = value as DerivedValueCallback;
+        callbacks[castProperty] = derivedValueCallback;
+        propertyValue = derivedValueCallback(config);
       } else {
         propertyValue = value;
       }
