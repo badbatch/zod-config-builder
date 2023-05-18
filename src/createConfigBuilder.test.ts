@@ -42,6 +42,47 @@ describe('createConfigBuilder', () => {
     });
   });
 
+  describe('when a user extends from a config', () => {
+    it('should copy over all values to the new config', async () => {
+      const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+      const config = createConfigBuilder<ConfigType>(configSchema);
+      config.toggle('FEAT_ALPHA@0.0.1').disable().name('alpha');
+      const childConfig = createConfigBuilder<ConfigType>(configSchema);
+      childConfig.extend(config);
+      expect(childConfig.values()).toEqual({ name: 'alpha' });
+    });
+
+    it('should copy over all toggles to the new config', async () => {
+      const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+      const config = createConfigBuilder<ConfigType>(configSchema);
+      config.toggle('FEAT_ALPHA@0.0.1').name('alpha');
+      const childConfig = createConfigBuilder<ConfigType>(configSchema);
+      childConfig.extend(config);
+      // @ts-expect-error private property
+      expect(config.values().__toggle).toBe('FEAT_ALPHA@0.0.1');
+    });
+
+    it('should copy over all disabled flags to the new config', async () => {
+      const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+      const config = createConfigBuilder<ConfigType>(configSchema);
+      config.disable().name('alpha');
+      const childConfig = createConfigBuilder<ConfigType>(configSchema);
+      childConfig.extend(config);
+      // @ts-expect-error private property
+      expect(config.values().__disabled).toBe(true);
+    });
+
+    it('should copy over all derived value callbacks to the new config builder', async () => {
+      const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+      const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+      route.page('personalDetails');
+      const childRoute = createConfigBuilder<RouteType>(routeSchema);
+      childRoute.extend(route);
+      childRoute.page('contactDetails', true);
+      expect(childRoute.values()).toEqual({ page: 'contactDetails', path: 'contact-details' });
+    });
+  });
+
   describe('when a user adds a value to the config', () => {
     describe('and the property has a default value', () => {
       describe('and that value is a string', () => {

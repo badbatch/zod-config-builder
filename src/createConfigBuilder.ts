@@ -3,7 +3,17 @@ import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { isValidValue } from './utils/isValidValue.ts';
 
-const RESERVED_KEYWORDS = new Set(['errors', 'flush', 'fork', 'toJson', 'validate', 'values']);
+const RESERVED_KEYWORDS = new Set([
+  'disable',
+  'errors',
+  'extend',
+  'flush',
+  'fork',
+  'toJson',
+  'toggle',
+  'validate',
+  'values',
+]);
 
 export const createConfigBuilder = <ZodTypes>(
   zodSchema: z.ZodSchema,
@@ -14,7 +24,10 @@ export const createConfigBuilder = <ZodTypes>(
         [Key in keyof ZodTypes]: ZodTypes[Key];
       }) => ZodTypes[keyof ZodTypes]
     >
-  > = {}
+  > = {},
+  initialValues: Partial<{
+    [Key in keyof ZodTypes]: ZodTypes[Key];
+  }> = {}
 ) => {
   type Config = {
     [Key in keyof ZodTypes]: ZodTypes[Key];
@@ -31,6 +44,7 @@ export const createConfigBuilder = <ZodTypes>(
   } & {
     disable: () => ConfigBuilder;
     errors: () => ZodError['errors'];
+    extend: (configBuilder: ConfigBuilder) => ConfigBuilder;
     flush: () => ZodTypes;
     fork: () => ConfigBuilder;
     toJson: () => string;
@@ -39,7 +53,7 @@ export const createConfigBuilder = <ZodTypes>(
     values: () => ZodTypes;
   };
 
-  let config = {} as Config;
+  let config = initialValues as Config;
 
   Object.defineProperty(config, '__zcb', {
     configurable: false,
@@ -47,7 +61,7 @@ export const createConfigBuilder = <ZodTypes>(
     value: true,
   });
 
-  const callbacks: Partial<Record<keyof ZodTypes, DerivedValueCallback>> = { ...derivedValueCallbacks };
+  let callbacks: Partial<Record<keyof ZodTypes, DerivedValueCallback>> = { ...derivedValueCallbacks };
 
   const configBuilder = {
     disable: () => {
@@ -66,6 +80,11 @@ export const createConfigBuilder = <ZodTypes>(
       } catch (error: unknown) {
         return (error as ZodError).errors;
       }
+    },
+    extend: (configBuilder: ConfigBuilder) => {
+      config = configBuilder.values();
+      // @ts-expect-error private property
+      callbacks = configBuilder.__callbacks as Partial<Record<keyof ZodTypes, DerivedValueCallback>>;
     },
     flush: () => {
       const values = configBuilder.values();
@@ -111,6 +130,12 @@ export const createConfigBuilder = <ZodTypes>(
       return config;
     },
   } as unknown as ConfigBuilder;
+
+  Object.defineProperty(configBuilder, '__callbacks', {
+    configurable: false,
+    enumerable: false,
+    value: callbacks,
+  });
 
   const jsonSchema = zodToJsonSchema(zodSchema) as JSONSchema7;
 
