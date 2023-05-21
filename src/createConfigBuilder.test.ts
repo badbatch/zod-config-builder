@@ -164,8 +164,8 @@ describe('createConfigBuilder', () => {
     });
   });
 
-  describe('when a user adds a value to the config', () => {
-    describe('and the property has a default value', () => {
+  describe('when the user does not add a value to the config', () => {
+    describe('and a config has a valid default value', () => {
       describe('and that value is a string', () => {
         it('should add the default value to the config', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
@@ -206,6 +206,57 @@ describe('createConfigBuilder', () => {
       });
     });
 
+    describe('and a config has an invalid default value', () => {
+      describe('and that value is a record of booleans', () => {
+        it('should throw an error', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+
+          const extendedSchema = configSchema.extend({
+            flags: z.record(z.boolean().default(true)).optional(),
+          });
+
+          expect(() => createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema)).toThrow(
+            'When setting schema property defaults for the object assigned to "flags", set them on the object and not the property.'
+          );
+        });
+      });
+
+      describe('and that value is an object of key/value pairs', () => {
+        it('should throw an error', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+
+          const extendedSchema = configSchema.extend({
+            flags: z
+              .object({
+                alpha: z.boolean().default(true),
+                bravo: z.boolean().default(true),
+              })
+              .optional(),
+          });
+
+          expect(() => createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema)).toThrow(
+            'When setting schema property defaults for the object assigned to "flags", set them on the object and not the property.'
+          );
+        });
+      });
+
+      describe('and that value is an array of strings', () => {
+        it('should add the default value to the config', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+
+          const extendedSchema = configSchema.extend({
+            colors: z.array(z.string().default('white')).optional(),
+          });
+
+          expect(() => createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema)).toThrow(
+            'When setting schema array defaults for the array assigned to "colors", set them on the array and not the item.'
+          );
+        });
+      });
+    });
+  });
+
+  describe('when a user adds a value to the config', () => {
     describe('and the property already has a value', () => {
       it('should throw an error', async () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');

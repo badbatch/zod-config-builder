@@ -1,8 +1,16 @@
 import { type JSONSchema7 } from 'json-schema';
 import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import { arrayHasInvalidDefaults } from './utils/arrayHasInvalidDefaults.ts';
 import { cloneConfig } from './utils/cloneConfig.ts';
+import { isDerivedValueCallback } from './utils/isDerivedValueCallback.ts';
+import { isInvalidPropertyOverride } from './utils/isInvalidPropertyOverride.ts';
+import { isPropertyReservedWord } from './utils/isPropertyReservedWord.ts';
+import { isSchemaValid } from './utils/isSchemaValid.ts';
+import { isValidPropertyDefinition } from './utils/isValidPropertyDefinition.ts';
 import { isValidValue } from './utils/isValidValue.ts';
+import { objectHasInvalidDefaults } from './utils/objectHasInvalidDefaults.ts';
+import { recordHasInvalidDefaults } from './utils/recordHasInvalidDefaults.ts';
 
 export const RESERVED_KEYWORDS = new Set([
   'disable',
@@ -140,12 +148,12 @@ export const createConfigBuilder = <ZodTypes>(
 
   const jsonSchema = zodToJsonSchema(zodSchema) as JSONSchema7;
 
-  if (jsonSchema.type !== 'object') {
+  if (isSchemaValid(jsonSchema)) {
     throw new Error(`The root type of a config schema must be "object", but received "${String(jsonSchema.type)}"`);
   }
 
   for (const propertyName in jsonSchema.properties) {
-    if (RESERVED_KEYWORDS.has(propertyName)) {
+    if (isPropertyReservedWord(propertyName)) {
       throw new Error(
         `"${propertyName}" is a reserved keyword within the config builder. Please use a different property name. The full list of reserved keywords is: ${[
           ...RESERVED_KEYWORDS,
@@ -156,13 +164,41 @@ export const createConfigBuilder = <ZodTypes>(
     const castProperty = propertyName as keyof Config;
     const propertyDefinition = jsonSchema.properties[propertyName];
 
-    if (typeof propertyDefinition === 'object' && propertyDefinition.default) {
-      config[castProperty] = propertyDefinition.default as Config[keyof Config];
+    if (isValidPropertyDefinition(propertyDefinition)) {
+      if (propertyDefinition.default) {
+        config[castProperty] = propertyDefinition.default as Config[keyof Config];
+      }
+
+      if (propertyDefinition.type === 'array' && arrayHasInvalidDefaults(propertyDefinition)) {
+        throw new Error(
+          `When setting schema array defaults for the array assigned to "${String(
+            castProperty
+          )}", set them on the array and not the item.`
+        );
+      }
+
+      if (propertyDefinition.type === 'object') {
+        if (objectHasInvalidDefaults(propertyDefinition)) {
+          throw new Error(
+            `When setting schema property defaults for the object assigned to "${String(
+              castProperty
+            )}", set them on the object and not the property.`
+          );
+        }
+
+        if (recordHasInvalidDefaults(propertyDefinition)) {
+          throw new Error(
+            `When setting schema property defaults for the object assigned to "${String(
+              castProperty
+            )}", set them on the object and not the property.`
+          );
+        }
+      }
     }
 
     configBuilder[castProperty] = ((value: Config[keyof Config] | DerivedValueCallback, override?: boolean) => {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (!override && config[castProperty] !== undefined) {
+      if (isInvalidPropertyOverride(config[castProperty], override)) {
         throw new Error(
           `A value already exists for "${String(
             castProperty
@@ -181,10 +217,9 @@ export const createConfigBuilder = <ZodTypes>(
         );
       }
 
-      if (typeof value === 'function') {
-        const derivedValueCallback = value as DerivedValueCallback;
-        callbacks[castProperty] = derivedValueCallback;
-        propertyValue = derivedValueCallback(config);
+      if (isDerivedValueCallback<DerivedValueCallback>(value)) {
+        callbacks[castProperty] = value;
+        propertyValue = value(config);
       } else {
         propertyValue = value;
       }
