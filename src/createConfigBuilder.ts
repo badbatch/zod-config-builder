@@ -1,9 +1,10 @@
 import { type JSONSchema7 } from 'json-schema';
 import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import { cloneConfig } from './utils/cloneConfig.ts';
 import { isValidValue } from './utils/isValidValue.ts';
 
-const RESERVED_KEYWORDS = new Set([
+export const RESERVED_KEYWORDS = new Set([
   'disable',
   'errors',
   'extend',
@@ -33,24 +34,24 @@ export const createConfigBuilder = <ZodTypes>(
     [Key in keyof ZodTypes]: ZodTypes[Key];
   };
 
-  type RequiredZodTypes = Required<ZodTypes>;
-  type DerivedValueCallback<K extends keyof ZodTypes = keyof ZodTypes> = (c: Config) => ZodTypes[K];
+  type RequiredConfig = Required<Config>;
+  type DerivedValueCallback<K extends keyof Config = keyof Config> = (c: Config) => Config[K];
 
   type ConfigBuilder = {
-    [Key in keyof RequiredZodTypes]: (
-      value: ZodTypes[Key] | DerivedValueCallback<Key>,
+    [Key in keyof RequiredConfig]: (
+      value: Config[Key] | DerivedValueCallback<Key>,
       override?: boolean
     ) => ConfigBuilder;
   } & {
     disable: () => ConfigBuilder;
     errors: () => ZodError['errors'];
     extend: (configBuilder: ConfigBuilder) => ConfigBuilder;
-    flush: () => ZodTypes;
+    flush: () => Config;
     fork: () => ConfigBuilder;
     toJson: () => string;
     toggle: (key: string) => ConfigBuilder;
     validate: () => boolean;
-    values: () => ZodTypes;
+    values: () => Config;
   };
 
   let config = initialValues as Config;
@@ -61,7 +62,7 @@ export const createConfigBuilder = <ZodTypes>(
     value: true,
   });
 
-  let callbacks: Partial<Record<keyof ZodTypes, DerivedValueCallback>> = { ...derivedValueCallbacks };
+  let callbacks: Partial<Record<keyof Config, DerivedValueCallback>> = { ...derivedValueCallbacks };
 
   const configBuilder = {
     disable: () => {
@@ -82,9 +83,9 @@ export const createConfigBuilder = <ZodTypes>(
       }
     },
     extend: (configBuilder: ConfigBuilder) => {
-      config = configBuilder.values();
+      config = cloneConfig<Config>(configBuilder.values());
       // @ts-expect-error private property
-      callbacks = configBuilder.__callbacks as Partial<Record<keyof ZodTypes, DerivedValueCallback>>;
+      callbacks = { ...configBuilder.__callbacks } as Partial<Record<keyof Config, DerivedValueCallback>>;
     },
     flush: () => {
       const values = configBuilder.values();
@@ -98,7 +99,7 @@ export const createConfigBuilder = <ZodTypes>(
 
       return values;
     },
-    fork: () => createConfigBuilder<ZodTypes>(zodSchema, derivedValueCallbacks),
+    fork: () => createConfigBuilder<Config>(zodSchema, derivedValueCallbacks),
     toJson: () => JSON.stringify(configBuilder.values()),
     toggle: (key: string) => {
       Object.defineProperty(config, '__toggle', {
@@ -123,7 +124,7 @@ export const createConfigBuilder = <ZodTypes>(
         const callback = callbacks[property];
 
         if (callback) {
-          config[property as keyof ZodTypes] = callback(config);
+          config[property as keyof Config] = callback(config);
         }
       }
 
@@ -139,40 +140,44 @@ export const createConfigBuilder = <ZodTypes>(
 
   const jsonSchema = zodToJsonSchema(zodSchema) as JSONSchema7;
 
+  if (jsonSchema.type !== 'object') {
+    throw new Error(`The root type of a config schema must be "object", but received "${String(jsonSchema.type)}"`);
+  }
+
   for (const propertyName in jsonSchema.properties) {
     if (RESERVED_KEYWORDS.has(propertyName)) {
       throw new Error(
-        `${propertyName} is a reserved keyword within the config builder. Please use a different property name. The full list of reserved keywords is: ${[
+        `"${propertyName}" is a reserved keyword within the config builder. Please use a different property name. The full list of reserved keywords is: ${[
           ...RESERVED_KEYWORDS,
         ].join(', ')}`
       );
     }
 
-    const castProperty = propertyName as keyof ZodTypes;
+    const castProperty = propertyName as keyof Config;
     const propertyDefinition = jsonSchema.properties[propertyName];
 
     if (typeof propertyDefinition === 'object' && propertyDefinition.default) {
-      config[castProperty] = propertyDefinition.default as Config[keyof ZodTypes];
+      config[castProperty] = propertyDefinition.default as Config[keyof Config];
     }
 
-    configBuilder[castProperty] = ((value: ZodTypes[keyof ZodTypes] | DerivedValueCallback, override?: boolean) => {
+    configBuilder[castProperty] = ((value: Config[keyof Config] | DerivedValueCallback, override?: boolean) => {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!override && config[castProperty] !== undefined) {
         throw new Error(
-          `A value already exists for ${String(
+          `A value already exists for "${String(
             castProperty
-          )}. You may be trying to add a new values before flushing the old one. If you intended to override the existing value, pass in 'true' as the second argument.`
+          )}". You may be trying to add a new values before flushing the old one. If you intended to override the existing value, pass in true as the second argument.`
         );
       }
 
-      let propertyValue: ZodTypes[keyof ZodTypes];
+      let propertyValue: Config[keyof Config];
       const MAX_DEPTH = 1;
 
       if (!isValidValue(value)) {
         throw new Error(
-          `${String(
+          `"${String(
             castProperty
-          )} value has a depth greater than ${MAX_DEPTH}. To pass in objects with a depth greater than ${MAX_DEPTH}, create a builder for that config slice.`
+          )}" value has a depth greater than ${MAX_DEPTH}. To pass in objects with a depth greater than ${MAX_DEPTH}, create a builder for that config slice.`
         );
       }
 
@@ -186,7 +191,7 @@ export const createConfigBuilder = <ZodTypes>(
 
       config[castProperty] = propertyValue;
       return configBuilder;
-    }) as ConfigBuilder[keyof ZodTypes];
+    }) as ConfigBuilder[keyof Config];
   }
 
   return configBuilder;

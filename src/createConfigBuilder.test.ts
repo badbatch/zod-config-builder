@@ -10,15 +10,30 @@ import {
 } from './__testUtils__/schema.ts';
 
 describe('createConfigBuilder', () => {
-  describe('when a user uses a key in the schema that is a reserved keyword', () => {
+  describe('when a user passes in a schema with a root type other than "object"', () => {
     it('should throw an error', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+      const invalidSchema = z.array(z.string());
+
+      expect(() => createConfigBuilder<z.infer<typeof invalidSchema>>(invalidSchema)).toThrow(
+        'The root type of a config schema must be "object", but received "array"'
+      );
+    });
+  });
+
+  describe('when a user uses a key in the schema that is a reserved keyword', () => {
+    it('should throw an error', async () => {
+      const { RESERVED_KEYWORDS, createConfigBuilder } = await import('./createConfigBuilder.ts');
 
       const invalidSchema = z.object({
         values: z.string(),
       });
 
-      expect(() => createConfigBuilder<z.infer<typeof invalidSchema>>(invalidSchema)).toThrow();
+      expect(() => createConfigBuilder<z.infer<typeof invalidSchema>>(invalidSchema)).toThrow(
+        `"values" is a reserved keyword within the config builder. Please use a different property name. The full list of reserved keywords is: ${[
+          ...RESERVED_KEYWORDS,
+        ].join(', ')}`
+      );
     });
   });
 
@@ -59,7 +74,7 @@ describe('createConfigBuilder', () => {
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
       childConfig.extend(config);
       // @ts-expect-error private property
-      expect(config.values().__toggle).toBe('FEAT_ALPHA@0.0.1');
+      expect(childConfig.values().__toggle).toBe('FEAT_ALPHA@0.0.1');
     });
 
     it('should copy over all disabled flags to the new config', async () => {
@@ -69,7 +84,7 @@ describe('createConfigBuilder', () => {
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
       childConfig.extend(config);
       // @ts-expect-error private property
-      expect(config.values().__disabled).toBe(true);
+      expect(childConfig.values().__disabled).toBe(true);
     });
 
     it('should copy over all derived value callbacks to the new config builder', async () => {
@@ -130,7 +145,10 @@ describe('createConfigBuilder', () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
         config.name('alpha');
-        expect(() => config.name('bravo')).toThrow();
+
+        expect(() => config.name('bravo')).toThrow(
+          'A value already exists for "name". You may be trying to add a new values before flushing the old one. If you intended to override the existing value, pass in true as the second argument.'
+        );
       });
     });
 
@@ -234,7 +252,9 @@ describe('createConfigBuilder', () => {
                 name: 'personalDetails',
               },
             })
-          ).toThrow();
+          ).toThrow(
+            '"pages" value has a depth greater than 1. To pass in objects with a depth greater than 1, create a builder for that config slice.'
+          );
         });
 
         it('should not add the value to the config', async () => {
@@ -314,7 +334,10 @@ describe('createConfigBuilder', () => {
         it('should throw an error', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
-          expect(() => config.routes([{ page: 'personalDetails', path: 'personal-details' }])).toThrow();
+
+          expect(() => config.routes([{ page: 'personalDetails', path: 'personal-details' }])).toThrow(
+            '"routes" value has a depth greater than 1. To pass in objects with a depth greater than 1, create a builder for that config slice.'
+          );
         });
 
         it('should not add the value to the config', async () => {
