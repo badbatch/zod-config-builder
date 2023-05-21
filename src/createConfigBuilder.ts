@@ -7,11 +7,11 @@ import { isValidValue } from './utils/isValidValue.ts';
 export const RESERVED_KEYWORDS = new Set([
   'disable',
   'errors',
+  'experiment',
   'extend',
   'flush',
   'fork',
   'toJson',
-  'toggle',
   'validate',
   'values',
 ]);
@@ -45,11 +45,11 @@ export const createConfigBuilder = <ZodTypes>(
   } & {
     disable: () => ConfigBuilder;
     errors: () => ZodError['errors'];
+    experiment: (key: string) => ConfigBuilder;
     extend: (configBuilder: ConfigBuilder) => ConfigBuilder;
     flush: () => Config;
     fork: () => ConfigBuilder;
     toJson: () => string;
-    toggle: (key: string) => ConfigBuilder;
     validate: () => boolean;
     values: () => Config;
   };
@@ -82,6 +82,15 @@ export const createConfigBuilder = <ZodTypes>(
         return (error as ZodError).errors;
       }
     },
+    experiment: (key: string) => {
+      Object.defineProperty(config, '__experiment', {
+        configurable: false,
+        enumerable: false,
+        value: key,
+      });
+
+      return configBuilder;
+    },
     extend: (configBuilder: ConfigBuilder) => {
       config = cloneConfig<Config>(configBuilder.values());
       // @ts-expect-error private property
@@ -101,15 +110,6 @@ export const createConfigBuilder = <ZodTypes>(
     },
     fork: () => createConfigBuilder<Config>(zodSchema, derivedValueCallbacks),
     toJson: () => JSON.stringify(configBuilder.values()),
-    toggle: (key: string) => {
-      Object.defineProperty(config, '__toggle', {
-        configurable: false,
-        enumerable: false,
-        value: key,
-      });
-
-      return configBuilder;
-    },
     validate: () => {
       try {
         zodSchema.parse(configBuilder.values());

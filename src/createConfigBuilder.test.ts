@@ -47,13 +47,13 @@ describe('createConfigBuilder', () => {
     });
   });
 
-  describe('when a user adds a toggle to the config', () => {
-    it('should add the toggle to the config', async () => {
+  describe('when a user adds a experiment to the config', () => {
+    it('should add the experiment to the config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      config.toggle('FEAT_ALPHA@0.0.1').name('alpha');
+      config.experiment('FEAT_ALPHA@0.0.1').name('alpha');
       // @ts-expect-error private property
-      expect(config.values().__toggle).toBe('FEAT_ALPHA@0.0.1');
+      expect(config.values().__experiment).toBe('FEAT_ALPHA@0.0.1');
     });
   });
 
@@ -61,20 +61,20 @@ describe('createConfigBuilder', () => {
     it('should copy over all values to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      config.toggle('FEAT_ALPHA@0.0.1').disable().name('alpha');
+      config.experiment('FEAT_ALPHA@0.0.1').disable().name('alpha');
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
       childConfig.extend(config);
       expect(childConfig.values()).toEqual({ name: 'alpha' });
     });
 
-    it('should copy over all toggles to the new config', async () => {
+    it('should copy over all experiments to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      config.toggle('FEAT_ALPHA@0.0.1').name('alpha');
+      config.experiment('FEAT_ALPHA@0.0.1').name('alpha');
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
       childConfig.extend(config);
       // @ts-expect-error private property
-      expect(childConfig.values().__toggle).toBe('FEAT_ALPHA@0.0.1');
+      expect(childConfig.values().__experiment).toBe('FEAT_ALPHA@0.0.1');
     });
 
     it('should copy over all disabled flags to the new config', async () => {

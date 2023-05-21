@@ -1,6 +1,6 @@
 import isPlainObject from 'lodash/isPlainObject.js';
 
-const NON_ENUMERABLE_KEYS = new Set(['__disabled', '__toggle', '__zcb']);
+const NON_ENUMERABLE_KEYS = new Set(['__disabled', '__experiment', '__zcb']);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const cloneArray = (list: any[]): any[] =>
