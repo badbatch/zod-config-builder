@@ -61,30 +61,96 @@ describe('createConfigBuilder', () => {
     it('should copy over all values to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      config.experiment('FEAT_ALPHA@0.0.1').disable().name('alpha');
+      const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+      const page = createConfigBuilder<PageType>(pageSchema);
+
+      config
+        .name('alpha')
+        .pages({ contactDetails: page.name('contactDetails').flush() })
+        .routes([route.page('contactDetails').flush()]);
+
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
       childConfig.extend(config);
-      expect(childConfig.values()).toEqual({ name: 'alpha' });
+
+      expect(childConfig.values()).toEqual({
+        name: 'alpha',
+        pages: {
+          contactDetails: { name: 'contactDetails' },
+        },
+        routes: [{ page: 'contactDetails', path: 'contact-details' }],
+      });
     });
 
     it('should copy over all experiments to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      config.experiment('FEAT_ALPHA@0.0.1').name('alpha');
+      const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+      const page = createConfigBuilder<PageType>(pageSchema);
+
+      config
+        .experiment('FEAT_ALPHA@0.0.1')
+        .name('alpha')
+        .pages({ contactDetails: page.experiment('FEAT_BRAVO@0.0.1').name('contactDetails').flush() })
+        .routes([route.experiment('FEAT_CHARLIE@0.0.1').page('contactDetails').flush()]);
+
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
       childConfig.extend(config);
-      // @ts-expect-error private property
-      expect(childConfig.values().__experiment).toBe('FEAT_ALPHA@0.0.1');
+
+      expect(childConfig.values()).toEqual(
+        expect.objectContaining({
+          __experiment: 'FEAT_ALPHA@0.0.1',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          pages: expect.objectContaining({
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            contactDetails: expect.objectContaining({
+              __experiment: 'FEAT_BRAVO@0.0.1',
+            }),
+          }),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          routes: expect.arrayContaining([
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            expect.objectContaining({
+              __experiment: 'FEAT_CHARLIE@0.0.1',
+            }),
+          ]),
+        })
+      );
     });
 
     it('should copy over all disabled flags to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      config.disable().name('alpha');
+      const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+      const page = createConfigBuilder<PageType>(pageSchema);
+
+      config
+        .disable()
+        .name('alpha')
+        .pages({ contactDetails: page.disable().name('contactDetails').flush() })
+        .routes([route.disable().page('contactDetails').flush()]);
+
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
       childConfig.extend(config);
-      // @ts-expect-error private property
-      expect(childConfig.values().__disabled).toBe(true);
+
+      expect(childConfig.values()).toEqual(
+        expect.objectContaining({
+          __disabled: true,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          pages: expect.objectContaining({
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            contactDetails: expect.objectContaining({
+              __disabled: true,
+            }),
+          }),
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          routes: expect.arrayContaining([
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            expect.objectContaining({
+              __disabled: true,
+            }),
+          ]),
+        })
+      );
     });
 
     it('should copy over all derived value callbacks to the new config builder', async () => {
