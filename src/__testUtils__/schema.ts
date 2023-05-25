@@ -5,10 +5,23 @@ import { distanceUnits } from '../data/distanceUnits.ts';
 import { languageCodes } from '../data/languageCodes.ts';
 import { timezones } from '../data/timezones.ts';
 
+export const baseSectionSchema = z.object({
+  name: z.string(),
+});
+
+export type SectionType = z.infer<typeof baseSectionSchema> & {
+  sections?: SectionType[];
+};
+
+export const sectionSchema: z.ZodType<SectionType> = baseSectionSchema.extend({
+  sections: z.lazy(() => sectionSchema.array()).optional(),
+});
+
 export const pageSchema = z.object({
   name: z.string(),
   path: z.string().optional(),
   queryParams: z.array(z.string()).optional(),
+  sections: z.array(sectionSchema).optional(),
 });
 
 export type PageType = z.infer<typeof pageSchema>;
