@@ -1,6 +1,40 @@
 import type { List } from 'ts-toolbelt';
 import type { Includes } from 'type-fest';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyRecord = Record<string, any>;
+
+export interface WriteConfigOptions {
+  experimentsCallback?: ExperimentsCallback;
+  outputFile: string;
+}
+
+export type ExperimentsCallback = <Config extends AnyRecord>(
+  id: string,
+  clone: Config,
+  config: Config
+) => Promise<TransformConfigHandlerReturnType<Config>>;
+
+export type TransformConfigHandler = <Config extends AnyRecord>(
+  clone: Config,
+  config: Config
+) => TransformConfigHandlerReturnType<Config> | Promise<TransformConfigHandlerReturnType<Config>>;
+
+export type TransformConfigHandlerSync = <Config extends AnyRecord>(
+  clone: Config,
+  config: Config
+) => TransformConfigHandlerReturnType<Config>;
+
+export enum TransformConfigHandlerAction {
+  DELETE_NODE = 'deleteNode',
+  SKIP_NODE = 'skipNode',
+}
+
+export interface TransformConfigHandlerReturnType<Config extends AnyRecord> {
+  action?: TransformConfigHandlerAction;
+  value?: Config;
+}
+
 export type Leaves<T, Path extends string[] = []> = T extends string
   ? Path
   : {

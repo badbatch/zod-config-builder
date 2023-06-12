@@ -1,8 +1,8 @@
 import { type JSONSchema7 } from 'json-schema';
 import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
+import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValues.ts';
 import { arrayHasInvalidDefaults } from './utils/arrayHasInvalidDefaults.ts';
-import { cloneConfig } from './utils/cloneConfig.ts';
 import { isDerivedValueCallback } from './utils/isDerivedValueCallback.ts';
 import { isInvalidPropertyOverride } from './utils/isInvalidPropertyOverride.ts';
 import { isPropertyReservedWord } from './utils/isPropertyReservedWord.ts';
@@ -11,6 +11,7 @@ import { isValidPropertyDefinition } from './utils/isValidPropertyDefinition.ts'
 import { isValidValue } from './utils/isValidValue.ts';
 import { objectHasInvalidDefaults } from './utils/objectHasInvalidDefaults.ts';
 import { recordHasInvalidDefaults } from './utils/recordHasInvalidDefaults.ts';
+import { transformConfigSync } from './utils/transformConfig.ts';
 
 export const RESERVED_KEYWORDS = new Set([
   'disable',
@@ -100,7 +101,7 @@ export const createConfigBuilder = <ZodTypes>(
       return configBuilder;
     },
     extend: (configBuilder: ConfigBuilder) => {
-      config = cloneConfig<Config>(configBuilder.values());
+      config = transformConfigSync<Config>(configBuilder.values(), [cloneNonEnumerableValues]);
       // @ts-expect-error private property
       callbacks = { ...configBuilder.__callbacks } as Partial<Record<keyof Config, DerivedValueCallback>>;
     },
@@ -117,7 +118,7 @@ export const createConfigBuilder = <ZodTypes>(
       return values;
     },
     fork: () => createConfigBuilder<Config>(zodSchema, derivedValueCallbacks),
-    toJson: () => JSON.stringify(configBuilder.values()),
+    toJson: () => JSON.stringify(configBuilder.values(), undefined, 2),
     validate: () => {
       try {
         zodSchema.parse(configBuilder.values());

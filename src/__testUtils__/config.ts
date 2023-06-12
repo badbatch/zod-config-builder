@@ -23,7 +23,10 @@ export const config = {
       ],
     },
   },
-  routes: [{ page: 'contactDetails', path: 'contact-details' }],
+  routes: [
+    { page: 'personalDetails', path: 'personal-details' },
+    { page: 'contactDetails', path: 'contact-details' },
+  ],
   timeouts: { apollo: 10_000 },
   timezone: 'Europe/London',
 } as const;
