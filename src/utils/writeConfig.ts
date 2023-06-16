@@ -30,5 +30,5 @@ export const writeConfig = async <Config extends object>(
 
   shelljs.echo(`zcd watch => writing to file: ${outputFile}`);
   shelljs.echo(`zcd watch => content to write:\n${output}\n`);
-  outputFileSync(outputFile, output);
+  outputFileSync(resolve(process.cwd(), outputFile), output);
 };

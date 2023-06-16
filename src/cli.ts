@@ -2,84 +2,64 @@ import { watchFile } from 'node:fs';
 import { resolve } from 'node:path';
 import shelljs from 'shelljs';
 import yargs from 'yargs';
-import type { ExperimentsCallback } from './types.ts';
-import { writeConfig } from './utils/writeConfig.ts';
+import { importValidateWriteConfig } from './utils/importValidateWriteConfig.ts';
+
+export enum Commands {
+  BUILD = 'build',
+  WATCH = 'watch',
+}
+
+const generateArguments = (cmdYargs: yargs.Argv) =>
+  cmdYargs
+    .positional('input-file', {
+      demandOption: true,
+      desc: 'The relative path to the config builder root file',
+      type: 'string',
+    })
+    .positional('output-file', {
+      demandOption: true,
+      desc: 'The relative path to the output config file',
+      type: 'string',
+    })
+    .option('experiments-callback-file', {
+      desc: 'The relative path to the experiment callback file',
+      type: 'string',
+    });
 
 export const cli = () => {
   yargs
     .command(
-      'watch <inputFile> <outputFile>',
-      'watch a config builder and write ',
-      cmdYargs =>
-        cmdYargs
-          .positional('inputFile', {
-            demandOption: true,
-            desc: 'The relative path to the config builder root file',
-            type: 'string',
-          })
-          .positional('outputFile', {
-            demandOption: true,
-            desc: 'The relative path to the output config file',
-            type: 'string',
-          })
-          .option('experiments-callback', {
-            desc: 'The relative path to the experiment callback file',
-            type: 'string',
-          }),
+      'watch <input-file> <output-file>',
+      'Watch a config builder and write config',
+      cmdYargs => generateArguments(cmdYargs),
       argv => {
-        const fullWatchFilePath = resolve(process.cwd(), argv.inputFile);
-        shelljs.echo(`zcd watch => watching file: ${argv.inputFile}`);
+        shelljs.echo(`zcd watch => watching file: ${argv['input-file']}`);
 
-        watchFile(fullWatchFilePath, () => {
-          import(fullWatchFilePath)
-            .then(
-              ({
-                default: configBuilder,
-              }: {
-                default: ReturnType<typeof import('./createConfigBuilder.ts')['createConfigBuilder']>;
-              }) => {
-                shelljs.echo('zcd watch => file change detected');
+        watchFile(resolve(process.cwd(), argv['input-file']), () => {
+          shelljs.echo('zcd watch => file change detected');
 
-                if (!configBuilder.validate()) {
-                  shelljs.echo('zcd watch => invalid config');
-                  shelljs.echo(`zcd watch => errors:\n${JSON.stringify(configBuilder.errors(), undefined, 2)}\n`);
-                  shelljs.exit(1);
-                }
-
-                shelljs.echo('zcd watch => valid config');
-                shelljs.echo(`zcd watch => config values:\n${configBuilder.toJson()}\n`);
-
-                if (argv['experiments-callback']) {
-                  import(resolve(process.cwd(), argv['experiments-callback']))
-                    .then(({ default: experimentsCallback }: { default: ExperimentsCallback }) => {
-                      void writeConfig(configBuilder.values(), { experimentsCallback, outputFile: argv.outputFile });
-                    })
-                    .catch((error: unknown) => {
-                      if (error instanceof Error) {
-                        shelljs.echo(`zcd watch => error message: ${error.message}`);
-
-                        if (error.stack) {
-                          shelljs.echo(`zcd watch => error stack:\n${error.stack}\n`);
-                        }
-                      }
-                    });
-
-                  return;
-                }
-
-                void writeConfig(configBuilder.values(), { outputFile: argv.outputFile });
-              }
-            )
-            .catch((error: unknown) => {
-              if (error instanceof Error) {
-                shelljs.echo(`zcd watch => error message: ${error.message}`);
-
-                if (error.stack) {
-                  shelljs.echo(`zcd watch => error stack:\n${error.stack}\n`);
-                }
-              }
-            });
+          importValidateWriteConfig(
+            argv['input-file'],
+            argv['output-file'],
+            Commands.WATCH,
+            argv['experiments-callback-file']
+          );
         });
+      }
+    )
+    .command(
+      'build <input-file> <output-file>',
+      'Write config from a config builder',
+      cmdYargs => generateArguments(cmdYargs),
+      argv => {
+        shelljs.echo(`zcd build => building file: ${argv['input-file']}`);
+
+        importValidateWriteConfig(
+          argv['input-file'],
+          argv['output-file'],
+          Commands.BUILD,
+          argv['experiments-callback-file']
+        );
       }
     )
     .help().argv;
