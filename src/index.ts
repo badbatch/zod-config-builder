@@ -1,4 +1,5 @@
 export * from './createConfigBuilder.ts';
+export * from './createConfigReader.ts';
 export * from './data/countryCodes.ts';
 export * from './data/countryNames.ts';
 export * from './data/distanceUnits.ts';
