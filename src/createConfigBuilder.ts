@@ -5,25 +5,13 @@ import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValue
 import { arrayHasInvalidDefaults } from './utils/arrayHasInvalidDefaults.ts';
 import { isDerivedValueCallback } from './utils/isDerivedValueCallback.ts';
 import { isInvalidPropertyOverride } from './utils/isInvalidPropertyOverride.ts';
-import { isPropertyReservedWord } from './utils/isPropertyReservedWord.ts';
+import { RESERVED_KEYWORDS, isPropertyReservedWord } from './utils/isPropertyReservedWord.ts';
 import { isSchemaValid } from './utils/isSchemaValid.ts';
 import { isValidPropertyDefinition } from './utils/isValidPropertyDefinition.ts';
 import { isValidValue } from './utils/isValidValue.ts';
 import { objectHasInvalidDefaults } from './utils/objectHasInvalidDefaults.ts';
 import { recordHasInvalidDefaults } from './utils/recordHasInvalidDefaults.ts';
 import { transformConfigSync } from './utils/transformConfig.ts';
-
-export const RESERVED_KEYWORDS = new Set([
-  'disable',
-  'errors',
-  'experiment',
-  'extend',
-  'flush',
-  'fork',
-  'toJson',
-  'validate',
-  'values',
-]);
 
 export const createConfigBuilder = <ZodTypes>(
   zodSchema: z.ZodSchema,

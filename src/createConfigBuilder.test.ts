@@ -8,6 +8,7 @@ import {
   pageSchema,
   routeSchema,
 } from './__testUtils__/schema.ts';
+import { RESERVED_KEYWORDS } from './utils/isPropertyReservedWord.ts';
 
 describe('createConfigBuilder', () => {
   describe('when a user passes in a schema with a root type other than "object"', () => {
@@ -23,7 +24,7 @@ describe('createConfigBuilder', () => {
 
   describe('when a user uses a key in the schema that is a reserved keyword', () => {
     it('should throw an error', async () => {
-      const { RESERVED_KEYWORDS, createConfigBuilder } = await import('./createConfigBuilder.ts');
+      const { createConfigBuilder } = await import('./createConfigBuilder.ts');
 
       const invalidSchema = z.object({
         values: z.string(),
