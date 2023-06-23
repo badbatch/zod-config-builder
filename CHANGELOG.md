@@ -1,3 +1,25 @@
+#### 0.0.7 (2023-06-23)
+
+##### Chores
+
+*  update deps (f4e4709e)
+*  upgrade deps (5d340107)
+*  update badge link (54264b99)
+*  update badge link (4ecd3233)
+
+##### Documentation Changes
+
+*  update readme (c8098f18)
+
+##### New Features
+
+*  add build command to cli (d7d34b50)
+
+##### Bug Fixes
+
+*  resolve circular deps (d994f0a9)
+*  add types export (ef9c6a34)
+
 #### 0.0.6 (2023-06-12)
 
 ##### Bug Fixes
