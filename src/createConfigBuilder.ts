@@ -2,6 +2,7 @@ import { type JSONSchema7 } from 'json-schema';
 import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValues.ts';
+import { NonEmumeralProperties } from './types.ts';
 import { arrayHasInvalidDefaults } from './utils/arrayHasInvalidDefaults.ts';
 import { isDerivedValueCallback } from './utils/isDerivedValueCallback.ts';
 import { isInvalidPropertyOverride } from './utils/isInvalidPropertyOverride.ts';
@@ -53,7 +54,7 @@ export const createConfigBuilder = <ZodTypes>(
 
   let config = initialValues as Config;
 
-  Object.defineProperty(config, '__zcb', {
+  Object.defineProperty(config, NonEmumeralProperties.ZCB, {
     configurable: false,
     enumerable: false,
     value: true,
@@ -63,7 +64,7 @@ export const createConfigBuilder = <ZodTypes>(
 
   const configBuilder = {
     disable: () => {
-      Object.defineProperty(config, '__disabled', {
+      Object.defineProperty(config, NonEmumeralProperties.DISABLED, {
         configurable: false,
         enumerable: false,
         value: true,
@@ -80,7 +81,7 @@ export const createConfigBuilder = <ZodTypes>(
       }
     },
     experiment: (key: string) => {
-      Object.defineProperty(config, '__experiment', {
+      Object.defineProperty(config, NonEmumeralProperties.EXPERIMENT, {
         configurable: false,
         enumerable: false,
         value: key,
@@ -97,7 +98,7 @@ export const createConfigBuilder = <ZodTypes>(
       const values = configBuilder.values();
       config = {} as Config;
 
-      Object.defineProperty(config, '__zcb', {
+      Object.defineProperty(config, NonEmumeralProperties.ZCB, {
         configurable: false,
         enumerable: false,
         value: true,
@@ -129,7 +130,7 @@ export const createConfigBuilder = <ZodTypes>(
     },
   } as unknown as ConfigBuilder;
 
-  Object.defineProperty(configBuilder, '__callbacks', {
+  Object.defineProperty(configBuilder, NonEmumeralProperties.CALLBACKS, {
     configurable: false,
     enumerable: false,
     value: callbacks,

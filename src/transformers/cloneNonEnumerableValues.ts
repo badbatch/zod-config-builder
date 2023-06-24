@@ -1,6 +1,6 @@
-import type { AnyRecord, TransformConfigHandlerSync } from '../types.ts';
+import { type AnyRecord, NonEmumeralProperties, type TransformConfigHandlerSync } from '../types.ts';
 
-const NON_ENUMERABLE_KEYS = new Set(['__disabled', '__experiment', '__zcb']);
+const NON_ENUMERABLE_KEYS = new Set(Object.values(NonEmumeralProperties));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const cloneNonEnumerableValues: TransformConfigHandlerSync = <Config extends AnyRecord>(

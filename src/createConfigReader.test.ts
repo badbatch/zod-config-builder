@@ -1,4 +1,4 @@
-import { config } from './__testUtils__/config.ts';
+import { config } from './__testUtils__/configParser.ts';
 
 describe('createConfigReader', () => {
   describe('when a user accesses a known property', () => {

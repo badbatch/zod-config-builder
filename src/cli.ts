@@ -2,7 +2,7 @@ import { watchFile } from 'node:fs';
 import { resolve } from 'node:path';
 import shelljs from 'shelljs';
 import yargs from 'yargs';
-import { importValidateWriteConfig } from './utils/importValidateWriteConfig.ts';
+import { importValidateTransformWriteConfig } from './utils/importValidateTransformWriteConfig.ts';
 
 export enum Commands {
   BUILD = 'build',
@@ -38,7 +38,7 @@ export const cli = () => {
         watchFile(resolve(process.cwd(), argv['input-file']), () => {
           shelljs.echo('zcd watch => file change detected');
 
-          importValidateWriteConfig(
+          importValidateTransformWriteConfig(
             argv['input-file'],
             argv['output-file'],
             Commands.WATCH,
@@ -54,7 +54,7 @@ export const cli = () => {
       argv => {
         shelljs.echo(`zcd build => building file: ${argv['input-file']}`);
 
-        importValidateWriteConfig(
+        importValidateTransformWriteConfig(
           argv['input-file'],
           argv['output-file'],
           Commands.BUILD,

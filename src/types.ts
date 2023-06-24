@@ -4,16 +4,31 @@ import type { Includes } from 'type-fest';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyRecord = Record<string, any>;
 
-export interface WriteConfigOptions {
-  experimentsCallback?: ExperimentsCallback;
-  outputFile: string;
+export type Buckets<Config extends AnyRecord> = Record<string, Experiment<Config>>;
+
+export interface ConfigParserOptions {
+  experimentsCallback?: RunExperimentsCallback;
 }
 
-export type ExperimentsCallback = <Config extends AnyRecord>(
+export interface Experiment<Config extends AnyRecord> {
+  action?: TransformConfigHandlerAction;
+  value?: Config;
+}
+
+export enum NonEmumeralProperties {
+  CALLBACKS = '__callbacks',
+  DISABLED = '__disabled',
+  EXPERIMENT = '__experiment',
+  ZCB = '__zcb',
+}
+
+export type RunExperimentsCallback = (id: string) => Promise<string>;
+
+export type SetupExperimentsCallback = <Config extends AnyRecord>(
   id: string,
   clone: Config,
   config: Config
-) => Promise<TransformConfigHandlerReturnType<Config>>;
+) => Promise<Buckets<Config>>;
 
 export type TransformConfigHandler = <Config extends AnyRecord>(
   clone: Config,
@@ -33,6 +48,11 @@ export enum TransformConfigHandlerAction {
 export interface TransformConfigHandlerReturnType<Config extends AnyRecord> {
   action?: TransformConfigHandlerAction;
   value?: Config;
+}
+
+export interface WriteConfigOptions {
+  experimentsCallback?: SetupExperimentsCallback;
+  outputFile: string;
 }
 
 export type Leaves<T, Path extends string[] = []> = T extends string

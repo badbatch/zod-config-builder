@@ -9,7 +9,7 @@ import { setupExperiments } from '../transformers/setupExperiments.ts';
 import type { TransformConfigHandler, WriteConfigOptions } from '../types.ts';
 import { transformConfig } from './transformConfig.ts';
 
-export const writeConfig = async <Config extends object>(
+export const transformWriteConfig = async <Config extends object>(
   config: Config,
   { experimentsCallback, outputFile }: WriteConfigOptions
 ) => {
