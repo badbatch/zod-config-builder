@@ -1,3 +1,13 @@
+#### 0.0.8 (2023-07-01)
+
+##### Documentation Changes
+
+*  refactor way config reader is recommended to be used (1e3ffae3)
+
+##### Refactors
+
+*  change experiments interfaces and add config parser (10764e42)
+
 #### 0.0.7 (2023-06-23)
 
 ##### Chores
