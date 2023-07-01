@@ -13,7 +13,7 @@ export const runExperiments =
       const { buckets, id } = config.__experiment as { buckets: Buckets<Config>; id: string };
       const bucket = await callback(id);
 
-      if (bucket in buckets && buckets[bucket]) {
+      if (bucket && bucket in buckets && buckets[bucket]) {
         return buckets[bucket]!;
       }
     }

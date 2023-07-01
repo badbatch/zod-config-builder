@@ -1,5 +1,5 @@
 import type { List } from 'ts-toolbelt';
-import type { Includes } from 'type-fest';
+import type { Includes, Join } from 'type-fest';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyRecord = Record<string, any>;
@@ -22,7 +22,11 @@ export enum NonEmumeralProperties {
   ZCB = '__zcb',
 }
 
+export type Path<Config extends object> = Join<Leaves<Config>, '.'>;
+
 export type RunExperimentsCallback = (id: string) => Promise<string>;
+
+export type Scope<Config extends object> = Join<Paths<Config>, '.'>;
 
 export type SetupExperimentsCallback = <Config extends AnyRecord>(
   id: string,

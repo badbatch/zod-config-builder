@@ -1,12 +1,9 @@
 import get from 'lodash/get.js';
-import type { Get, Join } from 'type-fest';
-import type { Leaves, Paths } from './types.ts';
+import type { Get } from 'type-fest';
+import type { Path, Scope } from './types.ts';
 
 export const createConfigReader = <Config extends object>(config: Config) => {
-  const configReader = <Path extends Join<Leaves<Config>, '.'>>(path: Path) => get(config, path);
-
-  configReader.scope = <Scope extends Join<Paths<Config>, '.'>>(scope: Scope) =>
-    createConfigReader(get(config, scope) as Get<Config, Scope>);
-
+  const configReader = <P extends Path<Config>>(path: P) => get(config, path);
+  configReader.scope = <S extends Scope<Config>>(scope: S) => createConfigReader(get(config, scope) as Get<Config, S>);
   return configReader;
 };
