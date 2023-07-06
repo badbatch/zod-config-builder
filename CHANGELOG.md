@@ -1,3 +1,9 @@
+#### 0.0.12 (2023-07-06)
+
+##### Bug Fixes
+
+*  document ts node usage (e62a6524)
+
 #### 0.0.11 (2023-07-06)
 
 ##### Bug Fixes
