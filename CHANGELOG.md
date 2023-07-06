@@ -1,3 +1,9 @@
+#### 0.0.15 (2023-07-06)
+
+##### Documentation Changes
+
+*  correct config reader export example (985b033a)
+
 #### 0.0.14 (2023-07-06)
 
 ##### Refactors
