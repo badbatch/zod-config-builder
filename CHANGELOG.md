@@ -1,3 +1,9 @@
+#### 0.0.10 (2023-07-06)
+
+##### Bug Fixes
+
+*  use correct tsconfig and exclude test utils folder (f6d89f52)
+
 #### 0.0.9 (2023-07-06)
 
 ##### Bug Fixes
