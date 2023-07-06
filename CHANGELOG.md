@@ -1,3 +1,9 @@
+#### 0.0.11 (2023-07-06)
+
+##### Bug Fixes
+
+*  create config builder type and export (2c970534)
+
 #### 0.0.10 (2023-07-06)
 
 ##### Bug Fixes
