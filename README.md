@@ -346,10 +346,14 @@ const scopedReader = configReader.scope('pages.contactDetails')
                       .scope('0');
 // reader config path autocompletion and validation
 // value and type preview
-const value = scopedReader('name');
+const value = scopedReader.read('name');
 ```
 
 #### reader API
+
+**read: `(value: string) => Get<Config, string>`**
+
+Use to read a value out of config.
 
 **scope: `(value: string) => Get<Config, string>`**
 

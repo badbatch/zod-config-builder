@@ -4,7 +4,7 @@ describe('createConfigReader', () => {
   describe('when a user accesses a known property', () => {
     it('should return the correct value', () => {
       const reader = createReader();
-      const value = reader('countryCode');
+      const value = reader.read('countryCode');
       expect(value).toBe('GB');
     });
   });
@@ -12,7 +12,7 @@ describe('createConfigReader', () => {
   describe('when a user accesses a known nested property', () => {
     it('should return the correct value', () => {
       const reader = createReader();
-      const value = reader('pages.contactDetails.name');
+      const value = reader.read('pages.contactDetails.name');
       expect(value).toBe('contactDetails');
     });
   });
@@ -22,7 +22,7 @@ describe('createConfigReader', () => {
       it('should return the correct value', () => {
         const reader = createReader();
         const scopedReader = reader.scope('pages.contactDetails');
-        const value = scopedReader('name');
+        const value = scopedReader.read('name');
         expect(value).toBe('contactDetails');
       });
     });
@@ -33,7 +33,7 @@ describe('createConfigReader', () => {
       it('should return the correct value', () => {
         const reader = createReader();
         const scopedReader = reader.scope('pages.contactDetails').scope('sections.1.sections').scope('0');
-        const value = scopedReader('name');
+        const value = scopedReader.read('name');
         expect(value).toBe('main');
       });
     });
