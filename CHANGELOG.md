@@ -1,3 +1,9 @@
+#### 0.0.14 (2023-07-06)
+
+##### Refactors
+
+*  move config reading to read method on reader (5fc6a133)
+
 #### 0.0.13 (2023-07-06)
 
 ##### Bug Fixes
