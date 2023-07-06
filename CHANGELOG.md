@@ -1,3 +1,9 @@
+#### 0.0.9 (2023-07-06)
+
+##### Bug Fixes
+
+*  stop npm ignore dist folder (9e44699e)
+
 #### 0.0.8 (2023-07-01)
 
 ##### Documentation Changes
