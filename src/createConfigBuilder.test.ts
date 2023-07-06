@@ -483,7 +483,7 @@ describe('createConfigBuilder', () => {
           .languageCodes(['en'])
           .locales(({ countryCode, languageCodes }) =>
             // eslint-disable-next-line jest/no-conditional-in-test
-            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : []
+            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : []
           );
 
         expect(config.values()).toEqual({ countryCode: 'GB', languageCodes: ['en'], locales: ['en_GB'] });
@@ -498,7 +498,7 @@ describe('createConfigBuilder', () => {
           .languageCodes(['en'])
           .locales(({ countryCode, languageCodes }) =>
             // eslint-disable-next-line jest/no-conditional-in-test
-            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : []
+            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : []
           )
           .languageCodes(['fr'], true);
 

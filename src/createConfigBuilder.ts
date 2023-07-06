@@ -14,6 +14,23 @@ import { objectHasInvalidDefaults } from './utils/objectHasInvalidDefaults.ts';
 import { recordHasInvalidDefaults } from './utils/recordHasInvalidDefaults.ts';
 import { transformConfigSync } from './utils/transformConfig.ts';
 
+export type ConfigBuilder<ZodTypes> = {
+  [Key in keyof Required<ZodTypes>]: (
+    value: ZodTypes[Key] | ((c: ZodTypes) => ZodTypes[Key]),
+    override?: boolean
+  ) => ConfigBuilder<ZodTypes>;
+} & {
+  disable: () => ConfigBuilder<ZodTypes>;
+  errors: () => ZodError['errors'];
+  experiment: (key: string) => ConfigBuilder<ZodTypes>;
+  extend: (configBuilder: ConfigBuilder<ZodTypes>) => ConfigBuilder<ZodTypes>;
+  flush: () => ZodTypes;
+  fork: () => ConfigBuilder<ZodTypes>;
+  toJson: () => string;
+  validate: () => boolean;
+  values: () => ZodTypes;
+};
+
 export const createConfigBuilder = <ZodTypes>(
   zodSchema: z.ZodSchema,
   derivedValueCallbacks: Partial<
@@ -27,31 +44,12 @@ export const createConfigBuilder = <ZodTypes>(
   initialValues: Partial<{
     [Key in keyof ZodTypes]: ZodTypes[Key];
   }> = {}
-) => {
+): ConfigBuilder<ZodTypes> => {
   type Config = {
     [Key in keyof ZodTypes]: ZodTypes[Key];
   };
 
-  type RequiredConfig = Required<Config>;
   type DerivedValueCallback<K extends keyof Config = keyof Config> = (c: Config) => Config[K];
-
-  type ConfigBuilder = {
-    [Key in keyof RequiredConfig]: (
-      value: Config[Key] | DerivedValueCallback<Key>,
-      override?: boolean
-    ) => ConfigBuilder;
-  } & {
-    disable: () => ConfigBuilder;
-    errors: () => ZodError['errors'];
-    experiment: (key: string) => ConfigBuilder;
-    extend: (configBuilder: ConfigBuilder) => ConfigBuilder;
-    flush: () => Config;
-    fork: () => ConfigBuilder;
-    toJson: () => string;
-    validate: () => boolean;
-    values: () => Config;
-  };
-
   let config = initialValues as Config;
 
   Object.defineProperty(config, NonEmumeralProperties.ZCB, {
@@ -89,7 +87,7 @@ export const createConfigBuilder = <ZodTypes>(
 
       return configBuilder;
     },
-    extend: (configBuilder: ConfigBuilder) => {
+    extend: (configBuilder: ConfigBuilder<Config>) => {
       config = transformConfigSync<Config>(configBuilder.values(), [cloneNonEnumerableValues]);
       // @ts-expect-error private property
       callbacks = { ...configBuilder.__callbacks } as Partial<Record<keyof Config, DerivedValueCallback>>;
@@ -128,7 +126,7 @@ export const createConfigBuilder = <ZodTypes>(
 
       return config;
     },
-  } as unknown as ConfigBuilder;
+  } as unknown as ConfigBuilder<ZodTypes>;
 
   Object.defineProperty(configBuilder, NonEmumeralProperties.CALLBACKS, {
     configurable: false,
@@ -216,7 +214,7 @@ export const createConfigBuilder = <ZodTypes>(
 
       config[castProperty] = propertyValue;
       return configBuilder;
-    }) as ConfigBuilder[keyof Config];
+    }) as ConfigBuilder<Config>[keyof Config];
   }
 
   return configBuilder;
