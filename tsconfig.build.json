@@ -8,6 +8,7 @@
     "src/**/*"
   ],
   "exclude": [
-    "**/*.test.*"
+    "**/*.test.*",
+    "**/__testUtils__/**"
   ]
 }
