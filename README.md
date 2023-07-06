@@ -200,8 +200,10 @@ Use to return the config values as an object.
 
 Use the script below or its `build` equivalent to transform a config builder file into a file that default exports a literally typed object like the one in the following example.
 
+If you require native ESM support, use `NODE_OPTIONS="--loader ts-node/esm"` instead.
+
 ```sh
-npx zcb watch ./configBuilder.ts ./builtConfig.ts
+NODE_OPTIONS="--loader ts-node/register" npx zcb watch ./configBuilder.ts ./builtConfig.ts
 ```
 
 ```ts

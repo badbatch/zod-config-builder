@@ -40,7 +40,6 @@
     "handlebars": "^4.7.7",
     "json-schema": "^0.4.0",
     "shelljs": "^0.8.4",
-    "ts-node": "^10.9.1",
     "yargs": "^15.1.0",
     "zod": "^3.21.4",
     "zod-to-json-schema": "^3.21.0"
@@ -48,7 +47,8 @@
   "peerDependencies": {
     "@babel/runtime": "<8",
     "core-js": "<4",
-    "lodash": "<5"
+    "lodash": "<5",
+    "ts-node": "<11"
   },
   "devDependencies": {
     "@babel/cli": "^7.21.5",
@@ -123,6 +123,7 @@
     "rollup-plugin-sourcemaps": "^0.6.3",
     "suppress-experimental-warnings": "^1.1.17",
     "syncpack": "^9.8.6",
+    "ts-node": "^10.9.1",
     "ts-toolbelt": "^9.6.0",
     "type-fest": "^3.10.0",
     "typescript": "^5.0.3"
@@ -133,4 +134,3 @@
     "zod"
   ]
 }
-
