@@ -1,3 +1,9 @@
+#### 0.0.16 (2023-07-07)
+
+##### Documentation Changes
+
+*  fix wording issue in readme (eca32bca)
+
 #### 0.0.15 (2023-07-06)
 
 ##### Documentation Changes
