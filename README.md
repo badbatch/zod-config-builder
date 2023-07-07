@@ -5,7 +5,7 @@ Build configs with type safety from zod schema.
 [![npm version](https://badge.fury.io/js/zcb.svg)](https://badge.fury.io/js/zcb)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-Define a configuration schema with [`zod`](https://github.com/colinhacks/zod) and use the output of that in `zcb` to create a config builder with autocomplete and setter value autocomplete.
+Define a configuration schema with [`zod`](https://github.com/colinhacks/zod) and use the output of that in `zcb` to create a config builder with method autocomplete and value type validation.
 
 Use our cli module to build and/or watch a config builder file and transform it into a literally typed config object.
 
