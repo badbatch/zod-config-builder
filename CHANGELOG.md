@@ -1,3 +1,9 @@
+#### 0.0.17 (2023-08-14)
+
+##### Bug Fixes
+
+*  update repodog deps (fd2e2d7a)
+
 #### 0.0.16 (2023-07-07)
 
 ##### Documentation Changes
