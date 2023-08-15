@@ -5,7 +5,7 @@
   "author": "Dylan Aubrey",
   "license": "MIT",
   "homepage": "https://github.com/badbatch/zod-config-builder",
-  "repository": "badbatch/zod-config-builder",
+  "repository": "https://github.com/badbatch/zod-config-builder",
   "bugs": "https://github.com/badbatch/zod-config-builder/issues",
   "type": "module",
   "bin": {
