@@ -1,3 +1,9 @@
+#### 0.0.18 (2023-08-15)
+
+##### Bug Fixes
+
+*  update repository link in package json (928a6680)
+
 #### 0.0.17 (2023-08-14)
 
 ##### Bug Fixes
