@@ -1,3 +1,10 @@
+#### 0.0.19 (2023-08-15)
+
+##### Bug Fixes
+
+*  status badge (023d2055)
+*  add badge to readme (218aa094)
+
 #### 0.0.18 (2023-08-15)
 
 ##### Bug Fixes
