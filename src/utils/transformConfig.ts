@@ -1,5 +1,4 @@
-import castArray from 'lodash/castArray.js';
-import isPlainObject from 'lodash/isPlainObject.js';
+import { castArray, isPlainObject } from 'lodash-es';
 import {
   type AnyRecord,
   type TransformConfigHandler,

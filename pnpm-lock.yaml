@@ -126,9 +126,9 @@ devDependencies:
   '@types/json-schema':
     specifier: ^7.0.11
     version: 7.0.11
-  '@types/lodash':
-    specifier: ^4.14.191
-    version: 4.14.194
+  '@types/lodash-es':
+    specifier: ^4.17.9
+    version: 4.17.9
   '@types/node':
     specifier: ^18.11.18
     version: 18.16.7
@@ -213,7 +213,7 @@ devDependencies:
   jest:
     specifier: ^29.5.0
     version: 29.5.0(@types/node@18.16.7)(ts-node@10.9.1)
-  lodash:
+  lodash-es:
     specifier: ^4.17.21
     version: 4.17.21
   markdownlint-cli:
@@ -2750,8 +2750,14 @@ packages:
       '@types/node': 18.16.7
     dev: true
 
-  /@types/lodash@4.14.194:
-    resolution: {integrity: sha512-r22s9tAS7imvBt2lyHC9B8AGwWnXaYb1tY09oyLkXDs4vArpYJzw09nj8MLx5VfciBPGIb+ZwG0ssYnEPJxn/g==}
+  /@types/lodash-es@4.17.9:
+    resolution: {integrity: sha512-ZTcmhiI3NNU7dEvWLZJkzG6ao49zOIjEgIE0RgV7wbPxU0f2xT3VSAHw2gmst8swH6V0YkLRGp4qPlX/6I90MQ==}
+    dependencies:
+      '@types/lodash': 4.14.199
+    dev: true
+
+  /@types/lodash@4.14.199:
+    resolution: {integrity: sha512-Vrjz5N5Ia4SEzWWgIVwnHNEnb1UE1XMkvY5DGXrAeOGE9imk0hgTHh5GyDjLDJi9OTCn9oo9dXH1uToK1VRfrg==}
     dev: true
 
   /@types/minimatch@5.1.2:
@@ -6226,6 +6232,10 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       p-locate: 5.0.0
+    dev: true
+
+  /lodash-es@4.17.21:
+    resolution: {integrity: sha512-mKnC+QJ9pWVzv+C4/U3rRsHapFfHvQFoFB92e52xeyGMcX6/OlIl78je1u8vePzYZSkkogMPJ2yjxxsb89cxyw==}
     dev: true
 
   /lodash.camelcase@4.3.0:

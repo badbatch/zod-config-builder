@@ -1,4 +1,4 @@
-import isPlainObject from 'lodash/isPlainObject.js';
+import { isPlainObject } from 'lodash-es';
 
 export const isValidValue = (value: unknown, depth = 0): boolean => {
   if (isPlainObject(value)) {

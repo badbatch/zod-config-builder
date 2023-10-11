@@ -98,7 +98,7 @@ Then use the schema and its types to create a config builder and build out your 
 
 ```ts
 // ./configBuilder.ts
-import kebabCase from 'lodash/kebabCase.js';
+import { kebabCase } from 'lodash-es';
 import { createConfigBuilder } from 'zcb';
 import {
   type ConfigType,

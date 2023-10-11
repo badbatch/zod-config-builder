@@ -1,4 +1,4 @@
-import kebabCase from 'lodash/kebabCase.js';
+import { kebabCase } from 'lodash-es';
 import { createConfigBuilder } from '../createConfigBuilder.ts';
 import {
   type ConfigType,

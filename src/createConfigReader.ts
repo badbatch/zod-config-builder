@@ -1,4 +1,4 @@
-import get from 'lodash/get.js';
+import { get } from 'lodash-es';
 import type { Get } from 'type-fest';
 import type { Path, Scope } from './types.ts';
 
