@@ -6,7 +6,7 @@ module.exports = [
   {
     ...buildConfig({
       copy: {
-        targets: [{ dest: 'dist/main/templates', src: 'src/templates/*' }],
+        targets: [{ dest: ['dist/esm/templates', 'dist/cjs/templates'], src: 'src/templates/*' }],
       },
     }),
   },
