@@ -1,3 +1,9 @@
+#### 0.0.24 (2023-11-22)
+
+##### New Features
+
+*  upgrade syncpack (e7e1fddf)
+
 #### 0.0.23 (2023-11-22)
 
 ##### Bug Fixes
