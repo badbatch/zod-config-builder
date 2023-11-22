@@ -1,3 +1,9 @@
+#### 0.0.23 (2023-11-22)
+
+##### Bug Fixes
+
+*  correct bin path and exports require ext (539e91ac)
+
 #### 0.0.22 (2023-11-22)
 
 ##### New Features
