@@ -1,3 +1,9 @@
+#### 0.0.22 (2023-11-22)
+
+##### New Features
+
+*  move to exports in package json (64cf205f)
+
 #### 0.0.21 (2023-10-12)
 
 ##### Chores
