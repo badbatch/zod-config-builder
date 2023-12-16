@@ -87,10 +87,10 @@ export const createConfigBuilder = <ZodTypes>(
 
       return configBuilder;
     },
-    extend: (configBuilder: ConfigBuilder<Config>) => {
-      config = transformConfigSync<Config>(configBuilder.values(), [cloneNonEnumerableValues]);
+    extend: (builder: ConfigBuilder<Config>) => {
+      config = transformConfigSync<Config>(builder.values(), [cloneNonEnumerableValues]);
       // @ts-expect-error private property
-      callbacks = { ...configBuilder.__callbacks } as Partial<Record<keyof Config, DerivedValueCallback>>;
+      callbacks = { ...builder.__callbacks } as Partial<Record<keyof Config, DerivedValueCallback>>;
     },
     flush: () => {
       const values = configBuilder.values();

@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 dependencies:
   fs-extra:
     specifier: ^11.1.1
@@ -79,14 +83,14 @@ devDependencies:
     specifier: ^1.1.11
     version: 1.1.11(@babel/cli@7.21.5)(@babel/core@7.21.8)(@babel/plugin-proposal-decorators@7.23.3)(@babel/plugin-syntax-import-assertions@7.20.0)(@babel/plugin-transform-class-properties@7.23.3)(@babel/plugin-transform-export-namespace-from@7.23.4)(@babel/plugin-transform-modules-commonjs@7.23.3)(@babel/plugin-transform-runtime@7.21.4)(@babel/preset-env@7.21.5)(@babel/preset-react@7.18.6)(@babel/preset-typescript@7.21.5)(@babel/runtime@7.21.5)(babel-plugin-codegen@4.1.5)(babel-plugin-macros@3.1.0)
   '@repodog/cli':
-    specifier: ^1.2.4
-    version: 1.2.4
+    specifier: ^1.3.3
+    version: 1.3.3
   '@repodog/commitlint-config':
     specifier: ^1.1.6
     version: 1.1.6(@commitlint/cli@17.6.3)(@commitlint/config-conventional@17.6.3)(@commitlint/prompt-cli@17.6.3)
   '@repodog/eslint-config':
-    specifier: ^1.1.17
-    version: 1.1.17(@babel/eslint-parser@7.21.8)(@typescript-eslint/eslint-plugin@5.59.5)(@typescript-eslint/parser@5.59.5)(eslint-config-prettier@8.8.0)(eslint-import-resolver-typescript@3.5.5)(eslint-plugin-import@2.27.5)(eslint-plugin-prefer-arrow@1.2.3)(eslint-plugin-prettier@4.2.1)(eslint-plugin-sort-class-members@1.18.0)(eslint-plugin-sort-destructure-keys@1.5.0)(eslint-plugin-sort-keys-fix@1.1.2)(eslint-plugin-typescript-sort-keys@2.3.0)(eslint-plugin-unicorn@46.0.1)(eslint@8.40.0)
+    specifier: ^1.1.19
+    version: 1.1.19(@babel/eslint-parser@7.21.8)(@typescript-eslint/eslint-plugin@5.59.5)(@typescript-eslint/parser@5.59.5)(eslint-config-prettier@8.8.0)(eslint-import-resolver-typescript@3.5.5)(eslint-plugin-import@2.27.5)(eslint-plugin-prefer-arrow@1.2.3)(eslint-plugin-prettier@4.2.1)(eslint-plugin-sort-class-members@1.18.0)(eslint-plugin-sort-destructure-keys@1.5.0)(eslint-plugin-sort-keys-fix@1.1.2)(eslint-plugin-typescript-sort-keys@2.3.0)(eslint-plugin-unicorn@46.0.1)(eslint@8.40.0)
   '@repodog/eslint-config-jest':
     specifier: ^1.1.10
     version: 1.1.10(eslint-plugin-jest@27.2.1)
@@ -103,11 +107,11 @@ devDependencies:
     specifier: ^1.1.8
     version: 1.1.8(@rollup/plugin-babel@6.0.3)(@rollup/plugin-commonjs@25.0.7)(@rollup/plugin-image@3.0.2)(@rollup/plugin-json@6.0.0)(@rollup/plugin-node-resolve@15.0.2)(@rollup/plugin-terser@0.4.1)(rollup-plugin-analyzer@4.0.0)(rollup-plugin-copy@3.4.0)(rollup-plugin-sourcemaps@0.6.3)(rollup@3.21.6)
   '@repodog/syncpack-config':
-    specifier: ^1.2.2
-    version: 1.2.2(syncpack@12.0.0-alpha.0)
+    specifier: ^1.2.3
+    version: 1.2.3(syncpack@12.0.0-alpha.0)
   '@repodog/ts-config':
-    specifier: ^1.1.6
-    version: 1.1.6(typescript@5.0.4)
+    specifier: ^1.1.7
+    version: 1.1.7(typescript@5.0.4)
   '@rollup/plugin-babel':
     specifier: ^6.0.3
     version: 6.0.3(@babel/core@7.21.8)(rollup@3.21.6)
@@ -165,6 +169,9 @@ devDependencies:
   core-js:
     specifier: ^3.30.2
     version: 3.30.2
+  cts-types:
+    specifier: ^0.0.4
+    version: 0.0.4
   del-cli:
     specifier: ^3.0.1
     version: 3.0.1
@@ -1736,6 +1743,13 @@ packages:
       regenerator-runtime: 0.13.11
     dev: true
 
+  /@babel/runtime@7.23.6:
+    resolution: {integrity: sha512-zHd0eUrf5GZoOWVCXp6koAKQTfZV07eit6bGPmJgnZdnSAvvZee6zniW2XMF7Cmc4ISOOnPy3QaSiIJGJkVEDQ==}
+    engines: {node: '>=6.9.0'}
+    dependencies:
+      regenerator-runtime: 0.14.1
+    dev: true
+
   /@babel/template@7.20.7:
     resolution: {integrity: sha512-8SegXApWe6VoNw0r9JHpSteLKTpTiLZ4rMlGIm9JQ18KiCtyQiAMEazujAHrUS5flrcqYZa75ukev3P6QmUwUw==}
     engines: {node: '>=6.9.0'}
@@ -2518,14 +2532,14 @@ packages:
       babel-plugin-macros: 3.1.0
     dev: true
 
-  /@repodog/cli-cut@1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
-    resolution: {integrity: sha512-J+2fMGdb9swK9QPr+aIpeF7dlqyM2XhrvjxUu1jkeu0+rjq9CrVbcWrX2BypaC8VdNGIM4YLWQkHsn/eO8UC/g==}
+  /@repodog/cli-cut@1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
+    resolution: {integrity: sha512-a4nzvAMLHkXBXgHyk7TkKq8jiPpUqNEwDL33yFXfWA9IVZeuAILGbSdTROvQdEYPnBtkvWJL2vcTCZq9Qk1oYQ==}
     peerDependencies:
       '@babel/runtime': <8
       core-js: <4
     dependencies:
       '@babel/runtime': 7.21.5
-      '@repodog/cli-utils': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-utils': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
       ansi-colors: 4.1.3
       core-js: 3.30.2
       semver: 7.5.4
@@ -2535,16 +2549,16 @@ packages:
       - lodash-es
     dev: true
 
-  /@repodog/cli-new@1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
-    resolution: {integrity: sha512-nry9VZJdSB/OjpV8CcX93l46E6YLZGW24c8rdo60f9zghOPMfDD8Vq1N/DL6imRy8AKr5qjkqw8jzuLD6fWR/g==}
+  /@repodog/cli-new@1.3.3(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
+    resolution: {integrity: sha512-oUICmWJAMOARARfC5bWYLuPeCfTkfRiBCWGEOtuRiriGE8lJ5vl8fCfkUQZWwNBt1eyT8OveRuHgVmEe6b16/g==}
     peerDependencies:
       '@babel/runtime': <8
       core-js: <4
       lodash-es: <5
     dependencies:
       '@babel/runtime': 7.21.5
-      '@repodog/cli-setup': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
-      '@repodog/cli-utils': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-setup': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-utils': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
       ansi-colors: 4.1.3
       core-js: 3.30.2
       enquirer: 2.4.1
@@ -2556,31 +2570,31 @@ packages:
       - supports-color
     dev: true
 
-  /@repodog/cli-postinstall@0.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
-    resolution: {integrity: sha512-funUUcAmLxR3F1i9dv9mZvr5QoODpvbNQ6JnAYKEvquysQkEqkaC6qh4WgMayfif9z2l9P4aML/8FFywI920SQ==}
+  /@repodog/cli-postinstall@0.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
+    resolution: {integrity: sha512-c8+H+eqgrCT9pnC1r+ZJGEg6HlAbK33OtECEn/TlQLcT+ENx6fJxPrp5s6OSDROuXffwDQlwks3dzAmsCuKDYw==}
     peerDependencies:
       '@babel/runtime': <8
       core-js: <4
+      lodash-es: <5
     dependencies:
       '@babel/runtime': 7.21.5
-      '@repodog/cli-utils': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-utils': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
       ansi-colors: 4.1.3
       core-js: 3.30.2
+      lodash-es: 4.17.21
       package-json: 8.1.1
       shelljs: 0.8.5
       yargs: 15.4.1
-    transitivePeerDependencies:
-      - lodash-es
     dev: true
 
-  /@repodog/cli-publish@1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
-    resolution: {integrity: sha512-Sta+jj1twYVc3URUQ+8MBUtMtj31aarfz3V2sYcuk1kchSxNSYUErszOE2MYgIuMpdjo8Bsoir/XL3VIqi69XQ==}
+  /@repodog/cli-publish@1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
+    resolution: {integrity: sha512-NiQv2F5U94hPCakk7h1DfcbHzMycGXKZn9qGj8/y88QSz/+DKE2dKuou3fQYeBbOPAOjyGIoPVNQ6bLu99t/vw==}
     peerDependencies:
       '@babel/runtime': <8
       core-js: <4
     dependencies:
       '@babel/runtime': 7.21.5
-      '@repodog/cli-utils': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-utils': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
       ansi-colors: 4.1.3
       core-js: 3.30.2
       semver: 7.5.4
@@ -2590,14 +2604,14 @@ packages:
       - lodash-es
     dev: true
 
-  /@repodog/cli-setup@1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
-    resolution: {integrity: sha512-nm5xZaHEJIa6sNRAbtuEVUNBYuWyvL4ZeVZht3095Ur2OezUSjjxbxgIzphYFvx7oIQBQeO45cWk8gzLAM/LYg==}
+  /@repodog/cli-setup@1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
+    resolution: {integrity: sha512-14Nj4bYZZVFbjOOXqwu1X0K5PT3LwkxPbFXxBn5f6WS3Xcf0Xq5VRs3AJmRnNVn2WSpGjMofLAwGP+QtjgiJKQ==}
     peerDependencies:
       '@babel/runtime': <8
       core-js: <4
     dependencies:
       '@babel/runtime': 7.21.5
-      '@repodog/cli-utils': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-utils': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
       ansi-colors: 4.1.3
       core-js: 3.30.2
       enquirer: 2.4.1
@@ -2607,8 +2621,8 @@ packages:
       - lodash-es
     dev: true
 
-  /@repodog/cli-utils@1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
-    resolution: {integrity: sha512-Dd5D1g5sq3/eoekMgSRdMkTtrtX40igoRO4D7qtx4fnLn3vXlJLVnDk74wNDYRhz5tAkNvi33o4NmXTDyhmPxw==}
+  /@repodog/cli-utils@1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
+    resolution: {integrity: sha512-r0i+oms4zz8eEA4r8HpRYuQrQ9lwnzuxlyLec6hZnWgyrXCJTNp04CwyRNYabelSJgYcfV9xspQuMg+RcQ8OkA==}
     peerDependencies:
       '@babel/runtime': <8
       core-js: <4
@@ -2624,14 +2638,31 @@ packages:
       shelljs: 0.8.5
     dev: true
 
-  /@repodog/cli-write@1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
-    resolution: {integrity: sha512-pJAthPYl/KNB3ja4LLG8zxMdPv6Wl6bgpWe/4oYcx0+Z6EACfVO39O2lh36gpGaCTcuaPxZZXctRVbmKZhU0LQ==}
+  /@repodog/cli-utils@1.2.6(@babel/runtime@7.23.6)(core-js@3.30.2)(lodash-es@4.17.21):
+    resolution: {integrity: sha512-r0i+oms4zz8eEA4r8HpRYuQrQ9lwnzuxlyLec6hZnWgyrXCJTNp04CwyRNYabelSJgYcfV9xspQuMg+RcQ8OkA==}
+    peerDependencies:
+      '@babel/runtime': <8
+      core-js: <4
+      lodash-es: <5
+    dependencies:
+      '@babel/runtime': 7.23.6
+      ansi-colors: 4.1.3
+      core-js: 3.30.2
+      glob: 10.3.10
+      js-yaml: 4.1.0
+      lodash-es: 4.17.21
+      semver: 7.5.4
+      shelljs: 0.8.5
+    dev: true
+
+  /@repodog/cli-write@1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21):
+    resolution: {integrity: sha512-2kHaLqk79j+Nt6LIfDnJksdTd9ofFOqhCF1Awx0MeaeggPWGHqmaZ90rRQVcbqUA+HO7Vr7NYNHFdLFPGUrxLw==}
     peerDependencies:
       '@babel/runtime': <8
       core-js: <4
     dependencies:
       '@babel/runtime': 7.21.5
-      '@repodog/cli-utils': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-utils': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
       ansi-colors: 4.1.3
       core-js: 3.30.2
       dotenv: 16.3.1
@@ -2643,18 +2674,18 @@ packages:
       - lodash-es
     dev: true
 
-  /@repodog/cli@1.2.4:
-    resolution: {integrity: sha512-A6DbpZUH47PhbRExZb5oW94gGLm7VJv6sAWuOat95OHmYpKs+B4sML6mQH2fAFeEN0r6oi+CCGre84IdUFsvTQ==}
-    engines: {node: ^18.13.0}
+  /@repodog/cli@1.3.3:
+    resolution: {integrity: sha512-07rXdeSbdwS7n/q4eZSsmxNRDInDXzkYE7VJNJO6EnIWDdVkm6WCbEDilOrb0ldqV2bsZslek8/StnVCNB0f6g==}
+    engines: {node: ^20.10.0}
     hasBin: true
     dependencies:
       '@babel/runtime': 7.21.5
-      '@repodog/cli-cut': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
-      '@repodog/cli-new': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
-      '@repodog/cli-postinstall': 0.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
-      '@repodog/cli-publish': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
-      '@repodog/cli-setup': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
-      '@repodog/cli-write': 1.2.4(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-cut': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-new': 1.3.3(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-postinstall': 0.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-publish': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-setup': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@repodog/cli-write': 1.2.6(@babel/runtime@7.21.5)(core-js@3.30.2)(lodash-es@4.17.21)
       ansi-colors: 4.1.3
       core-js: 3.30.2
       jiti: 1.21.0
@@ -2688,8 +2719,8 @@ packages:
       eslint-plugin-jest: 27.2.1(@typescript-eslint/eslint-plugin@5.59.5)(eslint@8.40.0)(jest@29.5.0)(typescript@5.0.4)
     dev: true
 
-  /@repodog/eslint-config@1.1.17(@babel/eslint-parser@7.21.8)(@typescript-eslint/eslint-plugin@5.59.5)(@typescript-eslint/parser@5.59.5)(eslint-config-prettier@8.8.0)(eslint-import-resolver-typescript@3.5.5)(eslint-plugin-import@2.27.5)(eslint-plugin-prefer-arrow@1.2.3)(eslint-plugin-prettier@4.2.1)(eslint-plugin-sort-class-members@1.18.0)(eslint-plugin-sort-destructure-keys@1.5.0)(eslint-plugin-sort-keys-fix@1.1.2)(eslint-plugin-typescript-sort-keys@2.3.0)(eslint-plugin-unicorn@46.0.1)(eslint@8.40.0):
-    resolution: {integrity: sha512-MjqfIZOazb/0jlVq0lGPXHscocMYluQB7+y4unOMc6FlZg7F0u8XzTo1jj7XS+0EnV/nlp5oz0dnhLALD3VlZg==}
+  /@repodog/eslint-config@1.1.19(@babel/eslint-parser@7.21.8)(@typescript-eslint/eslint-plugin@5.59.5)(@typescript-eslint/parser@5.59.5)(eslint-config-prettier@8.8.0)(eslint-import-resolver-typescript@3.5.5)(eslint-plugin-import@2.27.5)(eslint-plugin-prefer-arrow@1.2.3)(eslint-plugin-prettier@4.2.1)(eslint-plugin-sort-class-members@1.18.0)(eslint-plugin-sort-destructure-keys@1.5.0)(eslint-plugin-sort-keys-fix@1.1.2)(eslint-plugin-typescript-sort-keys@2.3.0)(eslint-plugin-unicorn@46.0.1)(eslint@8.40.0):
+    resolution: {integrity: sha512-TJ4g1CYaUoxufCLDglNP8IU54+CYpGzYR2io8oP9sL3zusy8YzcZYUdbC1jpueN7/LvRS2Rlc6kpoH+QsOspqg==}
     peerDependencies:
       '@babel/eslint-parser': <8
       '@typescript-eslint/eslint-plugin': <6
@@ -2786,16 +2817,16 @@ packages:
       rollup-plugin-sourcemaps: 0.6.3(@types/node@18.16.7)(rollup@3.21.6)
     dev: true
 
-  /@repodog/syncpack-config@1.2.2(syncpack@12.0.0-alpha.0):
-    resolution: {integrity: sha512-jzqZ0+RQUbRGUeWqUXJCuyJM+0FkP1a5JRNnj9AW2A22HNn0IuD364YvdPDBbB/+HOcQD+0uG1IzVJz3+HLWkA==}
+  /@repodog/syncpack-config@1.2.3(syncpack@12.0.0-alpha.0):
+    resolution: {integrity: sha512-knw2jDM2MkchEoZ01hGUfcU3pdhuj9kUk+pHUFCi9zLssa8g4bKZJ3czdElzupfGdvkPpda+3B6OQVpVGWf3JA==}
     peerDependencies:
       syncpack: <13
     dependencies:
       syncpack: 12.0.0-alpha.0(fast-check@3.14.0)(typescript@5.0.4)
     dev: true
 
-  /@repodog/ts-config@1.1.6(typescript@5.0.4):
-    resolution: {integrity: sha512-GG8rYRK43D2qkKeaZSW+GFMkif46yVqtCBMDiTvPUkzHbfypnPF98TXuvQHp9XCRu2YTlGXDqHvLXiY3808iLw==}
+  /@repodog/ts-config@1.1.7(typescript@5.0.4):
+    resolution: {integrity: sha512-YH59qpbDwu/kjQLJjCKxY+IiupLPiVs+jzSQn2dZtT72p7eUiKsDIFxwsuCQnWxVahLJDCLUeQUWeu0f7f7HVg==}
     peerDependencies:
       typescript: <6
     dependencies:
@@ -4197,6 +4228,23 @@ packages:
       cssom: 0.3.8
     dev: true
 
+  /cts-types@0.0.4:
+    resolution: {integrity: sha512-efQiQvWQS7mYyilcZxHSh/w3wii+5QeuyaUvwebVmVhFcbvHznUTsbvfX1nwfohHc67U7uXink4SUtSf6PwMzg==}
+    hasBin: true
+    dependencies:
+      '@babel/runtime': 7.23.6
+      '@repodog/cli-utils': 1.2.6(@babel/runtime@7.23.6)(core-js@3.30.2)(lodash-es@4.17.21)
+      '@types/lodash-es': 4.17.9
+      '@types/shelljs': 0.8.12
+      '@types/yargs': 15.0.15
+      ansi-colors: 4.1.3
+      core-js: 3.30.2
+      glob: 10.3.10
+      lodash-es: 4.17.21
+      shelljs: 0.8.5
+      yargs: 15.4.1
+    dev: true
+
   /dargs@7.0.0:
     resolution: {integrity: sha512-2iy1EkLdlBzQGvbweYRFxmFath8+K7+AKB0TlhHWkNuH+TmovaMH/Wp7V7R4u7f4SnX3OgLsU9t1NI9ioDnUpg==}
     engines: {node: '>=8'}
@@ -4611,7 +4659,7 @@ packages:
       debug: 4.3.4
       enhanced-resolve: 5.14.0
       eslint: 8.40.0
-      eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.59.5)(eslint-import-resolver-typescript@3.5.5)(eslint@8.40.0)
+      eslint-module-utils: 2.8.0(@typescript-eslint/parser@5.59.5)(eslint-import-resolver-node@0.3.7)(eslint-import-resolver-typescript@3.5.5)(eslint@8.40.0)
       eslint-plugin-import: 2.27.5(@typescript-eslint/parser@5.59.5)(eslint-import-resolver-typescript@3.5.5)(eslint@8.40.0)
       get-tsconfig: 4.5.0
       globby: 13.1.4
@@ -4650,35 +4698,6 @@ packages:
       debug: 3.2.7
       eslint: 8.40.0
       eslint-import-resolver-node: 0.3.7
-      eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.59.5)(eslint-plugin-import@2.27.5)(eslint@8.40.0)
-    transitivePeerDependencies:
-      - supports-color
-    dev: true
-
-  /eslint-module-utils@2.8.0(@typescript-eslint/parser@5.59.5)(eslint-import-resolver-typescript@3.5.5)(eslint@8.40.0):
-    resolution: {integrity: sha512-aWajIYfsqCKRDgUfjEXNN/JlrzauMuSEy5sbd7WXbtW3EH6A6MpwEh42c7qD+MqQo9QMJ6fWLAeIJynx0g6OAw==}
-    engines: {node: '>=4'}
-    peerDependencies:
-      '@typescript-eslint/parser': '*'
-      eslint: '*'
-      eslint-import-resolver-node: '*'
-      eslint-import-resolver-typescript: '*'
-      eslint-import-resolver-webpack: '*'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint:
-        optional: true
-      eslint-import-resolver-node:
-        optional: true
-      eslint-import-resolver-typescript:
-        optional: true
-      eslint-import-resolver-webpack:
-        optional: true
-    dependencies:
-      '@typescript-eslint/parser': 5.59.5(eslint@8.40.0)(typescript@5.0.4)
-      debug: 3.2.7
-      eslint: 8.40.0
       eslint-import-resolver-typescript: 3.5.5(@typescript-eslint/parser@5.59.5)(eslint-plugin-import@2.27.5)(eslint@8.40.0)
     transitivePeerDependencies:
       - supports-color
@@ -6892,7 +6911,7 @@ packages:
     engines: {node: '>=6'}
     dependencies:
       pify: 4.0.1
-      semver: 5.7.1
+      semver: 5.7.2
     dev: true
 
   /make-dir@3.1.0:
@@ -7673,6 +7692,10 @@ packages:
     resolution: {integrity: sha512-kY1AZVr2Ra+t+piVaJ4gxaFaReZVH40AKNo7UCX6W+dEwBo/2oZJzqfuN1qLq1oL45o56cPaTXELwrTh8Fpggg==}
     dev: true
 
+  /regenerator-runtime@0.14.1:
+    resolution: {integrity: sha512-dYnhHh0nJoMfnkZs6GmmhFknAGRrLznOu5nc9ML+EJxGvrx6H7teuevqVqCuPcPK//3eDrrjQhehXVx9cnkGdw==}
+    dev: true
+
   /regenerator-transform@0.15.1:
     resolution: {integrity: sha512-knzmNAcuyxV+gQCufkYcvOqX/qIIfHLv0u5x79kRxuGojfYVky1f15TzZEu2Avte8QGepvUNTnLskf8E6X6Vyg==}
     dependencies:
@@ -7929,6 +7952,11 @@ packages:
 
   /semver@5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
+    hasBin: true
+    dev: true
+
+  /semver@5.7.2:
+    resolution: {integrity: sha512-cBznnQ9KjJqU67B52RMC65CMarK2600WFnbkcaiwWq3xy/5haFJlshgnpjovMVJ+Hff49d8GEn0b87C5pDQ10g==}
     hasBin: true
     dev: true
 
@@ -8911,7 +8939,3 @@ packages:
   /zod@3.21.4:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
-
-settings:
-  autoInstallPeers: true
-  excludeLinksFromLockfile: false

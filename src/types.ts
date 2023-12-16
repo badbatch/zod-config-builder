@@ -59,16 +59,16 @@ export interface WriteConfigOptions {
   outputFile: string;
 }
 
-export type Leaves<T, Path extends string[] = []> = T extends string
-  ? Path
+export type Leaves<T, LeafPath extends string[] = []> = T extends string
+  ? LeafPath
   : {
-      [K in keyof T & string]: Leaves<T[K], [...Path, K]>;
+      [K in keyof T & string]: Leaves<T[K], [...LeafPath, K]>;
     }[keyof T & string];
 
-export type Paths<T, Path extends string[] = []> = T extends string
-  ? Path
+export type Paths<T, LeafPath extends string[] = []> = T extends string
+  ? LeafPath
   : {
-      [K in keyof T & string]: T[K] extends object ? Paths<T[K], [...Path, K]> : Path;
+      [K in keyof T & string]: T[K] extends object ? Paths<T[K], [...LeafPath, K]> : LeafPath;
     }[keyof T & string];
 
 export type LeavesScopeDiffs<T1 extends readonly string[][], T2 extends string[]> = {
