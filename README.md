@@ -15,7 +15,7 @@ Import that literally typed config in your components along with `zcb` and creat
 ## Installation
 
 ```sh
-npm install zcb
+npm add zcb
 ```
 
 ## Usage
