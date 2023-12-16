@@ -1,3 +1,16 @@
+#### 0.0.25 (2023-12-16)
+
+##### New Features
+
+*  better support esm and cjs (0d2cf3bc)
+
+##### Bug Fixes
+
+*  alias change in readme example (34656eb6)
+*  bump node and pnpm version (c808a282)
+*  typo in package json (98cd5cc1)
+*  remove redundant deps (a9cdecce)
+
 #### 0.0.24 (2023-11-22)
 
 ##### New Features
