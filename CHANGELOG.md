@@ -1,3 +1,9 @@
+#### 0.0.26 (2024-01-03)
+
+##### Bug Fixes
+
+*  move type defs into deps (941c6914)
+
 #### 0.0.25 (2023-12-16)
 
 ##### New Features
