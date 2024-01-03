@@ -1,3 +1,9 @@
+#### 0.0.27 (2024-01-03)
+
+##### Bug Fixes
+
+*  add missed type def to deps (5c3eb28a)
+
 #### 0.0.26 (2024-01-03)
 
 ##### Bug Fixes
