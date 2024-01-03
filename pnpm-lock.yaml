@@ -29,6 +29,9 @@ dependencies:
   shelljs:
     specifier: ^0.8.5
     version: 0.8.5
+  ts-toolbelt:
+    specifier: ^9.6.0
+    version: 9.6.0
   type-fest:
     specifier: ^3.10.0
     version: 3.10.0(typescript@5.0.4)
@@ -265,9 +268,6 @@ devDependencies:
   ts-node:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@18.16.7)(typescript@5.0.4)
-  ts-toolbelt:
-    specifier: ^9.6.0
-    version: 9.6.0
   typescript:
     specifier: ^5.0.4
     version: 5.0.4
@@ -8472,7 +8472,6 @@ packages:
 
   /ts-toolbelt@9.6.0:
     resolution: {integrity: sha512-nsZd8ZeNUzukXPlJmTBwUAuABDe/9qtVDelJeT/qW0ow3ZS3BsQJtNkan1802aM9Uf68/Y8ljw86Hu0h5IUW3w==}
-    dev: true
 
   /tsconfig-paths@3.14.2:
     resolution: {integrity: sha512-o/9iXgCYc5L/JxCHPe3Hvh8Q/2xm5Z+p18PESBU6Ff33695QnCHBEjcytY2q19ua7Mbl/DavtBOLq+oG0RCL+g==}
