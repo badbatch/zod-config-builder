@@ -20,15 +20,15 @@ export type ConfigBuilder<ZodTypes> = {
     override?: boolean
   ) => ConfigBuilder<ZodTypes>;
 } & {
-  disable: () => ConfigBuilder<ZodTypes>;
-  errors: () => ZodError['errors'];
-  experiment: (key: string) => ConfigBuilder<ZodTypes>;
-  extend: (configBuilder: ConfigBuilder<ZodTypes>) => ConfigBuilder<ZodTypes>;
-  flush: () => ZodTypes;
-  fork: () => ConfigBuilder<ZodTypes>;
-  toJson: () => string;
-  validate: () => boolean;
-  values: () => ZodTypes;
+  $disable: () => ConfigBuilder<ZodTypes>;
+  $errors: () => ZodError['errors'];
+  $experiment: (key: string) => ConfigBuilder<ZodTypes>;
+  $extend: (configBuilder: ConfigBuilder<ZodTypes>) => ConfigBuilder<ZodTypes>;
+  $flush: () => ZodTypes;
+  $fork: () => ConfigBuilder<ZodTypes>;
+  $toJson: () => string;
+  $validate: () => boolean;
+  $values: () => ZodTypes;
 };
 
 export const createConfigBuilder = <ZodTypes>(
@@ -61,7 +61,7 @@ export const createConfigBuilder = <ZodTypes>(
   let callbacks: Partial<Record<keyof Config, DerivedValueCallback>> = { ...derivedValueCallbacks };
 
   const configBuilder = {
-    disable: () => {
+    $disable: () => {
       Object.defineProperty(config, NonEmumeralProperties.DISABLED, {
         configurable: false,
         enumerable: false,
@@ -70,15 +70,15 @@ export const createConfigBuilder = <ZodTypes>(
 
       return configBuilder;
     },
-    errors: () => {
+    $errors: () => {
       try {
-        zodSchema.parse(configBuilder.values());
+        zodSchema.parse(configBuilder.$values());
         return [];
       } catch (error: unknown) {
         return (error as ZodError).errors;
       }
     },
-    experiment: (key: string) => {
+    $experiment: (key: string) => {
       Object.defineProperty(config, NonEmumeralProperties.EXPERIMENT, {
         configurable: false,
         enumerable: false,
@@ -87,13 +87,13 @@ export const createConfigBuilder = <ZodTypes>(
 
       return configBuilder;
     },
-    extend: (builder: ConfigBuilder<Config>) => {
-      config = transformConfigSync<Config>(builder.values(), [cloneNonEnumerableValues]);
+    $extend: (builder: ConfigBuilder<Config>) => {
+      config = transformConfigSync<Config>(builder.$values(), [cloneNonEnumerableValues]);
       // @ts-expect-error private property
       callbacks = { ...builder.__callbacks } as Partial<Record<keyof Config, DerivedValueCallback>>;
     },
-    flush: () => {
-      const values = configBuilder.values();
+    $flush: () => {
+      const values = configBuilder.$values();
       config = {} as Config;
 
       Object.defineProperty(config, NonEmumeralProperties.ZCB, {
@@ -104,18 +104,18 @@ export const createConfigBuilder = <ZodTypes>(
 
       return values;
     },
-    fork: () => createConfigBuilder<Config>(zodSchema, derivedValueCallbacks),
-    toJson: () => JSON.stringify(configBuilder.values(), undefined, 2),
-    validate: () => {
+    $fork: () => createConfigBuilder<Config>(zodSchema, derivedValueCallbacks),
+    $toJson: () => JSON.stringify(configBuilder.$values(), undefined, 2),
+    $validate: () => {
       try {
-        zodSchema.parse(configBuilder.values());
+        zodSchema.parse(configBuilder.$values());
         return true;
       } catch (error: unknown) {
         console.error(error);
         return false;
       }
     },
-    values: () => {
+    $values: () => {
       for (const property in callbacks) {
         const callback = callbacks[property];
 

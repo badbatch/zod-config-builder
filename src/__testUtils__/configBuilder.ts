@@ -15,7 +15,7 @@ const configBuilder = createConfigBuilder<ConfigType>(configSchema);
 const routeBuilder = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
 const pageBuilder = createConfigBuilder<PageType>(pageSchema);
 const sectionBuilder = createConfigBuilder<SectionType>(sectionSchema);
-const subsectionBuilder = sectionBuilder.fork();
+const subsectionBuilder = sectionBuilder.$fork();
 
 configBuilder
   .countryCode('GB')
@@ -30,27 +30,27 @@ configBuilder
     contactDetails: pageBuilder
       .name('contactDetails')
       .sections([
-        sectionBuilder.name('header').flush(),
+        sectionBuilder.name('header').$flush(),
         sectionBuilder
           .name('body')
-          .sections([subsectionBuilder.name('main').flush(), subsectionBuilder.name('sidebar').flush()])
-          .flush(),
-        sectionBuilder.name('footer').flush(),
+          .sections([subsectionBuilder.name('main').$flush(), subsectionBuilder.name('sidebar').$flush()])
+          .$flush(),
+        sectionBuilder.name('footer').$flush(),
       ])
-      .flush(),
+      .$flush(),
     personalDetails: pageBuilder
       .name('personalDetails')
       .sections([
-        sectionBuilder.name('header').flush(),
+        sectionBuilder.name('header').$flush(),
         sectionBuilder
           .name('body')
-          .sections([subsectionBuilder.name('main').flush(), subsectionBuilder.name('sidebar').flush()])
-          .flush(),
-        sectionBuilder.name('footer').flush(),
+          .sections([subsectionBuilder.name('main').$flush(), subsectionBuilder.name('sidebar').$flush()])
+          .$flush(),
+        sectionBuilder.name('footer').$flush(),
       ])
-      .flush(),
+      .$flush(),
   })
-  .routes([routeBuilder.page('personalDetails').flush(), routeBuilder.page('contactDetails').flush()])
+  .routes([routeBuilder.page('personalDetails').$flush(), routeBuilder.page('contactDetails').$flush()])
   .timeouts({ apollo: 10_000 })
   .timezone('Europe/London');
 

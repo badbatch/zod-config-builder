@@ -13,20 +13,20 @@ export const importValidateTransformWriteConfig = (
 ) => {
   import(resolve(process.cwd(), inputFile))
     .then(({ default: configBuilder }: { default: ConfigBuilder<object> }) => {
-      if (!configBuilder.validate()) {
+      if (!configBuilder.$validate()) {
         shelljs.echo(`zcd ${command} => invalid config`);
-        shelljs.echo(`zcd ${command} => config values:\n${configBuilder.toJson()}\n`);
-        shelljs.echo(`zcd ${command} => errors:\n${JSON.stringify(configBuilder.errors(), undefined, 2)}\n`);
+        shelljs.echo(`zcd ${command} => config values:\n${configBuilder.$toJson()}\n`);
+        shelljs.echo(`zcd ${command} => errors:\n${JSON.stringify(configBuilder.$errors(), undefined, 2)}\n`);
         shelljs.exit(1);
       }
 
       shelljs.echo('zcd ${command} => valid config');
-      shelljs.echo(`zcd ${command} => config values:\n${configBuilder.toJson()}\n`);
+      shelljs.echo(`zcd ${command} => config values:\n${configBuilder.$toJson()}\n`);
 
       if (experimentCallbackFile) {
         import(resolve(process.cwd(), experimentCallbackFile))
           .then(({ default: experimentsCallback }: { default: SetupExperimentsCallback }) => {
-            void transformWriteConfig(configBuilder.values(), { experimentsCallback, outputFile });
+            void transformWriteConfig(configBuilder.$values(), { experimentsCallback, outputFile });
           })
           .catch((error: unknown) => {
             if (error instanceof Error) {
@@ -41,7 +41,7 @@ export const importValidateTransformWriteConfig = (
         return;
       }
 
-      void transformWriteConfig(configBuilder.values(), { outputFile });
+      void transformWriteConfig(configBuilder.$values(), { outputFile });
     })
     .catch((error: unknown) => {
       if (error instanceof Error) {

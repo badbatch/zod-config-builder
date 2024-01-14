@@ -27,11 +27,11 @@ describe('createConfigBuilder', () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
 
       const invalidSchema = z.object({
-        values: z.string(),
+        $values: z.string(),
       });
 
       expect(() => createConfigBuilder<z.infer<typeof invalidSchema>>(invalidSchema)).toThrow(
-        `"values" is a reserved keyword within the config builder. Please use a different property name. The full list of reserved keywords is: ${[
+        `"$values" is a reserved keyword within the config builder. Please use a different property name. The full list of reserved keywords is: ${[
           ...RESERVED_KEYWORDS,
         ].join(', ')}`
       );
@@ -42,9 +42,9 @@ describe('createConfigBuilder', () => {
     it('should add the disabled flag to the config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      config.disable().name('alpha');
+      config.$disable().name('alpha');
       // @ts-expect-error private property
-      expect(config.values().__disabled).toBe(true);
+      expect(config.$values().__disabled).toBe(true);
     });
   });
 
@@ -52,9 +52,9 @@ describe('createConfigBuilder', () => {
     it('should add the experiment to the config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      config.experiment('FEAT_ALPHA@0.0.1').name('alpha');
+      config.$experiment('FEAT_ALPHA@0.0.1').name('alpha');
       // @ts-expect-error private property
-      expect(config.values().__experiment).toBe('FEAT_ALPHA@0.0.1');
+      expect(config.$values().__experiment).toBe('FEAT_ALPHA@0.0.1');
     });
   });
 
@@ -67,13 +67,13 @@ describe('createConfigBuilder', () => {
 
       config
         .name('alpha')
-        .pages({ contactDetails: page.name('contactDetails').flush() })
-        .routes([route.page('contactDetails').flush()]);
+        .pages({ contactDetails: page.name('contactDetails').$flush() })
+        .routes([route.page('contactDetails').$flush()]);
 
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
-      childConfig.extend(config);
+      childConfig.$extend(config);
 
-      expect(childConfig.values()).toEqual({
+      expect(childConfig.$values()).toEqual({
         name: 'alpha',
         pages: {
           contactDetails: { name: 'contactDetails' },
@@ -89,15 +89,15 @@ describe('createConfigBuilder', () => {
       const page = createConfigBuilder<PageType>(pageSchema);
 
       config
-        .experiment('FEAT_ALPHA@0.0.1')
+        .$experiment('FEAT_ALPHA@0.0.1')
         .name('alpha')
-        .pages({ contactDetails: page.experiment('FEAT_BRAVO@0.0.1').name('contactDetails').flush() })
-        .routes([route.experiment('FEAT_CHARLIE@0.0.1').page('contactDetails').flush()]);
+        .pages({ contactDetails: page.$experiment('FEAT_BRAVO@0.0.1').name('contactDetails').$flush() })
+        .routes([route.$experiment('FEAT_CHARLIE@0.0.1').page('contactDetails').$flush()]);
 
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
-      childConfig.extend(config);
+      childConfig.$extend(config);
 
-      expect(childConfig.values()).toEqual(
+      expect(childConfig.$values()).toEqual(
         expect.objectContaining({
           __experiment: 'FEAT_ALPHA@0.0.1',
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -125,15 +125,15 @@ describe('createConfigBuilder', () => {
       const page = createConfigBuilder<PageType>(pageSchema);
 
       config
-        .disable()
+        .$disable()
         .name('alpha')
-        .pages({ contactDetails: page.disable().name('contactDetails').flush() })
-        .routes([route.disable().page('contactDetails').flush()]);
+        .pages({ contactDetails: page.$disable().name('contactDetails').$flush() })
+        .routes([route.$disable().page('contactDetails').$flush()]);
 
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
-      childConfig.extend(config);
+      childConfig.$extend(config);
 
-      expect(childConfig.values()).toEqual(
+      expect(childConfig.$values()).toEqual(
         expect.objectContaining({
           __disabled: true,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -159,9 +159,9 @@ describe('createConfigBuilder', () => {
       const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
       route.page('personalDetails');
       const childRoute = createConfigBuilder<RouteType>(routeSchema);
-      childRoute.extend(route);
+      childRoute.$extend(route);
       childRoute.page('contactDetails', true);
-      expect(childRoute.values()).toEqual({ page: 'contactDetails', path: 'contact-details' });
+      expect(childRoute.$values()).toEqual({ page: 'contactDetails', path: 'contact-details' });
     });
   });
 
@@ -176,7 +176,7 @@ describe('createConfigBuilder', () => {
           });
 
           const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
-          expect(config.values()).toEqual({ description: 'This is the description.' });
+          expect(config.$values()).toEqual({ description: 'This is the description.' });
         });
       });
 
@@ -189,7 +189,7 @@ describe('createConfigBuilder', () => {
           });
 
           const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
-          expect(config.values()).toEqual({ flags: { alpha: true, bravo: false, charlie: false } });
+          expect(config.$values()).toEqual({ flags: { alpha: true, bravo: false, charlie: false } });
         });
       });
 
@@ -202,7 +202,7 @@ describe('createConfigBuilder', () => {
           });
 
           const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
-          expect(config.values()).toEqual({ colors: ['red', 'yellow', 'pink', 'green'] });
+          expect(config.$values()).toEqual({ colors: ['red', 'yellow', 'pink', 'green'] });
         });
       });
     });
@@ -275,14 +275,14 @@ describe('createConfigBuilder', () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
         config.countryCode('GB');
-        expect(config.values()).toEqual({ countryCode: 'GB' });
+        expect(config.$values()).toEqual({ countryCode: 'GB' });
       });
 
       it('should be a valid config', async () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
         config.countryCode('GB');
-        expect(config.validate()).toBe(true);
+        expect(config.$validate()).toBe(true);
       });
     });
 
@@ -291,14 +291,14 @@ describe('createConfigBuilder', () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
         config.languageCodes(['en']);
-        expect(config.values()).toEqual({ languageCodes: ['en'] });
+        expect(config.$values()).toEqual({ languageCodes: ['en'] });
       });
 
       it('should be a valid config', async () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
         config.languageCodes(['en']);
-        expect(config.validate()).toBe(true);
+        expect(config.$validate()).toBe(true);
       });
     });
 
@@ -307,14 +307,14 @@ describe('createConfigBuilder', () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
         config.timeouts({ apollo: 120_000 });
-        expect(config.values()).toEqual({ timeouts: { apollo: 120_000 } });
+        expect(config.$values()).toEqual({ timeouts: { apollo: 120_000 } });
       });
 
       it('should be a valid config', async () => {
         const { createConfigBuilder } = await import('./createConfigBuilder.ts');
         const config = createConfigBuilder<ConfigType>(configSchema);
         config.timeouts({ apollo: 120_000 });
-        expect(config.validate()).toBe(true);
+        expect(config.$validate()).toBe(true);
       });
     });
 
@@ -326,11 +326,11 @@ describe('createConfigBuilder', () => {
           const page = createConfigBuilder<PageType>(pageSchema);
 
           config.pages({
-            contactDetails: page.name('contactDetails').flush(),
-            personalDetails: page.name('personalDetails').flush(),
+            contactDetails: page.name('contactDetails').$flush(),
+            personalDetails: page.name('personalDetails').$flush(),
           });
 
-          expect(config.values()).toEqual({
+          expect(config.$values()).toEqual({
             pages: {
               contactDetails: {
                 name: 'contactDetails',
@@ -348,11 +348,11 @@ describe('createConfigBuilder', () => {
           const page = createConfigBuilder<PageType>(pageSchema);
 
           config.pages({
-            contactDetails: page.name('contactDetails').flush(),
-            personalDetails: page.name('personalDetails').flush(),
+            contactDetails: page.name('contactDetails').$flush(),
+            personalDetails: page.name('personalDetails').$flush(),
           });
 
-          expect(config.validate()).toBe(true);
+          expect(config.$validate()).toBe(true);
         });
       });
 
@@ -392,7 +392,7 @@ describe('createConfigBuilder', () => {
             // no catch
           }
 
-          expect(config.values()).toEqual({});
+          expect(config.$values()).toEqual({});
         });
       });
     });
@@ -403,17 +403,17 @@ describe('createConfigBuilder', () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
           const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
-          const subRoute = route.fork();
+          const subRoute = route.$fork();
 
           config.routes([
-            route.page('personalDetails').flush(),
+            route.page('personalDetails').$flush(),
             route
               .page('contactDetails')
-              .routes([subRoute.page('deliveryAddress').flush(), subRoute.page('billingAddress').flush()])
-              .flush(),
+              .routes([subRoute.page('deliveryAddress').$flush(), subRoute.page('billingAddress').$flush()])
+              .$flush(),
           ]);
 
-          expect(config.values()).toEqual({
+          expect(config.$values()).toEqual({
             routes: [
               { page: 'personalDetails', path: 'personal-details' },
               {
@@ -434,17 +434,17 @@ describe('createConfigBuilder', () => {
           const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
 
           config.routes([
-            route.page('personalDetails').flush(),
+            route.page('personalDetails').$flush(),
             route
               .page('contactDetails')
               .routes(() => {
-                const subRoute = route.fork();
-                return [subRoute.page('deliveryAddress').flush(), subRoute.page('billingAddress').flush()];
+                const subRoute = route.$fork();
+                return [subRoute.page('deliveryAddress').$flush(), subRoute.page('billingAddress').$flush()];
               })
-              .flush(),
+              .$flush(),
           ]);
 
-          expect(config.validate()).toBe(true);
+          expect(config.$validate()).toBe(true);
         });
       });
 
@@ -468,7 +468,7 @@ describe('createConfigBuilder', () => {
             // no catch
           }
 
-          expect(config.values()).toEqual({});
+          expect(config.$values()).toEqual({});
         });
       });
     });
@@ -486,7 +486,7 @@ describe('createConfigBuilder', () => {
             languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : []
           );
 
-        expect(config.values()).toEqual({ countryCode: 'GB', languageCodes: ['en'], locales: ['en_GB'] });
+        expect(config.$values()).toEqual({ countryCode: 'GB', languageCodes: ['en'], locales: ['en_GB'] });
       });
 
       it('should update the value to the config automatically', async () => {
@@ -502,7 +502,7 @@ describe('createConfigBuilder', () => {
           )
           .languageCodes(['fr'], true);
 
-        expect(config.values()).toEqual({ countryCode: 'GB', languageCodes: ['fr'], locales: ['fr_GB'] });
+        expect(config.$values()).toEqual({ countryCode: 'GB', languageCodes: ['fr'], locales: ['fr_GB'] });
       });
 
       it('should be a valid config', async () => {
@@ -517,7 +517,7 @@ describe('createConfigBuilder', () => {
             languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : []
           );
 
-        expect(config.validate()).toBe(true);
+        expect(config.$validate()).toBe(true);
       });
     });
   });
