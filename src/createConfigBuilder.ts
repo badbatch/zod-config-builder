@@ -10,6 +10,7 @@ import { RESERVED_KEYWORDS, isPropertyReservedWord } from './utils/isPropertyRes
 import { isSchemaValid } from './utils/isSchemaValid.ts';
 import { isValidPropertyDefinition } from './utils/isValidPropertyDefinition.ts';
 import { isValidValue } from './utils/isValidValue.ts';
+import { jsonStringifyReplacer } from './utils/jsonStringifyReplacer.ts';
 import { objectHasInvalidDefaults } from './utils/objectHasInvalidDefaults.ts';
 import { recordHasInvalidDefaults } from './utils/recordHasInvalidDefaults.ts';
 import { transformConfigSync } from './utils/transformConfig.ts';
@@ -105,7 +106,7 @@ export const createConfigBuilder = <ZodTypes>(
       return values;
     },
     $fork: () => createConfigBuilder<Config>(zodSchema, derivedValueCallbacks),
-    $toJson: () => JSON.stringify(configBuilder.$values(), undefined, 2),
+    $toJson: () => JSON.stringify(configBuilder.$values(), jsonStringifyReplacer, 2),
     $validate: () => {
       try {
         zodSchema.parse(configBuilder.$values());

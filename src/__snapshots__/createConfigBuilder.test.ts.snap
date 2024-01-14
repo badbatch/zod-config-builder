@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`createConfigBuilder when a user stringifies the config when a config value is a zod schema should stringify the value to JSON schema correctly 1`] = `
+"{
+  "schema": {
+    "anyOf": [
+      {
+        "not": {}
+      },
+      {
+        "type": "object",
+        "properties": {
+          "alpha": {
+            "type": "string"
+          },
+          "bravo": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "alpha",
+          "bravo"
+        ],
+        "additionalProperties": false
+      }
+    ],
+    "$schema": "http://json-schema.org/draft-07/schema#"
+  }
+}"
+`;

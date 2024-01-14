@@ -1,5 +1,5 @@
 import { kebabCase } from 'lodash-es';
-import { z } from 'zod';
+import { ZodType, z } from 'zod';
 import {
   type ConfigType,
   type PageType,
@@ -518,6 +518,31 @@ describe('createConfigBuilder', () => {
           );
 
         expect(config.$validate()).toBe(true);
+      });
+    });
+  });
+
+  describe('when a user stringifies the config', () => {
+    describe('when a config value is a zod schema', () => {
+      it('should stringify the value to JSON schema correctly', async () => {
+        const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+
+        const extendedSchema = configSchema.extend({
+          schema: z.instanceof(ZodType),
+        });
+
+        const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
+
+        config.schema(
+          z
+            .object({
+              alpha: z.string(),
+              bravo: z.boolean(),
+            })
+            .optional()
+        );
+
+        expect(config.$toJson()).toMatchSnapshot();
       });
     });
   });
