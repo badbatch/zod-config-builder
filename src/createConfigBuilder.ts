@@ -1,4 +1,5 @@
 import { type JSONSchema7 } from 'json-schema';
+import { cloneDeep, merge } from 'lodash-es';
 import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValues.ts';
@@ -51,7 +52,8 @@ export const createConfigBuilder = <ZodTypes>(
   };
 
   type DerivedValueCallback<K extends keyof Config = keyof Config> = (c: Config) => Config[K];
-  let config = initialValues as Config;
+  let config = cloneDeep(initialValues) as Config;
+  const defaultValues = {} as Partial<Config>;
 
   Object.defineProperty(config, NonEmumeralProperties.ZCB, {
     configurable: false,
@@ -95,7 +97,7 @@ export const createConfigBuilder = <ZodTypes>(
     },
     $flush: () => {
       const values = configBuilder.$values();
-      config = {} as Config;
+      config = cloneDeep(defaultValues) as Config;
 
       Object.defineProperty(config, NonEmumeralProperties.ZCB, {
         configurable: false,
@@ -155,7 +157,7 @@ export const createConfigBuilder = <ZodTypes>(
 
     if (isValidPropertyDefinition(propertyDefinition)) {
       if (propertyDefinition.default) {
-        config[castProperty] = propertyDefinition.default as Config[keyof Config];
+        defaultValues[castProperty] = propertyDefinition.default as Config[keyof Config];
       }
 
       if (propertyDefinition.type === 'array' && arrayHasInvalidDefaults(propertyDefinition)) {
@@ -178,9 +180,11 @@ export const createConfigBuilder = <ZodTypes>(
         const propertyDefaults = collateObjectPropertyDefaults(propertyDefinition);
 
         if (propertyDefaults) {
-          config[castProperty] = propertyDefaults as Config[keyof Config];
+          defaultValues[castProperty] = propertyDefaults as Config[keyof Config];
         }
       }
+
+      merge(config, cloneDeep(defaultValues));
     }
 
     configBuilder[castProperty] = ((value: Config[keyof Config] | DerivedValueCallback, override?: boolean) => {
