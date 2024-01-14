@@ -1,3 +1,17 @@
+#### 0.1.0 (2024-01-14)
+
+##### Chores
+
+*  bump deps (b2fb40df)
+
+##### New Features
+
+*  support value being zod schema in stringify (d0f1b47e)
+
+##### Refactors
+
+*  prefix inbuilt methods with dollar (bbd2ff08)
+
 #### 0.0.27 (2024-01-03)
 
 ##### Bug Fixes
