@@ -1,3 +1,9 @@
+#### 0.1.2 (2024-01-14)
+
+##### Bug Fixes
+
+*  stop default values being reset by flush (edc08202)
+
 #### 0.1.1 (2024-01-14)
 
 ##### New Features
