@@ -205,22 +205,6 @@ describe('createConfigBuilder', () => {
           expect(config.$values()).toEqual({ colors: ['red', 'yellow', 'pink', 'green'] });
         });
       });
-    });
-
-    describe('and a config has an invalid default value', () => {
-      describe('and that value is a record of booleans', () => {
-        it('should throw an error', async () => {
-          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
-
-          const extendedSchema = configSchema.extend({
-            flags: z.record(z.boolean().default(true)).optional(),
-          });
-
-          expect(() => createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema)).toThrow(
-            'When setting schema property defaults for the object assigned to "flags", set them on the object and not the property.'
-          );
-        });
-      });
 
       describe('and that value is an object of key/value pairs', () => {
         it('should throw an error', async () => {
@@ -235,8 +219,23 @@ describe('createConfigBuilder', () => {
               .optional(),
           });
 
+          const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
+          expect(config.$values()).toEqual({ flags: { alpha: true, bravo: true } });
+        });
+      });
+    });
+
+    describe('and a config has an invalid default value', () => {
+      describe('and that value is a record of booleans', () => {
+        it('should throw an error', async () => {
+          const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+
+          const extendedSchema = configSchema.extend({
+            flags: z.record(z.boolean().default(true)).optional(),
+          });
+
           expect(() => createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema)).toThrow(
-            'When setting schema property defaults for the object assigned to "flags", set them on the object and not the property.'
+            'When setting schema property defaults for the value of the record assigned to "flags", set them on the record and not the value.'
           );
         });
       });

@@ -4,6 +4,7 @@ import { zodToJsonSchema } from 'zod-to-json-schema';
 import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValues.ts';
 import { NonEmumeralProperties } from './types.ts';
 import { arrayHasInvalidDefaults } from './utils/arrayHasInvalidDefaults.ts';
+import { collateObjectPropertyDefaults } from './utils/collateObjectPropertyDefaults.ts';
 import { isDerivedValueCallback } from './utils/isDerivedValueCallback.ts';
 import { isInvalidPropertyOverride } from './utils/isInvalidPropertyOverride.ts';
 import { RESERVED_KEYWORDS, isPropertyReservedWord } from './utils/isPropertyReservedWord.ts';
@@ -11,7 +12,6 @@ import { isSchemaValid } from './utils/isSchemaValid.ts';
 import { isValidPropertyDefinition } from './utils/isValidPropertyDefinition.ts';
 import { isValidValue } from './utils/isValidValue.ts';
 import { jsonStringifyReplacer } from './utils/jsonStringifyReplacer.ts';
-import { objectHasInvalidDefaults } from './utils/objectHasInvalidDefaults.ts';
 import { recordHasInvalidDefaults } from './utils/recordHasInvalidDefaults.ts';
 import { transformConfigSync } from './utils/transformConfig.ts';
 
@@ -167,20 +167,18 @@ export const createConfigBuilder = <ZodTypes>(
       }
 
       if (propertyDefinition.type === 'object') {
-        if (objectHasInvalidDefaults(propertyDefinition)) {
+        if (recordHasInvalidDefaults(propertyDefinition)) {
           throw new Error(
-            `When setting schema property defaults for the object assigned to "${String(
+            `When setting schema property defaults for the value of the record assigned to "${String(
               castProperty
-            )}", set them on the object and not the property.`
+            )}", set them on the record and not the value.`
           );
         }
 
-        if (recordHasInvalidDefaults(propertyDefinition)) {
-          throw new Error(
-            `When setting schema property defaults for the object assigned to "${String(
-              castProperty
-            )}", set them on the object and not the property.`
-          );
+        const propertyDefaults = collateObjectPropertyDefaults(propertyDefinition);
+
+        if (propertyDefaults) {
+          config[castProperty] = propertyDefaults as Config[keyof Config];
         }
       }
     }
