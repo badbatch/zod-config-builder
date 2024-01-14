@@ -1,3 +1,9 @@
+#### 0.1.1 (2024-01-14)
+
+##### New Features
+
+*  enable setting defaults of known object properties (695359e7)
+
 #### 0.1.0 (2024-01-14)
 
 ##### Chores
