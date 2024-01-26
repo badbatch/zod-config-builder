@@ -62,7 +62,7 @@ describe('createConfigBuilder', () => {
     it('should copy over all values to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+      const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
       const page = createConfigBuilder<PageType>(pageSchema);
 
       config
@@ -85,7 +85,7 @@ describe('createConfigBuilder', () => {
     it('should copy over all experiments to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+      const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
       const page = createConfigBuilder<PageType>(pageSchema);
 
       config
@@ -121,7 +121,7 @@ describe('createConfigBuilder', () => {
     it('should copy over all disabled flags to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+      const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
       const page = createConfigBuilder<PageType>(pageSchema);
 
       config
@@ -156,7 +156,7 @@ describe('createConfigBuilder', () => {
 
     it('should copy over all derived value callbacks to the new config builder', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
-      const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+      const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
       route.page('personalDetails');
       const childRoute = createConfigBuilder<RouteType>(routeSchema);
       childRoute.$extend(route);
@@ -401,7 +401,7 @@ describe('createConfigBuilder', () => {
         it('should add the value to the config', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
-          const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+          const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
           const subRoute = route.$fork();
 
           config.routes([
@@ -430,7 +430,7 @@ describe('createConfigBuilder', () => {
         it('should be a valid config', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
-          const route = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+          const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
 
           config.routes([
             route.page('personalDetails').$flush(),

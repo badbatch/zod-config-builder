@@ -36,6 +36,7 @@ export type CreateConfigBuilderOptions = {
 
 export const createConfigBuilder = <ZodTypes>(
   zodSchema: z.ZodSchema,
+  options: CreateConfigBuilderOptions = {},
   derivedValueCallbacks: Partial<
     Record<
       keyof ZodTypes,
@@ -46,8 +47,7 @@ export const createConfigBuilder = <ZodTypes>(
   > = {},
   initialValues: Partial<{
     [Key in keyof ZodTypes]: ZodTypes[Key];
-  }> = {},
-  options: CreateConfigBuilderOptions = {}
+  }> = {}
 ): ConfigBuilder<ZodTypes> => {
   type Config = {
     [Key in keyof ZodTypes]: ZodTypes[Key];
@@ -123,7 +123,7 @@ export const createConfigBuilder = <ZodTypes>(
       config = createInitialConfig();
       return values;
     },
-    $fork: () => createConfigBuilder<Config>(zodSchema, derivedValueCallbacks, initialValues, options),
+    $fork: () => createConfigBuilder<Config>(zodSchema, options, derivedValueCallbacks, initialValues),
     $toJson: () => JSON.stringify(configBuilder.$values(), jsonStringifyReplacer, 2),
     $validate: () => {
       try {
