@@ -1,3 +1,9 @@
+#### 0.2.0 (2024-01-26)
+
+##### Refactors
+
+*  change order of arguments passed into config builder (100182c1)
+
 #### 0.1.3 (2024-01-26)
 
 ##### New Features
