@@ -1,3 +1,9 @@
+#### 0.1.3 (2024-01-26)
+
+##### New Features
+
+*  add ability to pass type into config builder (65577014)
+
 #### 0.1.2 (2024-01-14)
 
 ##### Bug Fixes
