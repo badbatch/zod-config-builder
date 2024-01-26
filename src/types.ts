@@ -19,6 +19,7 @@ export enum NonEmumeralProperties {
   CALLBACKS = '__callbacks',
   DISABLED = '__disabled',
   EXPERIMENT = '__experiment',
+  TYPE = '__type',
   ZCB = '__zcb',
 }
 

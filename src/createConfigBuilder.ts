@@ -4,16 +4,13 @@ import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValues.ts';
 import { NonEmumeralProperties } from './types.ts';
-import { arrayHasInvalidDefaults } from './utils/arrayHasInvalidDefaults.ts';
-import { collateObjectPropertyDefaults } from './utils/collateObjectPropertyDefaults.ts';
+import { collateDefaultValues } from './utils/collateDefaultValues.ts';
 import { isDerivedValueCallback } from './utils/isDerivedValueCallback.ts';
 import { isInvalidPropertyOverride } from './utils/isInvalidPropertyOverride.ts';
 import { RESERVED_KEYWORDS, isPropertyReservedWord } from './utils/isPropertyReservedWord.ts';
 import { isSchemaValid } from './utils/isSchemaValid.ts';
-import { isValidPropertyDefinition } from './utils/isValidPropertyDefinition.ts';
 import { isValidValue } from './utils/isValidValue.ts';
 import { jsonStringifyReplacer } from './utils/jsonStringifyReplacer.ts';
-import { recordHasInvalidDefaults } from './utils/recordHasInvalidDefaults.ts';
 import { transformConfigSync } from './utils/transformConfig.ts';
 
 export type ConfigBuilder<ZodTypes> = {
@@ -33,6 +30,10 @@ export type ConfigBuilder<ZodTypes> = {
   $values: () => ZodTypes;
 };
 
+export type CreateConfigBuilderOptions = {
+  type?: string;
+};
+
 export const createConfigBuilder = <ZodTypes>(
   zodSchema: z.ZodSchema,
   derivedValueCallbacks: Partial<
@@ -45,22 +46,44 @@ export const createConfigBuilder = <ZodTypes>(
   > = {},
   initialValues: Partial<{
     [Key in keyof ZodTypes]: ZodTypes[Key];
-  }> = {}
+  }> = {},
+  options: CreateConfigBuilderOptions = {}
 ): ConfigBuilder<ZodTypes> => {
   type Config = {
     [Key in keyof ZodTypes]: ZodTypes[Key];
   };
 
   type DerivedValueCallback<K extends keyof Config = keyof Config> = (c: Config) => Config[K];
-  let config = cloneDeep(initialValues) as Config;
-  const defaultValues = {} as Partial<Config>;
 
-  Object.defineProperty(config, NonEmumeralProperties.ZCB, {
-    configurable: false,
-    enumerable: false,
-    value: true,
-  });
+  const jsonSchema = zodToJsonSchema(zodSchema) as JSONSchema7;
 
+  if (isSchemaValid(jsonSchema)) {
+    throw new Error(`The root type of a config schema must be "object", but received "${String(jsonSchema.type)}"`);
+  }
+
+  const addNonEnumeralBaseProperties = (conf: Config) => {
+    Object.defineProperty(conf, NonEmumeralProperties.ZCB, {
+      configurable: false,
+      enumerable: false,
+      value: true,
+    });
+
+    if (options.type) {
+      Object.defineProperty(conf, NonEmumeralProperties.TYPE, {
+        configurable: false,
+        enumerable: false,
+        value: options.type,
+      });
+    }
+  };
+
+  const createInitialConfig = () => {
+    const config = merge(cloneDeep(initialValues), collateDefaultValues(jsonSchema)) as Config;
+    addNonEnumeralBaseProperties(config);
+    return config;
+  };
+
+  let config = createInitialConfig();
   let callbacks: Partial<Record<keyof Config, DerivedValueCallback>> = { ...derivedValueCallbacks };
 
   const configBuilder = {
@@ -97,17 +120,10 @@ export const createConfigBuilder = <ZodTypes>(
     },
     $flush: () => {
       const values = configBuilder.$values();
-      config = cloneDeep(defaultValues) as Config;
-
-      Object.defineProperty(config, NonEmumeralProperties.ZCB, {
-        configurable: false,
-        enumerable: false,
-        value: true,
-      });
-
+      config = createInitialConfig();
       return values;
     },
-    $fork: () => createConfigBuilder<Config>(zodSchema, derivedValueCallbacks),
+    $fork: () => createConfigBuilder<Config>(zodSchema, derivedValueCallbacks, initialValues, options),
     $toJson: () => JSON.stringify(configBuilder.$values(), jsonStringifyReplacer, 2),
     $validate: () => {
       try {
@@ -137,12 +153,6 @@ export const createConfigBuilder = <ZodTypes>(
     value: callbacks,
   });
 
-  const jsonSchema = zodToJsonSchema(zodSchema) as JSONSchema7;
-
-  if (isSchemaValid(jsonSchema)) {
-    throw new Error(`The root type of a config schema must be "object", but received "${String(jsonSchema.type)}"`);
-  }
-
   for (const propertyName in jsonSchema.properties) {
     if (isPropertyReservedWord(propertyName)) {
       throw new Error(
@@ -152,47 +162,13 @@ export const createConfigBuilder = <ZodTypes>(
       );
     }
 
-    const castProperty = propertyName as keyof Config;
-    const propertyDefinition = jsonSchema.properties[propertyName];
+    const castPropertyName = propertyName as keyof Config;
 
-    if (isValidPropertyDefinition(propertyDefinition)) {
-      if (propertyDefinition.default) {
-        defaultValues[castProperty] = propertyDefinition.default as Config[keyof Config];
-      }
-
-      if (propertyDefinition.type === 'array' && arrayHasInvalidDefaults(propertyDefinition)) {
-        throw new Error(
-          `When setting schema array defaults for the array assigned to "${String(
-            castProperty
-          )}", set them on the array and not the item.`
-        );
-      }
-
-      if (propertyDefinition.type === 'object') {
-        if (recordHasInvalidDefaults(propertyDefinition)) {
-          throw new Error(
-            `When setting schema property defaults for the value of the record assigned to "${String(
-              castProperty
-            )}", set them on the record and not the value.`
-          );
-        }
-
-        const propertyDefaults = collateObjectPropertyDefaults(propertyDefinition);
-
-        if (propertyDefaults) {
-          defaultValues[castProperty] = propertyDefaults as Config[keyof Config];
-        }
-      }
-
-      merge(config, cloneDeep(defaultValues));
-    }
-
-    configBuilder[castProperty] = ((value: Config[keyof Config] | DerivedValueCallback, override?: boolean) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      if (isInvalidPropertyOverride(config[castProperty], override)) {
+    configBuilder[castPropertyName] = ((value: Config[keyof Config] | DerivedValueCallback, override?: boolean) => {
+      if (isInvalidPropertyOverride(config[castPropertyName], override)) {
         throw new Error(
           `A value already exists for "${String(
-            castProperty
+            castPropertyName
           )}". You may be trying to add a new values before flushing the old one. If you intended to override the existing value, pass in true as the second argument.`
         );
       }
@@ -203,19 +179,19 @@ export const createConfigBuilder = <ZodTypes>(
       if (!isValidValue(value)) {
         throw new Error(
           `"${String(
-            castProperty
+            castPropertyName
           )}" value has a depth greater than ${MAX_DEPTH}. To pass in objects with a depth greater than ${MAX_DEPTH}, create a builder for that config slice.`
         );
       }
 
       if (isDerivedValueCallback<DerivedValueCallback>(value)) {
-        callbacks[castProperty] = value;
+        callbacks[castPropertyName] = value;
         propertyValue = value(config);
       } else {
         propertyValue = value;
       }
 
-      config[castProperty] = propertyValue;
+      config[castPropertyName] = propertyValue;
       return configBuilder;
     }) as ConfigBuilder<Config>[keyof Config];
   }
