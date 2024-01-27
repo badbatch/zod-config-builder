@@ -1,3 +1,9 @@
+#### 0.2.2 (2024-01-27)
+
+##### New Features
+
+*  expose non enumerable prop cloner (e0648102)
+
 #### 0.2.1 (2024-01-27)
 
 ##### New Features
