@@ -1,3 +1,9 @@
+#### 0.2.1 (2024-01-27)
+
+##### New Features
+
+*  add id to each schema node (d846b33c)
+
 #### 0.2.0 (2024-01-26)
 
 ##### Refactors
