@@ -1,5 +1,6 @@
 import { type JSONSchema7 } from 'json-schema';
 import { cloneDeep, merge } from 'lodash-es';
+import { v4 as uuidV4 } from 'uuid';
 import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValues.ts';
@@ -66,6 +67,12 @@ export const createConfigBuilder = <ZodTypes>(
       configurable: false,
       enumerable: false,
       value: true,
+    });
+
+    Object.defineProperty(conf, NonEmumeralProperties.ID, {
+      configurable: false,
+      enumerable: false,
+      value: uuidV4(),
     });
 
     if (options.type) {
