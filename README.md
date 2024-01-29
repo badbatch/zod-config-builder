@@ -112,7 +112,7 @@ import {
 } from './schema.ts';
 
 const configBuilder = createConfigBuilder<ConfigType>(configSchema);
-const routeBuilder = createConfigBuilder<RouteType>(routeSchema, { path: ({ page }) => kebabCase(page) });
+const routeBuilder = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
 const pageBuilder = createConfigBuilder<PageType>(pageSchema);
 const sectionBuilder = createConfigBuilder<SectionType>(sectionSchema);
 const subsectionBuilder = sectionBuilder.$fork();

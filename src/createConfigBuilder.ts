@@ -32,6 +32,9 @@ export type ConfigBuilder<ZodTypes> = {
 };
 
 export type CreateConfigBuilderOptions = {
+  overrides?: {
+    uuid?: () => string;
+  };
   type?: string;
 };
 
@@ -62,6 +65,8 @@ export const createConfigBuilder = <ZodTypes>(
     throw new Error(`The root type of a config schema must be "object", but received "${String(jsonSchema.type)}"`);
   }
 
+  const uuid = options.overrides?.uuid ?? uuidV4;
+
   const addNonEnumeralBaseProperties = (conf: Config) => {
     Object.defineProperty(conf, NonEmumeralProperties.ZCB, {
       configurable: false,
@@ -72,7 +77,7 @@ export const createConfigBuilder = <ZodTypes>(
     Object.defineProperty(conf, NonEmumeralProperties.ID, {
       configurable: false,
       enumerable: false,
-      value: uuidV4(),
+      value: uuid(),
     });
 
     if (options.type) {
