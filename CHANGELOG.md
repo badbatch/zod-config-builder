@@ -1,3 +1,9 @@
+#### 0.2.3 (2024-01-29)
+
+##### New Features
+
+*  enable overriding of uuid function (8634db11)
+
 #### 0.2.2 (2024-01-27)
 
 ##### New Features
