@@ -1,3 +1,13 @@
+#### 0.2.4 (2024-02-01)
+
+##### Documentation Changes
+
+*  update readme (87705305)
+
+##### Bug Fixes
+
+*  update generic type for clone non enumerable values (d88d412a)
+
 #### 0.2.3 (2024-01-29)
 
 ##### New Features
