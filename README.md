@@ -12,6 +12,8 @@ Use our cli module to build and/or watch a config builder file and transform it 
 
 Import that literally typed config in your components along with `zcb` and create a config reader with scoping abilities, config path autocomplete and return value preview.
 
+These three features can be used together in the above workflow or separeately. For example, you can just use the config builder to build a type-safe config for use in your application, or you could handcraft a locales file and use the config reader to read its values.
+
 ## Installation
 
 ```sh
@@ -201,7 +203,7 @@ Use to return the config values as an object.
 
 Use the script below or its `build` equivalent to transform a config builder file into a file that default exports a literally typed object like the one in the following example.
 
-If you require native ESM support, use `NODE_OPTIONS="--loader ts-node/esm"` instead.
+If you require native ESM support, use `NODE_OPTIONS="--loader ts-node/esm"`.
 
 ```sh
 NODE_OPTIONS="--loader ts-node/register" npx zcb watch ./configBuilder.ts ./builtConfig.ts
