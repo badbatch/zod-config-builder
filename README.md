@@ -12,7 +12,7 @@ Use our cli module to build and/or watch a config builder file and transform it 
 
 Import that literally typed config in your components along with `zcb` and create a config reader with scoping abilities, config path autocomplete and return value preview.
 
-These three features can be used together in the above workflow or separeately. For example, you can just use the config builder to build a type-safe config for use in your application, or you could handcraft a locales file and use the config reader to read its values.
+These three features can be used together in the above workflow or separately. For example, you can just use the config builder to build a type-safe config for use in your application, or you could handcraft a locales file and use the config reader to read its values.
 
 ## Installation
 
