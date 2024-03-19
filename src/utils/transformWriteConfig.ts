@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 import shelljs from 'shelljs';
 import { removeDisabledSlices } from '../transformers/removeDisabledSlices.ts';
 import { setupExperiments } from '../transformers/setupExperiments.ts';
-import type { TransformConfigHandler, WriteConfigOptions } from '../types.ts';
+import { type TransformConfigHandler, type WriteConfigOptions } from '../types.ts';
 import { transformConfig } from './transformConfig.ts';
 
 export const transformWriteConfig = async <Config extends object>(

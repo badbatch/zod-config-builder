@@ -1,6 +1,6 @@
-import type { JSONSchema7 } from 'json-schema';
+import { type JSONSchema7 } from 'json-schema';
 import { isBoolean, isUndefined } from 'lodash-es';
-import type { Jsonifiable } from 'type-fest';
+import { type Jsonifiable } from 'type-fest';
 import { objectPropertyHasDefaults } from './objectPropertyHasDefaults.ts';
 
 export const collateObjectPropertyDefaults = (propertyDefinition: JSONSchema7) => {

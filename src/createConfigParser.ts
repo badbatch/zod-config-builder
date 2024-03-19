@@ -1,5 +1,5 @@
 import { runExperiments } from './transformers/runExperiments.ts';
-import type { ConfigParserOptions, TransformConfigHandler } from './types.ts';
+import { type ConfigParserOptions, type TransformConfigHandler } from './types.ts';
 import { transformConfig } from './utils/transformConfig.ts';
 
 export const createConfigParser = async <Config extends object>(

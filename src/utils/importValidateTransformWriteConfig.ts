@@ -1,8 +1,8 @@
 import { resolve } from 'node:path';
 import shelljs from 'shelljs';
-import type { Commands } from '../cli.ts';
-import type { ConfigBuilder } from '../createConfigBuilder.ts';
-import type { SetupExperimentsCallback } from '../types.ts';
+import { type Commands } from '../cli.ts';
+import { type ConfigBuilder } from '../createConfigBuilder.ts';
+import { type SetupExperimentsCallback } from '../types.ts';
 import { transformWriteConfig } from './transformWriteConfig.ts';
 
 export const importValidateTransformWriteConfig = (

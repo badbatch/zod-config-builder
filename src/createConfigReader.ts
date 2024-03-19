@@ -1,6 +1,6 @@
 import { get } from 'lodash-es';
-import type { Get } from 'type-fest';
-import type { Path, Scope } from './types.ts';
+import { type Get } from 'type-fest';
+import { type Path, type Scope } from './types.ts';
 
 export interface ConfigReader<Config extends object> {
   read: <P extends Path<Config>>(path: P) => Get<Config, P>;

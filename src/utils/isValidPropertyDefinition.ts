@@ -1,4 +1,4 @@
-import type { JSONSchema7, JSONSchema7Definition } from 'json-schema';
+import { type JSONSchema7, type JSONSchema7Definition } from 'json-schema';
 
 export const isValidPropertyDefinition = (
   propertyDefinition: JSONSchema7Definition | undefined

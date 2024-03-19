@@ -1,4 +1,4 @@
-import type { Jsonifiable } from 'type-fest';
+import { type Jsonifiable } from 'type-fest';
 import { ZodType } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 

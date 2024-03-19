@@ -1,5 +1,5 @@
-import type { List } from 'ts-toolbelt';
-import type { Includes, Join } from 'type-fest';
+import { type List } from 'ts-toolbelt';
+import { type Includes, type Join } from 'type-fest';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyRecord = Record<string, any>;
