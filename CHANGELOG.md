@@ -1,273 +1,284 @@
-#### 0.2.4 (2024-02-01)
+# Changelog
 
-##### Documentation Changes
+## 0.2.5 (2024-03-19)
 
-*  update readme (87705305)
+### Bug Fixes
 
-##### Bug Fixes
+* typo in readme (788f656d)
 
-*  update generic type for clone non enumerable values (d88d412a)
+### Refactors
 
-#### 0.2.3 (2024-01-29)
+* update deps and change build tool to swc (97056a84)
 
-##### New Features
+## 0.2.4 (2024-02-01)
 
-*  enable overriding of uuid function (8634db11)
+### Documentation Changes
 
-#### 0.2.2 (2024-01-27)
+* update readme (87705305)
 
-##### New Features
+### Bug Fixes
 
-*  expose non enumerable prop cloner (e0648102)
+* update generic type for clone non enumerable values (d88d412a)
 
-#### 0.2.1 (2024-01-27)
+## 0.2.3 (2024-01-29)
 
-##### New Features
+### New Features
 
-*  add id to each schema node (d846b33c)
+* enable overriding of uuid function (8634db11)
 
-#### 0.2.0 (2024-01-26)
+## 0.2.2 (2024-01-27)
 
-##### Refactors
+### New Features
 
-*  change order of arguments passed into config builder (100182c1)
+* expose non enumerable prop cloner (e0648102)
 
-#### 0.1.3 (2024-01-26)
+## 0.2.1 (2024-01-27)
 
-##### New Features
+### New Features
 
-*  add ability to pass type into config builder (65577014)
+* add id to each schema node (d846b33c)
 
-#### 0.1.2 (2024-01-14)
+## 0.2.0 (2024-01-26)
 
-##### Bug Fixes
+### Refactors
 
-*  stop default values being reset by flush (edc08202)
+* change order of arguments passed into config builder (100182c1)
 
-#### 0.1.1 (2024-01-14)
+## 0.1.3 (2024-01-26)
 
-##### New Features
+### New Features
 
-*  enable setting defaults of known object properties (695359e7)
+* add ability to pass type into config builder (65577014)
 
-#### 0.1.0 (2024-01-14)
+## 0.1.2 (2024-01-14)
 
-##### Chores
+### Bug Fixes
 
-*  bump deps (b2fb40df)
+* stop default values being reset by flush (edc08202)
 
-##### New Features
+## 0.1.1 (2024-01-14)
 
-*  support value being zod schema in stringify (d0f1b47e)
+### New Features
 
-##### Refactors
+* enable setting defaults of known object properties (695359e7)
 
-*  prefix inbuilt methods with dollar (bbd2ff08)
+## 0.1.0 (2024-01-14)
 
-#### 0.0.27 (2024-01-03)
+### Chores
 
-##### Bug Fixes
+* bump deps (b2fb40df)
 
-*  add missed type def to deps (5c3eb28a)
+### New Features
 
-#### 0.0.26 (2024-01-03)
+* support value being zod schema in stringify (d0f1b47e)
 
-##### Bug Fixes
+### Refactors
 
-*  move type defs into deps (941c6914)
+* prefix inbuilt methods with dollar (bbd2ff08)
 
-#### 0.0.25 (2023-12-16)
+## 0.0.27 (2024-01-03)
 
-##### New Features
+### Bug Fixes
 
-*  better support esm and cjs (0d2cf3bc)
+* add missed type def to deps (5c3eb28a)
 
-##### Bug Fixes
+## 0.0.26 (2024-01-03)
 
-*  alias change in readme example (34656eb6)
-*  bump node and pnpm version (c808a282)
-*  typo in package json (98cd5cc1)
-*  remove redundant deps (a9cdecce)
+### Bug Fixes
 
-#### 0.0.24 (2023-11-22)
+* move type defs into deps (941c6914)
 
-##### New Features
+## 0.0.25 (2023-12-16)
 
-*  upgrade syncpack (e7e1fddf)
+### New Features
 
-#### 0.0.23 (2023-11-22)
+* better support esm and cjs (0d2cf3bc)
 
-##### Bug Fixes
+### Bug Fixes
 
-*  correct bin path and exports require ext (539e91ac)
+* alias change in readme example (34656eb6)
+* bump node and pnpm version (c808a282)
+* typo in package json (98cd5cc1)
+* remove redundant deps (a9cdecce)
 
-#### 0.0.22 (2023-11-22)
+## 0.0.24 (2023-11-22)
 
-##### New Features
+### New Features
 
-*  move to exports in package json (64cf205f)
+* upgrade syncpack (e7e1fddf)
 
-#### 0.0.21 (2023-10-12)
+## 0.0.23 (2023-11-22)
 
-##### Chores
+### Bug Fixes
 
-*  update deps (8e13fe52)
+* correct bin path and exports require ext (539e91ac)
 
-#### 0.0.20 (2023-10-11)
+## 0.0.22 (2023-11-22)
 
-##### Refactors
+### New Features
 
-*  use lodash-es (bf93fd08)
+* move to exports in package json (64cf205f)
 
-#### 0.0.19 (2023-08-15)
+## 0.0.21 (2023-10-12)
 
-##### Bug Fixes
+### Chores
 
-*  status badge (023d2055)
-*  add badge to readme (218aa094)
+* update deps (8e13fe52)
 
-#### 0.0.18 (2023-08-15)
+## 0.0.20 (2023-10-11)
 
-##### Bug Fixes
+### Refactors
 
-*  update repository link in package json (928a6680)
+* use lodash-es (bf93fd08)
 
-#### 0.0.17 (2023-08-14)
+## 0.0.19 (2023-08-15)
 
-##### Bug Fixes
+### Bug Fixes
 
-*  update repodog deps (fd2e2d7a)
+* status badge (023d2055)
+* add badge to readme (218aa094)
 
-#### 0.0.16 (2023-07-07)
+## 0.0.18 (2023-08-15)
 
-##### Documentation Changes
+### Bug Fixes
 
-*  fix wording issue in readme (eca32bca)
+* update repository link in package json (928a6680)
 
-#### 0.0.15 (2023-07-06)
+## 0.0.17 (2023-08-14)
 
-##### Documentation Changes
+### Bug Fixes
 
-*  correct config reader export example (985b033a)
+* update repodog deps (fd2e2d7a)
 
-#### 0.0.14 (2023-07-06)
+## 0.0.16 (2023-07-07)
 
-##### Refactors
+### Documentation Changes
 
-*  move config reading to read method on reader (5fc6a133)
+* fix wording issue in readme (eca32bca)
 
-#### 0.0.13 (2023-07-06)
+## 0.0.15 (2023-07-06)
 
-##### Bug Fixes
+### Documentation Changes
 
-*  update lock file (e38f5e0e)
+* correct config reader export example (985b033a)
 
-#### 0.0.12 (2023-07-06)
+## 0.0.14 (2023-07-06)
 
-##### Bug Fixes
+### Refactors
 
-*  document ts node usage (e62a6524)
+* move config reading to read method on reader (5fc6a133)
 
-#### 0.0.11 (2023-07-06)
+## 0.0.13 (2023-07-06)
 
-##### Bug Fixes
+### Bug Fixes
 
-*  create config builder type and export (2c970534)
+* update lock file (e38f5e0e)
 
-#### 0.0.10 (2023-07-06)
+## 0.0.12 (2023-07-06)
 
-##### Bug Fixes
+### Bug Fixes
 
-*  use correct tsconfig and exclude test utils folder (f6d89f52)
+* document ts node usage (e62a6524)
 
-#### 0.0.9 (2023-07-06)
+## 0.0.11 (2023-07-06)
 
-##### Bug Fixes
+### Bug Fixes
 
-*  stop npm ignore dist folder (9e44699e)
+* create config builder type and export (2c970534)
 
-#### 0.0.8 (2023-07-01)
+## 0.0.10 (2023-07-06)
 
-##### Documentation Changes
+### Bug Fixes
 
-*  refactor way config reader is recommended to be used (1e3ffae3)
+* use correct tsconfig and exclude test utils folder (f6d89f52)
 
-##### Refactors
+## 0.0.9 (2023-07-06)
 
-*  change experiments interfaces and add config parser (10764e42)
+### Bug Fixes
 
-#### 0.0.7 (2023-06-23)
+* stop npm ignore dist folder (9e44699e)
 
-##### Chores
+## 0.0.8 (2023-07-01)
 
-*  update deps (f4e4709e)
-*  upgrade deps (5d340107)
-*  update badge link (54264b99)
-*  update badge link (4ecd3233)
+### Documentation Changes
 
-##### Documentation Changes
+* refactor way config reader is recommended to be used (1e3ffae3)
 
-*  update readme (c8098f18)
+### Refactors
 
-##### New Features
+* change experiments interfaces and add config parser (10764e42)
 
-*  add build command to cli (d7d34b50)
+## 0.0.7 (2023-06-23)
 
-##### Bug Fixes
+### Chores
 
-*  resolve circular deps (d994f0a9)
-*  add types export (ef9c6a34)
+* update deps (f4e4709e)
+* upgrade deps (5d340107)
+* update badge link (54264b99)
+* update badge link (4ecd3233)
 
-#### 0.0.6 (2023-06-12)
+### Documentation Changes
 
-##### Bug Fixes
+* update readme (c8098f18)
 
-*  lock file (47de9f76)
+### New Features
 
-#### 0.0.5 (2023-06-12)
+* add build command to cli (d7d34b50)
 
-##### New Features
+### Bug Fixes
 
-*  create cli module for watching changes to config builder (63469791)
-*  add extend (16e7c83c)
-*  add override second arg to setters (0b3d0bee)
-*  add toggle (4a819329)
-*  add fork, flush and values methods (4f2266f5)
+* resolve circular deps (d994f0a9)
+* add types export (ef9c6a34)
 
-##### Bug Fixes
+## 0.0.6 (2023-06-12)
 
-*  enable nested scopes (ac4223ea)
-*  clone config when extending (4dc582e4)
+### Bug Fixes
 
-##### Refactors
+* lock file (47de9f76)
 
-*  move conditions into helpers (75c572e6)
-*  change toggle to experiment (dc24ef9c)
+## 0.0.5 (2023-06-12)
 
-##### Tests
+### New Features
 
-*  beef up extend unit tests (8c22ce20)
-*  add default unit tests (541894d7)
+* create cli module for watching changes to config builder (63469791)
+* add extend (16e7c83c)
+* add override second arg to setters (0b3d0bee)
+* add toggle (4a819329)
+* add fork, flush and values methods (4f2266f5)
 
-#### 0.0.4 (2023-05-16)
+### Bug Fixes
 
-##### Bug Fixes
+* enable nested scopes (ac4223ea)
+* clone config when extending (4dc582e4)
 
-*  add repodog cli as project dev dependency (3a61ad46)
+### Refactors
 
-#### 0.0.3 (2023-05-16)
+* move conditions into helpers (75c572e6)
+* change toggle to experiment (dc24ef9c)
 
-##### Bug Fixes
+### Tests
 
-*  add branch to reusable github action ref (5e3f8dbf)
+* beef up extend unit tests (8c22ce20)
+* add default unit tests (541894d7)
 
-#### 0.0.2 (2023-05-15)
+## 0.0.4 (2023-05-16)
 
-##### Chores
+### Bug Fixes
 
-*  add base files (3871f864)
+* add repodog cli as project dev dependency (3a61ad46)
 
-##### Refactors
+## 0.0.3 (2023-05-16)
 
-*  update core code and add unit tests (9a950e9b)
+### Bug Fixes
 
+* add branch to reusable github action ref (5e3f8dbf)
+
+## 0.0.2 (2023-05-15)
+
+### Chores
+
+* add base files (3871f864)
+
+### Refactors
+
+* update core code and add unit tests (9a950e9b)
