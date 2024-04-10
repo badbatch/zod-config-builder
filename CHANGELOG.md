@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.6 (2024-04-10)
+
+### New Features
+
+* add support for string template variables in config values (d94ee350)
+
 ## 0.2.5 (2024-03-19)
 
 ### Bug Fixes
