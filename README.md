@@ -354,9 +354,21 @@ const value = scopedReader.read('name');
 
 #### reader API
 
-**read: `(value: string) => Get<Config, string>`**
+**read: `(value: string, options?: { vars?: Record<string, string | number> }) => Get<Config, string>`**
 
-Use to read a value out of config.
+Use to read a value out of config. If the value resolves to a string, the reader also supports the string being a template that uses double bracket notation (`{{key}}`) and passing a `vars` object of key/value pairs as a property of the second `options` argument. The value of each matching key in the `vars` object will be replaced in the string template.
+
+```typescript
+const vars = {
+  name: 'Simon',
+  profession: 'pieman',
+};
+
+const stringTemplate = 'Simple {{name}} met a {{profession}} going to the fair';
+const reader = createConfigReader({ stringTemplate })
+const value = reader.read('stringTemplate', { vars });
+console.log(value); // 'Simple Simon met a pieman going to the fair'
+```
 
 **scope: `(value: string) => Get<Config, string>`**
 

@@ -68,6 +68,7 @@ export default {
       path: "contact-details"
     }
   ],
+  templateString: 'Simple {{name}} met a {{profession}} going to the fair',
   timeouts: {
     apollo: 10000
   },
