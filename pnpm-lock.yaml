@@ -86,14 +86,14 @@ importers:
         specifier: ^19.0.3
         version: 19.0.3(@commitlint/cli@19.5.0(@types/node@22.8.6)(typescript@5.6.3))(husky@9.1.6)
       '@repodog/eslint-config':
-        specifier: ^9.0.6
-        version: 9.0.6(@typescript-eslint/parser@8.12.2(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint-plugin-import@2.27.5(@typescript-eslint/parser@8.12.2(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.14.0(jiti@1.21.6)))(eslint@9.14.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)
+        specifier: ^9.0.7
+        version: 9.0.7(@typescript-eslint/parser@8.12.2(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint-plugin-import@2.27.5(@typescript-eslint/parser@8.12.2(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.14.0(jiti@1.21.6)))(eslint@9.14.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)
       '@repodog/eslint-config-jest':
         specifier: ^9.0.3
         version: 9.0.3(@typescript-eslint/eslint-plugin@8.12.2(@typescript-eslint/parser@8.12.2(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.14.0(jiti@1.21.6))(jest@29.7.0(@types/node@22.8.6)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.7.42)(@types/node@22.8.6)(typescript@5.6.3)))(typescript@5.6.3)
       '@repodog/jest-config':
-        specifier: ^29.0.2
-        version: 29.0.2(@jest/globals@29.7.0)(@swc/jest@0.2.36(@swc/core@1.7.42))(babel-jest@29.7.0(@babel/core@7.24.1))(jest-environment-jsdom@29.7.0)(jest-environment-node@29.7.0)(jest@29.7.0(@types/node@22.8.6)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.7.42)(@types/node@22.8.6)(typescript@5.6.3)))(suppress-experimental-warnings@2.0.0)
+        specifier: ^29.0.3
+        version: 29.0.3(@jest/globals@29.7.0)(@swc/jest@0.2.36(@swc/core@1.7.42))(babel-jest@29.7.0(@babel/core@7.21.8))(jest-environment-jsdom@29.7.0)(jest-environment-node@29.7.0)(jest@29.7.0(@types/node@22.8.6)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.7.42)(@types/node@22.8.6)(typescript@5.6.3)))(suppress-experimental-warnings@2.0.0)
       '@repodog/markdownlint-config':
         specifier: ^1.2.4
         version: 1.2.4(markdownlint-cli2@0.14.0)
@@ -712,15 +712,15 @@ packages:
     peerDependencies:
       eslint: <10
 
-  '@repodog/eslint-config@9.0.6':
-    resolution: {integrity: sha512-PaRSAkT/3A4H5QqGFI1ckkKVR4biJ4KfIfdZQ2zcSXUtTXP1gv6vFb1ap3CVp0sRtjabRoV3pUCbKP5r8WqWdw==}
+  '@repodog/eslint-config@9.0.7':
+    resolution: {integrity: sha512-r1gVbXBf9mw2gFyVmMCVs6jaKGTD9J2SRYR9rh5JvYwubr5Q0phN/y+mHvnRxAgdYodfH9XarKRFL4yw/0o7Zw==}
     peerDependencies:
       eslint: <10
       prettier: <4
       typescript: <6
 
-  '@repodog/jest-config@29.0.2':
-    resolution: {integrity: sha512-XAl4B/I2m9kR1R+O5P6W8D7cDGRLw0nMxiIzGrzwZZLOP5Cv95Fc9ZV9Wp9YXXNdoRpBc3X6/SlseVjfBYRxag==}
+  '@repodog/jest-config@29.0.3':
+    resolution: {integrity: sha512-YqtebWO97FKO2WdIY26W9Fmqm8+JlQXrQLHPs3woeWRh1e12GXBs1/yAdH6/OMqNQllybvkm25bauWZqTgQZTw==}
     peerDependencies:
       '@jest/globals': <30
       '@swc/jest': <1
@@ -4264,55 +4264,25 @@ snapshots:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
 
-  '@babel/plugin-syntax-async-generators@7.8.4(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
-
   '@babel/plugin-syntax-bigint@7.8.3(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.22.5
-
-  '@babel/plugin-syntax-bigint@7.8.3(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.22.5
-    optional: true
 
   '@babel/plugin-syntax-class-properties@7.12.13(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
 
-  '@babel/plugin-syntax-class-properties@7.12.13(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
-
   '@babel/plugin-syntax-import-meta@7.10.4(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
 
-  '@babel/plugin-syntax-import-meta@7.10.4(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
-
   '@babel/plugin-syntax-json-strings@7.8.3(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
-
-  '@babel/plugin-syntax-json-strings@7.8.3(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
 
   '@babel/plugin-syntax-jsx@7.24.1(@babel/core@7.21.8)':
     dependencies:
@@ -4324,77 +4294,35 @@ snapshots:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
 
-  '@babel/plugin-syntax-logical-assignment-operators@7.10.4(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
-
   '@babel/plugin-syntax-nullish-coalescing-operator@7.8.3(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
-
-  '@babel/plugin-syntax-nullish-coalescing-operator@7.8.3(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
 
   '@babel/plugin-syntax-numeric-separator@7.10.4(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
 
-  '@babel/plugin-syntax-numeric-separator@7.10.4(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
-
   '@babel/plugin-syntax-object-rest-spread@7.8.3(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
-
-  '@babel/plugin-syntax-object-rest-spread@7.8.3(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
 
   '@babel/plugin-syntax-optional-catch-binding@7.8.3(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
 
-  '@babel/plugin-syntax-optional-catch-binding@7.8.3(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
-
   '@babel/plugin-syntax-optional-chaining@7.8.3(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
 
-  '@babel/plugin-syntax-optional-chaining@7.8.3(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
-
   '@babel/plugin-syntax-top-level-await@7.14.5(@babel/core@7.21.8)':
     dependencies:
       '@babel/core': 7.21.8
       '@babel/helper-plugin-utils': 7.21.5
-
-  '@babel/plugin-syntax-top-level-await@7.14.5(@babel/core@7.24.1)':
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/helper-plugin-utils': 7.21.5
-    optional: true
 
   '@babel/plugin-syntax-typescript@7.24.1(@babel/core@7.21.8)':
     dependencies:
@@ -4959,7 +4887,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@repodog/eslint-config@9.0.6(@typescript-eslint/parser@8.12.2(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint-plugin-import@2.27.5(@typescript-eslint/parser@8.12.2(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.14.0(jiti@1.21.6)))(eslint@9.14.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)':
+  '@repodog/eslint-config@9.0.7(@typescript-eslint/parser@8.12.2(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint-plugin-import@2.27.5(@typescript-eslint/parser@8.12.2(eslint@9.14.0(jiti@1.21.6))(typescript@5.6.3))(eslint@9.14.0(jiti@1.21.6)))(eslint@9.14.0(jiti@1.21.6))(prettier@3.3.3)(typescript@5.6.3)':
     dependencies:
       '@eslint/compat': 1.2.2(eslint@9.14.0(jiti@1.21.6))
       '@eslint/eslintrc': 3.1.0
@@ -4989,7 +4917,7 @@ snapshots:
       - eslint-plugin-import
       - supports-color
 
-  '@repodog/jest-config@29.0.2(@jest/globals@29.7.0)(@swc/jest@0.2.36(@swc/core@1.7.42))(babel-jest@29.7.0(@babel/core@7.24.1))(jest-environment-jsdom@29.7.0)(jest-environment-node@29.7.0)(jest@29.7.0(@types/node@22.8.6)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.7.42)(@types/node@22.8.6)(typescript@5.6.3)))(suppress-experimental-warnings@2.0.0)':
+  '@repodog/jest-config@29.0.3(@jest/globals@29.7.0)(@swc/jest@0.2.36(@swc/core@1.7.42))(babel-jest@29.7.0(@babel/core@7.21.8))(jest-environment-jsdom@29.7.0)(jest-environment-node@29.7.0)(jest@29.7.0(@types/node@22.8.6)(babel-plugin-macros@3.1.0)(ts-node@10.9.2(@swc/core@1.7.42)(@types/node@22.8.6)(typescript@5.6.3)))(suppress-experimental-warnings@2.0.0)':
     dependencies:
       '@jest/globals': 29.7.0
       identity-obj-proxy: 3.0.0
@@ -4999,7 +4927,7 @@ snapshots:
       suppress-experimental-warnings: 2.0.0
     optionalDependencies:
       '@swc/jest': 0.2.36(@swc/core@1.7.42)
-      babel-jest: 29.7.0(@babel/core@7.24.1)
+      babel-jest: 29.7.0(@babel/core@7.21.8)
 
   '@repodog/markdownlint-config@1.2.4(markdownlint-cli2@0.14.0)':
     dependencies:
@@ -5681,20 +5609,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  babel-jest@29.7.0(@babel/core@7.24.1):
-    dependencies:
-      '@babel/core': 7.24.1
-      '@jest/transform': 29.7.0
-      '@types/babel__core': 7.20.5
-      babel-plugin-istanbul: 6.1.1
-      babel-preset-jest: 29.6.3(@babel/core@7.24.1)
-      chalk: 4.1.2
-      graceful-fs: 4.2.11
-      slash: 3.0.0
-    transitivePeerDependencies:
-      - supports-color
-    optional: true
-
   babel-plugin-istanbul@6.1.1:
     dependencies:
       '@babel/helper-plugin-utils': 7.21.5
@@ -5735,35 +5649,11 @@ snapshots:
       '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.21.8)
       '@babel/plugin-syntax-top-level-await': 7.14.5(@babel/core@7.21.8)
 
-  babel-preset-current-node-syntax@1.0.1(@babel/core@7.24.1):
-    dependencies:
-      '@babel/core': 7.24.1
-      '@babel/plugin-syntax-async-generators': 7.8.4(@babel/core@7.24.1)
-      '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.24.1)
-      '@babel/plugin-syntax-class-properties': 7.12.13(@babel/core@7.24.1)
-      '@babel/plugin-syntax-import-meta': 7.10.4(@babel/core@7.24.1)
-      '@babel/plugin-syntax-json-strings': 7.8.3(@babel/core@7.24.1)
-      '@babel/plugin-syntax-logical-assignment-operators': 7.10.4(@babel/core@7.24.1)
-      '@babel/plugin-syntax-nullish-coalescing-operator': 7.8.3(@babel/core@7.24.1)
-      '@babel/plugin-syntax-numeric-separator': 7.10.4(@babel/core@7.24.1)
-      '@babel/plugin-syntax-object-rest-spread': 7.8.3(@babel/core@7.24.1)
-      '@babel/plugin-syntax-optional-catch-binding': 7.8.3(@babel/core@7.24.1)
-      '@babel/plugin-syntax-optional-chaining': 7.8.3(@babel/core@7.24.1)
-      '@babel/plugin-syntax-top-level-await': 7.14.5(@babel/core@7.24.1)
-    optional: true
-
   babel-preset-jest@29.6.3(@babel/core@7.21.8):
     dependencies:
       '@babel/core': 7.21.8
       babel-plugin-jest-hoist: 29.6.3
       babel-preset-current-node-syntax: 1.0.1(@babel/core@7.21.8)
-
-  babel-preset-jest@29.6.3(@babel/core@7.24.1):
-    dependencies:
-      '@babel/core': 7.24.1
-      babel-plugin-jest-hoist: 29.6.3
-      babel-preset-current-node-syntax: 1.0.1(@babel/core@7.24.1)
-    optional: true
 
   balanced-match@1.0.2: {}
 
