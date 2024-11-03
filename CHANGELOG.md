@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.8 (2024-11-03)
+
+### Chores
+
+* bump deps (7b915538)
+* **deps:**  bump @babel/traverse (1554eb65)
+
+### Bug Fixes
+
+* security vulnerabilities (5014a4ae)
+
 ## 0.2.7 (2024-11-03)
 
 ### Bug Fixes
