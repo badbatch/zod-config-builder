@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.7 (2024-11-03)
+
+### Bug Fixes
+
+* remove github actions param (0b6075f8)
+
+### Refactors
+
+* upgrade repodog deps (3a957c1e)
+
 ## 0.2.6 (2024-04-10)
 
 ### New Features
