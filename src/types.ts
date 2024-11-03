@@ -33,17 +33,17 @@ export type Scope<Config extends object> = Join<Paths<Config>, '.'>;
 export type SetupExperimentsCallback = <Config extends AnyRecord>(
   id: string,
   clone: Config,
-  config: Config
+  config: Config,
 ) => Promise<Buckets<Config>>;
 
 export type TransformConfigHandler = <Config extends AnyRecord>(
   clone: Config,
-  config: Config
+  config: Config,
 ) => TransformConfigHandlerReturnType<Config> | Promise<TransformConfigHandlerReturnType<Config>>;
 
 export type TransformConfigHandlerSync = <Config extends AnyRecord>(
   clone: Config,
-  config: Config
+  config: Config,
 ) => TransformConfigHandlerReturnType<Config>;
 
 export enum TransformConfigHandlerAction {
@@ -61,17 +61,21 @@ export interface WriteConfigOptions {
   outputFile: string;
 }
 
-export type Leaves<T, LeafPath extends string[] = []> = T extends string
+export type Leaves<T, LeafPath extends string[] = [], Depth extends number = 0> = T extends string
   ? LeafPath
-  : {
-      [K in keyof T & string]: Leaves<T[K], [...LeafPath, K]>;
-    }[keyof T & string];
+  : Depth extends 15
+    ? LeafPath
+    : {
+        [K in keyof T & string]: Leaves<T[K], [...LeafPath, K], LeafPath['length']>;
+      }[keyof T & string];
 
-export type Paths<T, LeafPath extends string[] = []> = T extends string
+export type Paths<T, LeafPath extends string[] = [], Depth extends number = 0> = T extends string
   ? LeafPath
-  : {
-      [K in keyof T & string]: T[K] extends object ? Paths<T[K], [...LeafPath, K]> : LeafPath;
-    }[keyof T & string];
+  : Depth extends 15
+    ? LeafPath
+    : {
+        [K in keyof T & string]: T[K] extends object ? Paths<T[K], [...LeafPath, K], LeafPath['length']> : LeafPath;
+      }[keyof T & string];
 
 export type LeavesScopeDiffs<T1 extends readonly string[][], T2 extends string[]> = {
   [K1 in keyof T1]: List.Length<List.Intersect<T1[K1], T2, '<-contains'>> extends 1

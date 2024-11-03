@@ -30,8 +30,8 @@ describe('createConfigReader', () => {
         // @ts-expect-error path does not resovle to a string
         expect(() => reader.read('pages.contactDetails', { vars })).toThrow(
           new Error(
-            'config reader received variables to use in string template, but the path did not resolve to a string.'
-          )
+            'config reader received variables to use in string template, but the path did not resolve to a string.',
+          ),
         );
       });
     });

@@ -12,6 +12,8 @@ export interface ConfigReader<Config extends object> {
 }
 
 export const createConfigReader = <Config extends object>(config: Config): ConfigReader<Config> => {
+  // Aimed at reducing the amount of work for typescript to resolve type.
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const configReader = {
     read: <P extends Path<Config>>(path: P, { vars }: ReadOptions = {}) => {
       if (!vars) {
@@ -22,7 +24,7 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
 
       if (!isString(output)) {
         throw new Error(
-          'config reader received variables to use in string template, but the path did not resolve to a string.'
+          'config reader received variables to use in string template, but the path did not resolve to a string.',
         );
       }
 
@@ -30,6 +32,8 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
         return acc.replace(new RegExp(`{{${key}}}`), String(vars[key]));
       }, output);
     },
+    // Aimed at reducing the amount of work for typescript to resolve type.
+    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     scope: <S extends Scope<Config>>(scope: S) => createConfigReader(get(config, scope) as Get<Config, S>),
   } as ConfigReader<Config>;
 

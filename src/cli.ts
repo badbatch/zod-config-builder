@@ -1,7 +1,8 @@
 import { watchFile } from 'node:fs';
 import { resolve } from 'node:path';
 import shelljs from 'shelljs';
-import yargs from 'yargs';
+import yargs, { type Argv } from 'yargs';
+import { hideBin } from 'yargs/helpers';
 import { importValidateTransformWriteConfig } from './utils/importValidateTransformWriteConfig.ts';
 
 export enum Commands {
@@ -9,7 +10,7 @@ export enum Commands {
   WATCH = 'watch',
 }
 
-const generateArguments = (cmdYargs: yargs.Argv) =>
+const generateArguments = (cmdYargs: Argv) =>
   cmdYargs
     .positional('input-file', {
       demandOption: true,
@@ -27,40 +28,49 @@ const generateArguments = (cmdYargs: yargs.Argv) =>
     });
 
 export const cli = () => {
-  yargs
+  // yargs does not provide a way to pass generic to type args.
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  const argv = yargs(hideBin(process.argv)) as Argv<{
+    'experiments-callback-file'?: string;
+    'input-file': string;
+    'output-file': string;
+  }>;
+
+  void argv
     .command(
       'watch <input-file> <output-file>',
       'Watch a config builder and write config',
       cmdYargs => generateArguments(cmdYargs),
-      argv => {
-        shelljs.echo(`zcd watch => watching file: ${argv['input-file']}`);
+      cmdYargs => {
+        shelljs.echo(`zcd watch => watching file: ${cmdYargs['input-file']}`);
 
-        watchFile(resolve(process.cwd(), argv['input-file']), () => {
+        watchFile(resolve(process.cwd(), cmdYargs['input-file']), () => {
           shelljs.echo('zcd watch => file change detected');
 
           importValidateTransformWriteConfig(
-            argv['input-file'],
-            argv['output-file'],
+            cmdYargs['input-file'],
+            cmdYargs['output-file'],
             Commands.WATCH,
-            argv['experiments-callback-file']
+            cmdYargs['experiments-callback-file'],
           );
         });
-      }
+      },
     )
     .command(
       'build <input-file> <output-file>',
       'Write config from a config builder',
       cmdYargs => generateArguments(cmdYargs),
-      argv => {
-        shelljs.echo(`zcd build => building file: ${argv['input-file']}`);
+      cmdYargs => {
+        shelljs.echo(`zcd build => building file: ${cmdYargs['input-file']}`);
 
         importValidateTransformWriteConfig(
-          argv['input-file'],
-          argv['output-file'],
+          cmdYargs['input-file'],
+          cmdYargs['output-file'],
           Commands.BUILD,
-          argv['experiments-callback-file']
+          cmdYargs['experiments-callback-file'],
         );
-      }
+      },
     )
-    .help().argv;
+    .help()
+    .parseAsync();
 };

@@ -11,7 +11,7 @@ import { transformConfig } from './transformConfig.ts';
 
 export const transformWriteConfig = async <Config extends object>(
   config: Config,
-  { experimentsCallback, outputFile }: WriteConfigOptions
+  { experimentsCallback, outputFile }: WriteConfigOptions,
 ) => {
   const handlers: TransformConfigHandler[] = [removeDisabledSlices];
 
@@ -20,12 +20,12 @@ export const transformWriteConfig = async <Config extends object>(
   }
 
   const template = Handlebars.compile(
-    readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), './templates/config.ts.hbs'), { encoding: 'utf8' })
+    readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), './templates/config.ts.hbs'), { encoding: 'utf8' }),
   );
 
   const output = template({ config: JSON.stringify(await transformConfig(config, handlers), undefined, 2) }).replaceAll(
     /"([A-Za-z][\dA-Za-z]+)":/g,
-    '$1:'
+    '$1:',
   );
 
   shelljs.echo(`zcd watch => writing to file: ${outputFile}`);

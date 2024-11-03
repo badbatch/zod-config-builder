@@ -17,7 +17,7 @@ describe('createConfigBuilder', () => {
       const invalidSchema = z.array(z.string());
 
       expect(() => createConfigBuilder<z.infer<typeof invalidSchema>>(invalidSchema)).toThrow(
-        'The root type of a config schema must be "object", but received "array"'
+        'The root type of a config schema must be "object", but received "array"',
       );
     });
   });
@@ -33,7 +33,7 @@ describe('createConfigBuilder', () => {
       expect(() => createConfigBuilder<z.infer<typeof invalidSchema>>(invalidSchema)).toThrow(
         `"$values" is a reserved keyword within the config builder. Please use a different property name. The full list of reserved keywords is: ${[
           ...RESERVED_KEYWORDS,
-        ].join(', ')}`
+        ].join(', ')}`,
       );
     });
   });
@@ -109,12 +109,11 @@ describe('createConfigBuilder', () => {
           }),
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           routes: expect.arrayContaining([
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             expect.objectContaining({
               __experiment: 'FEAT_CHARLIE@0.0.1',
             }),
           ]),
-        })
+        }),
       );
     });
 
@@ -145,12 +144,11 @@ describe('createConfigBuilder', () => {
           }),
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           routes: expect.arrayContaining([
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             expect.objectContaining({
               __disabled: true,
             }),
           ]),
-        })
+        }),
       );
     });
 
@@ -235,7 +233,7 @@ describe('createConfigBuilder', () => {
           });
 
           expect(() => createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema)).toThrow(
-            'When setting schema property defaults for the value of the record assigned to "flags", set them on the record and not the value.'
+            'When setting schema property defaults for the value of the record assigned to "flags", set them on the record and not the value.',
           );
         });
       });
@@ -249,7 +247,7 @@ describe('createConfigBuilder', () => {
           });
 
           expect(() => createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema)).toThrow(
-            'When setting schema array defaults for the array assigned to "colors", set them on the array and not the item.'
+            'When setting schema array defaults for the array assigned to "colors", set them on the array and not the item.',
           );
         });
       });
@@ -264,7 +262,7 @@ describe('createConfigBuilder', () => {
         config.name('alpha');
 
         expect(() => config.name('bravo')).toThrow(
-          'A value already exists for "name". You may be trying to add a new values before flushing the old one. If you intended to override the existing value, pass in true as the second argument.'
+          'A value already exists for "name". You may be trying to add a new values before flushing the old one. If you intended to override the existing value, pass in true as the second argument.',
         );
       });
     });
@@ -368,9 +366,9 @@ describe('createConfigBuilder', () => {
               personalDetails: {
                 name: 'personalDetails',
               },
-            })
+            }),
           ).toThrow(
-            '"pages" value has a depth greater than 1. To pass in objects with a depth greater than 1, create a builder for that config slice.'
+            '"pages" value has a depth greater than 1. To pass in objects with a depth greater than 1, create a builder for that config slice.',
           );
         });
 
@@ -453,7 +451,7 @@ describe('createConfigBuilder', () => {
           const config = createConfigBuilder<ConfigType>(configSchema);
 
           expect(() => config.routes([{ page: 'personalDetails', path: 'personal-details' }])).toThrow(
-            '"routes" value has a depth greater than 1. To pass in objects with a depth greater than 1, create a builder for that config slice.'
+            '"routes" value has a depth greater than 1. To pass in objects with a depth greater than 1, create a builder for that config slice.',
           );
         });
 
@@ -482,7 +480,7 @@ describe('createConfigBuilder', () => {
           .languageCodes(['en'])
           .locales(({ countryCode, languageCodes }) =>
             // eslint-disable-next-line jest/no-conditional-in-test
-            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : []
+            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : [],
           );
 
         expect(config.$values()).toEqual({ countryCode: 'GB', languageCodes: ['en'], locales: ['en_GB'] });
@@ -497,7 +495,7 @@ describe('createConfigBuilder', () => {
           .languageCodes(['en'])
           .locales(({ countryCode, languageCodes }) =>
             // eslint-disable-next-line jest/no-conditional-in-test
-            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : []
+            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : [],
           )
           .languageCodes(['fr'], true);
 
@@ -513,7 +511,7 @@ describe('createConfigBuilder', () => {
           .languageCodes(['en'])
           .locales(({ countryCode, languageCodes }) =>
             // eslint-disable-next-line jest/no-conditional-in-test
-            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : []
+            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : [],
           );
 
         expect(config.$validate()).toBe(true);
@@ -538,7 +536,7 @@ describe('createConfigBuilder', () => {
               alpha: z.string(),
               bravo: z.boolean(),
             })
-            .optional()
+            .optional(),
         );
 
         expect(config.$toJson()).toMatchSnapshot();

@@ -9,7 +9,7 @@ export const importValidateTransformWriteConfig = (
   inputFile: string,
   outputFile: string,
   command: Commands,
-  experimentCallbackFile?: string
+  experimentCallbackFile?: string,
 ) => {
   import(resolve(process.cwd(), inputFile))
     .then(({ default: configBuilder }: { default: ConfigBuilder<object> }) => {

@@ -23,7 +23,7 @@ configBuilder
   .distanceUnit('km')
   .languageCodes(['en'])
   .locales(({ countryCode, languageCodes }) =>
-    languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : []
+    languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : [],
   )
   .name('alpha')
   .pages({
@@ -54,5 +54,4 @@ configBuilder
   .timeouts({ apollo: 10_000 })
   .timezone('Europe/London');
 
-// eslint-disable-next-line import/no-default-export
 export default configBuilder;

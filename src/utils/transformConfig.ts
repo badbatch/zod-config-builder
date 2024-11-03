@@ -15,19 +15,20 @@ const transformArray = (list: any[], handler: TransformConfigHandler | Transform
       }
 
       if (Array.isArray(entry)) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return
         return transformArray(entry, handler);
       }
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return entry;
-    })
+    }),
   );
 
 export const transformConfig = async <Config extends AnyRecord>(
   config: Config,
-  handler: TransformConfigHandler | TransformConfigHandler[] = []
+  handler: TransformConfigHandler | TransformConfigHandler[] = [],
 ): Promise<Config> => {
+  // Typing gets too complicated without casting.
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   let transform = {} as Config;
   const handlers = castArray(handler);
 
@@ -35,6 +36,8 @@ export const transformConfig = async <Config extends AnyRecord>(
     const result = await Promise.resolve(callback(transform, config));
 
     if (result.action === TransformConfigHandlerAction.DELETE_NODE) {
+      // Typing gets too complicated without casting.
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       return {} as Config;
     }
 
@@ -53,6 +56,8 @@ export const transformConfig = async <Config extends AnyRecord>(
     if (isPlainObject(value)) {
       transform[key] = await transformConfig(value, handler);
     } else if (Array.isArray(value)) {
+      // transformArraySync returns an any type.
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       transform[key] = (await transformArray(value, handler)) as Config[Extract<keyof Config, string>];
     } else {
       transform[key] = value;
@@ -81,8 +86,10 @@ const transformArraySync = (list: any[], handler: TransformConfigHandlerSync | T
 
 export const transformConfigSync = <Config extends AnyRecord>(
   config: Config,
-  handler: TransformConfigHandlerSync | TransformConfigHandlerSync[] = []
+  handler: TransformConfigHandlerSync | TransformConfigHandlerSync[] = [],
 ): Config => {
+  // Typing gets too complicated without casting.
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   let transform = {} as Config;
   const handlers = castArray(handler);
 
@@ -90,6 +97,8 @@ export const transformConfigSync = <Config extends AnyRecord>(
     const result = callback(transform, config);
 
     if (result.action === TransformConfigHandlerAction.DELETE_NODE) {
+      // Typing gets too complicated without casting.
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       return {} as Config;
     }
 
@@ -108,6 +117,8 @@ export const transformConfigSync = <Config extends AnyRecord>(
     if (isPlainObject(value)) {
       transform[key] = transformConfigSync(value, handler);
     } else if (Array.isArray(value)) {
+      // transformArraySync returns an any type.
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       transform[key] = transformArraySync(value, handler) as Config[Extract<keyof Config, string>];
     } else {
       transform[key] = value;

@@ -5,10 +5,9 @@ import {
   type TransformConfigHandlerSync,
 } from '../types.ts';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const removeDisabledSlices: TransformConfigHandlerSync = <Config extends AnyRecord>(
   clone: Config,
-  config: Config
+  config: Config,
 ) => {
   if (NonEmumeralProperties.DISABLED in config) {
     return {
