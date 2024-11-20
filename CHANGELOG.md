@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.2.9 (2024-11-20)
+
+### Bug Fixes
+
+* remove postintall script (1647dbfa)
+
 ## 0.2.8 (2024-11-03)
 
 ### Chores
