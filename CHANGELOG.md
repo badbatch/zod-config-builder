@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.10 (2025-05-28)
+
+### Chores
+
+* **deps:**
+  * bump @babel/helpers (b973e051)
+  * bump serialize-javascript (e0a30af5)
+  * bump cross-spawn (86ac67bd)
+  * bump @eslint/plugin-kit (1be2b122)
+
+### Bug Fixes
+
+* vulnerabilities (19a5d35c)
+
 ## 0.2.9 (2024-11-20)
 
 ### Bug Fixes
