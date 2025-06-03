@@ -28,7 +28,7 @@ describe('createConfigReader', () => {
         const reader = createReader();
 
         // @ts-expect-error path does not resovle to a string
-        expect(() => reader.read('pages.contactDetails', { vars })).toThrow(
+        expect(() => reader.read('pages.contactDetails', vars)).toThrow(
           new Error(
             'config reader received variables to use in string template, but the path did not resolve to a string.',
           ),
@@ -39,7 +39,7 @@ describe('createConfigReader', () => {
     describe('when a user accesses a property that is a string', () => {
       it('should return the correct string value with template placeholders populated', () => {
         const reader = createReader();
-        const value = reader.read('templateString', { vars });
+        const value = reader.read('templateString', vars);
         expect(value).toBe('Simple Simon met a pieman going to the fair');
       });
     });

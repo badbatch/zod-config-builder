@@ -2,12 +2,8 @@ import { get, isString } from 'lodash-es';
 import { type Get } from 'type-fest';
 import { type Path, type Scope } from './types.ts';
 
-export type ReadOptions = {
-  vars?: Record<string, string | number>;
-};
-
 export interface ConfigReader<Config extends object> {
-  read: <P extends Path<Config>>(path: P, options?: ReadOptions) => Get<Config, P>;
+  read: <P extends Path<Config>>(path: P, variables?: Record<string, string | number>) => Get<Config, P>;
   scope: <S extends Scope<Config>>(scope: S) => ConfigReader<Get<Config, S>>;
 }
 
@@ -15,8 +11,8 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
   // Aimed at reducing the amount of work for typescript to resolve type.
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const configReader = {
-    read: <P extends Path<Config>>(path: P, { vars }: ReadOptions = {}) => {
-      if (!vars) {
+    read: <P extends Path<Config>>(path: P, variables?: Record<string, string | number>) => {
+      if (!variables) {
         return get(config, path);
       }
 
@@ -28,8 +24,8 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
         );
       }
 
-      return Object.keys(vars).reduce<string>((acc, key) => {
-        return acc.replace(new RegExp(`{{${key}}}`), String(vars[key]));
+      return Object.keys(variables).reduce<string>((acc, key) => {
+        return acc.replace(new RegExp(`{{${key}}}`), String(variables[key]));
       }, output);
     },
     // Aimed at reducing the amount of work for typescript to resolve type.
