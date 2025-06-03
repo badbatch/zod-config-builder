@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.0 (2025-06-03)
+
+### Refactors
+
+* make variables the second param instead of nested in options (f2381fe7)
+
 ## 0.2.10 (2025-05-28)
 
 ### Chores
