@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.3.1 (2025-06-12)
+
+### Chores
+
+* minor update (98c85603)
+* upgrade deps (73654ebb)
+
 ## 0.3.0 (2025-06-03)
 
 ### Refactors
