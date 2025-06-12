@@ -1,10 +1,12 @@
-const rollupConfig = require('@repodog/rollup-config');
-const swcConfig = require('@repodog/swc-config');
-const swcPlugin = require('@rollup/plugin-swc');
+import rollupConfig from '@repodog/rollup-config';
+import swcConfig from '@repodog/swc-config';
+import swcPlugin from '@rollup/plugin-swc';
 
 const config = rollupConfig({ compiler: swcPlugin({ swc: swcConfig.ts }) });
 
-module.exports = [
+// rollup requires a default export
+// eslint-disable-next-line import-x/no-default-export
+export default [
   {
     ...rollupConfig({
       compiler: swcPlugin({ swc: swcConfig.ts }),

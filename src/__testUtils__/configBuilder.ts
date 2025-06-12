@@ -54,4 +54,6 @@ configBuilder
   .timeouts({ apollo: 10_000 })
   .timezone('Europe/London');
 
+// convention is to default export.
+// eslint-disable-next-line import-x/no-default-export
 export default configBuilder;

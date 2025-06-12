@@ -1,3 +1,5 @@
 #!/usr/bin/env node
-const { cli } = await import('zcb'); // eslint-disable-line import-x/no-unresolved
+// This can be unresolved, depending on whether build has been run.
+// eslint-disable-next-line import-x/no-unresolved
+const { cli } = await import('zcb');
 cli();

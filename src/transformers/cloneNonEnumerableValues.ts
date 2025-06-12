@@ -14,7 +14,6 @@ export const cloneNonEnumerableValues: TransformConfigHandlerSync = <
       Object.defineProperty(clone, nonEnumerableKey, {
         configurable: false,
         enumerable: false,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         value: config[nonEnumerableKey],
       });
     }
