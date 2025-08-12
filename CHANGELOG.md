@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.3 (2025-08-12)
+
+### Bug Fixes
+
+* read not allowing paths to go past array of objects or objects (1a8ca980)
+
 ## 0.3.2 (2025-08-12)
 
 ### Chores
