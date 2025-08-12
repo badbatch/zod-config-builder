@@ -56,6 +56,7 @@ describe('createConfigReader', () => {
       it('should throw the expected error', () => {
         const reader = createReader();
 
+        // @ts-expect-error Required to test error
         expect(() => reader.read('pages.contactDetails.sections')).toThrow(
           'Path resolved to an object or an array of objects, but `read` can only resolve to a primitive value or an array of primitives. Use the `scope` method instead',
         );

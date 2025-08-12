@@ -55,16 +55,11 @@ export type Primitive = string | number | boolean | bigint | symbol | null | und
 
 export type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...0[]];
 
-export type Leaves<T, LeafPath extends string[] = [], Depth extends number = 10> = Depth extends never
-  ? never
-  : T extends Primitive
-    ? LeafPath
-    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      T extends readonly any[]
-      ? LeafPath
-      : {
-          [K in keyof T & string]: Leaves<T[K], [...LeafPath, K], Prev[Depth]>;
-        }[keyof T & string];
+export type IsArrayOfPrimitives<T> = T extends readonly (infer U)[]
+  ? Exclude<U, Primitive> extends never
+    ? true
+    : false
+  : false;
 
 export type OwnKeys<T> = Exclude<
   {
@@ -73,6 +68,16 @@ export type OwnKeys<T> = Exclude<
   }[Extract<keyof T, string>],
   `${string}[Symbol.${string}`
 >;
+
+export type Leaves<T, LeafPath extends string[] = [], Depth extends number = 10> = Depth extends never
+  ? never
+  : T extends Primitive
+    ? LeafPath
+    : IsArrayOfPrimitives<T> extends true
+      ? LeafPath
+      : {
+          [K in OwnKeys<T>]: Leaves<T[K], [...LeafPath, K], Prev[Depth]>;
+        }[OwnKeys<T>];
 
 export type Paths<T, ScopePath extends string[] = [], Depth extends number = 10> = Depth extends never
   ? never
