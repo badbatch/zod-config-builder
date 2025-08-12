@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.2 (2025-08-12)
+
+### Chores
+
+* upgrade deps (9739a071)
+* force commit (cde9f262)
+
+### Bug Fixes
+
+* vulnerabilities (04b6efc2)
+* support all primitive config values in read op (ac8cfd78)
+
 ## 0.3.1 (2025-06-12)
 
 ### Chores
