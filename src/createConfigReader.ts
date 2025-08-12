@@ -1,6 +1,7 @@
-import { get, isString } from 'lodash-es';
+import { isPlainObject, isString } from 'lodash-es';
 import { type Get } from 'type-fest';
 import { type Path, type Scope } from './types.ts';
+import { get } from './utils/typedGet.ts';
 
 export interface ConfigReader<Config extends object> {
   read: <P extends Path<Config>>(path: P, variables?: Record<string, string | number>) => Get<Config, P>;
@@ -10,17 +11,23 @@ export interface ConfigReader<Config extends object> {
 export const createConfigReader = <Config extends object>(config: Config): ConfigReader<Config> => {
   // Aimed at reducing the amount of work for typescript to resolve type.
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const configReader = {
+  return {
     read: <P extends Path<Config>>(path: P, variables?: Record<string, string | number>) => {
-      if (!variables) {
-        return get(config, path);
+      const output = get(config, path);
+
+      if (isPlainObject(output) || (Array.isArray(output) && output.some(entry => isPlainObject(entry)))) {
+        throw new Error(
+          'Path resolved to an object or an array of objects, but `read` can only resolve to a primitive value or an array of primitives. Use the `scope` method instead.',
+        );
       }
 
-      const output = get(config, path);
+      if (!variables) {
+        return output;
+      }
 
       if (!isString(output)) {
         throw new Error(
-          'config reader received variables to use in string template, but the path did not resolve to a string.',
+          'Config reader received variables to use in string template, but the path did not resolve to a string.',
         );
       }
 
@@ -28,10 +35,16 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
         return acc.replace(new RegExp(`{{${key}}}`), String(variables[key]));
       }, output);
     },
-    // Aimed at reducing the amount of work for typescript to resolve type.
-    // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    scope: <S extends Scope<Config>>(scope: S) => createConfigReader(get(config, scope) as Get<Config, S>),
-  } as ConfigReader<Config>;
+    scope: <S extends Scope<Config>>(scope: S) => {
+      const output = get(config, scope);
 
-  return configReader;
+      if (!isPlainObject(output) && !(Array.isArray(output) && output.some(entry => isPlainObject(entry)))) {
+        throw new Error(
+          'Path resolved to a primitive or an array of primitive, but `scope` can only resolve to an object or an array of object. Use the `read` method instead.',
+        );
+      }
+
+      return createConfigReader(output);
+    },
+  } as ConfigReader<Config>;
 };

@@ -4,7 +4,6 @@ import { v4 as uuidV4 } from 'uuid';
 import { type ZodError, type z } from 'zod';
 import { zodToJsonSchema } from 'zod-to-json-schema';
 import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValues.ts';
-import { NonEmumeralProperties } from './types.ts';
 import { collateDefaultValues } from './utils/collateDefaultValues.ts';
 import { isDerivedValueCallback } from './utils/isDerivedValueCallback.ts';
 import { isInvalidPropertyOverride } from './utils/isInvalidPropertyOverride.ts';
@@ -70,20 +69,20 @@ export const createConfigBuilder = <ZodTypes>(
   const uuid = options.overrides?.uuid ?? uuidV4;
 
   const addNonEnumeralBaseProperties = (conf: Config) => {
-    Object.defineProperty(conf, NonEmumeralProperties.ZCB, {
+    Object.defineProperty(conf, '__zcb', {
       configurable: false,
       enumerable: false,
       value: true,
     });
 
-    Object.defineProperty(conf, NonEmumeralProperties.ID, {
+    Object.defineProperty(conf, '__id', {
       configurable: false,
       enumerable: false,
       value: uuid(),
     });
 
     if (options.type) {
-      Object.defineProperty(conf, NonEmumeralProperties.TYPE, {
+      Object.defineProperty(conf, '__type', {
         configurable: false,
         enumerable: false,
         value: options.type,
@@ -107,7 +106,7 @@ export const createConfigBuilder = <ZodTypes>(
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const configBuilder = {
     $disable: () => {
-      Object.defineProperty(config, NonEmumeralProperties.DISABLED, {
+      Object.defineProperty(config, '__disabled', {
         configurable: false,
         enumerable: false,
         value: true,
@@ -126,7 +125,7 @@ export const createConfigBuilder = <ZodTypes>(
       }
     },
     $experiment: (key: string) => {
-      Object.defineProperty(config, NonEmumeralProperties.EXPERIMENT, {
+      Object.defineProperty(config, '__experiment', {
         configurable: false,
         enumerable: false,
         value: key,
@@ -172,7 +171,7 @@ export const createConfigBuilder = <ZodTypes>(
     },
   } as unknown as ConfigBuilder<ZodTypes>;
 
-  Object.defineProperty(configBuilder, NonEmumeralProperties.CALLBACKS, {
+  Object.defineProperty(configBuilder, '__callbacks', {
     configurable: false,
     enumerable: false,
     value: callbacks,

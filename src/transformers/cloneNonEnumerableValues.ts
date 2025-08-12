@@ -1,6 +1,6 @@
-import { type AnyRecord, NonEmumeralProperties, type TransformConfigHandlerSync } from '../types.ts';
+import { type AnyRecord, type TransformConfigHandlerSync } from '../types.ts';
 
-const NON_ENUMERABLE_KEYS = new Set(Object.values(NonEmumeralProperties));
+const NON_ENUMERABLE_KEYS = ['__callbacks', '__disabled', '__experiment', '__id', '__type', '__zcb'];
 
 export const cloneNonEnumerableValues: TransformConfigHandlerSync = <
   Config1 extends AnyRecord,

@@ -5,10 +5,7 @@ import yargs, { type Argv } from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { importValidateTransformWriteConfig } from './utils/importValidateTransformWriteConfig.ts';
 
-export enum Commands {
-  BUILD = 'build',
-  WATCH = 'watch',
-}
+export type Commands = 'build' | 'watch';
 
 const generateArguments = (cmdYargs: Argv) =>
   cmdYargs
@@ -50,7 +47,7 @@ export const cli = () => {
           importValidateTransformWriteConfig(
             cmdYargs['input-file'],
             cmdYargs['output-file'],
-            Commands.WATCH,
+            'watch',
             cmdYargs['experiments-callback-file'],
           );
         });
@@ -66,7 +63,7 @@ export const cli = () => {
         importValidateTransformWriteConfig(
           cmdYargs['input-file'],
           cmdYargs['output-file'],
-          Commands.BUILD,
+          'build',
           cmdYargs['experiments-callback-file'],
         );
       },

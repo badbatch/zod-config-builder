@@ -19,13 +19,15 @@ const subsectionBuilder = sectionBuilder.$fork();
 
 configBuilder
   .countryCode('GB')
-  .countryName('United Kingdom')
+  // Want to test using null value
+  // eslint-disable-next-line unicorn/no-null
+  .countryName(null)
   .distanceUnit('km')
+  .enabled(true)
   .languageCodes(['en'])
   .locales(({ countryCode, languageCodes }) =>
     languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : [],
   )
-  .name('alpha')
   .pages({
     contactDetails: pageBuilder
       .name('contactDetails')

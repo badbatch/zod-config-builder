@@ -22,6 +22,14 @@
       },
       "import": "./dist/esm/index.mjs",
       "require": "./dist/cjs/index.cjs"
+    },
+    "./cli": {
+      "types": {
+        "import": "./dist/types/esm/cli.d.ts",
+        "require": "./dist/types/cjs/cli.d.cts"
+      },
+      "import": "./dist/esm/cli.mjs",
+      "require": "./dist/cjs/cli.cjs"
     }
   },
   "publishConfig": {
@@ -47,8 +55,8 @@
     "test": "COMPILER=swc node --require=suppress-experimental-warnings --experimental-vm-modules node_modules/jest/bin/jest.js",
     "type-check": "tsc --noEmit",
     "validate": "pnpm run syncpack && pnpm run build && pnpm run lint && pnpm run type-check && pnpm run test",
-    "zcb:build": "NODE_OPTIONS=\"--loader ts-node/esm\" node ./bin/zcb.mjs build ./src/__testUtils__/configBuilder.ts ./src/__testUtils__/builtConfig.ts",
-    "zcb:watch": "NODE_OPTIONS=\"--loader ts-node/esm\" node ./bin/zcb.mjs watch ./src/__testUtils__/configBuilder.ts ./src/__testUtils__/builtConfig.ts"
+    "zcb:build": "NODE_OPTIONS=\"--experimental-strip-types\" node ./bin/zcb.js build ./src/__testUtils__/configBuilder.ts ./src/__testUtils__/builtConfig.ts",
+    "zcb:watch": "NODE_OPTIONS=\"--experimental-strip-types\" node ./bin/zcb.js watch ./src/__testUtils__/configBuilder.ts ./src/__testUtils__/builtConfig.ts"
   },
   "dependencies": {
     "@types/fs-extra": "^11.0.4",

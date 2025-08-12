@@ -1,10 +1,5 @@
 import { castArray, isPlainObject } from 'lodash-es';
-import {
-  type AnyRecord,
-  type TransformConfigHandler,
-  TransformConfigHandlerAction,
-  type TransformConfigHandlerSync,
-} from '../types.ts';
+import { type AnyRecord, type TransformConfigHandler, type TransformConfigHandlerSync } from '../types.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const transformArray = (list: any[], handler: TransformConfigHandler | TransformConfigHandler[]): Promise<any[]> =>
@@ -35,7 +30,7 @@ export const transformConfig = async <Config extends AnyRecord>(
   for (const callback of handlers) {
     const result = await Promise.resolve(callback(transform, config));
 
-    if (result.action === TransformConfigHandlerAction.DELETE_NODE) {
+    if (result.action === 'DELETE_NODE') {
       // Typing gets too complicated without casting.
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       return {} as Config;
@@ -45,7 +40,7 @@ export const transformConfig = async <Config extends AnyRecord>(
       transform = result.value;
     }
 
-    if (result.action === TransformConfigHandlerAction.SKIP_NODE) {
+    if (result.action === 'SKIP_NODE') {
       return transform;
     }
   }
@@ -96,7 +91,7 @@ export const transformConfigSync = <Config extends AnyRecord>(
   for (const callback of handlers) {
     const result = callback(transform, config);
 
-    if (result.action === TransformConfigHandlerAction.DELETE_NODE) {
+    if (result.action === 'DELETE_NODE') {
       // Typing gets too complicated without casting.
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       return {} as Config;
@@ -106,7 +101,7 @@ export const transformConfigSync = <Config extends AnyRecord>(
       transform = result.value;
     }
 
-    if (result.action === TransformConfigHandlerAction.SKIP_NODE) {
+    if (result.action === 'SKIP_NODE') {
       return transform;
     }
   }

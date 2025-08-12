@@ -15,14 +15,7 @@ export interface Experiment<Config extends AnyRecord> {
   value?: Config;
 }
 
-export enum NonEmumeralProperties {
-  CALLBACKS = '__callbacks',
-  DISABLED = '__disabled',
-  EXPERIMENT = '__experiment',
-  ID = '__id',
-  TYPE = '__type',
-  ZCB = '__zcb',
-}
+export type NonEmumeralProperties = '__callbacks' | '__disabled' | '__experiment' | '__id' | '__type' | '__zcb';
 
 export type Path<Config extends object> = Join<Leaves<Config>, '.'>;
 
@@ -46,10 +39,7 @@ export type TransformConfigHandlerSync = <Config extends AnyRecord>(
   config: Config,
 ) => TransformConfigHandlerReturnType<Config>;
 
-export enum TransformConfigHandlerAction {
-  DELETE_NODE = 'deleteNode',
-  SKIP_NODE = 'skipNode',
-}
+export type TransformConfigHandlerAction = 'DELETE_NODE' | 'SKIP_NODE';
 
 export interface TransformConfigHandlerReturnType<Config extends AnyRecord> {
   action?: TransformConfigHandlerAction;
@@ -61,22 +51,38 @@ export interface WriteConfigOptions {
   outputFile: string;
 }
 
-export type Leaves<T, LeafPath extends string[] = [], Depth extends number = 0> = T extends string
-  ? LeafPath
-  : Depth extends 15
-    ? LeafPath
-    : {
-        [K in keyof T & string]: Leaves<T[K], [...LeafPath, K], LeafPath['length']>;
-      }[keyof T & string];
+export type Primitive = string | number | boolean | bigint | symbol | null | undefined;
 
-export type Paths<T, LeafPath extends string[] = [], Depth extends number = 0> = T extends string
-  ? LeafPath
-  : Depth extends 15
-    ? LeafPath
-    : {
-        [K in keyof T & string]: T[K] extends object ? Paths<T[K], [...LeafPath, K], LeafPath['length']> : LeafPath;
-      }[keyof T & string];
+export type Prev = [never, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, ...0[]];
 
+export type Leaves<T, LeafPath extends string[] = [], Depth extends number = 10> = Depth extends never
+  ? never
+  : T extends Primitive
+    ? LeafPath
+    : // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      T extends readonly any[]
+      ? LeafPath
+      : {
+          [K in keyof T & string]: Leaves<T[K], [...LeafPath, K], Prev[Depth]>;
+        }[keyof T & string];
+
+export type OwnKeys<T> = Exclude<
+  {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [K in Extract<keyof T, string>]: T[K] extends (...args: any[]) => any ? never : K;
+  }[Extract<keyof T, string>],
+  `${string}[Symbol.${string}`
+>;
+
+export type Paths<T, ScopePath extends string[] = [], Depth extends number = 10> = Depth extends never
+  ? never
+  : T extends Primitive
+    ? never
+    : ScopePath extends []
+      ? { [K in OwnKeys<T>]: Paths<T[K], [K], Prev[Depth]> }[OwnKeys<T>]
+      : ScopePath | { [K in OwnKeys<T>]: Paths<T[K], [...ScopePath, K], Prev[Depth]> }[OwnKeys<T>];
+
+// This type is not used, but is left here for reference
 export type LeavesScopeDiffs<T1 extends readonly string[][], T2 extends string[]> = {
   [K1 in keyof T1]: List.Length<List.Intersect<T1[K1], T2, '<-contains'>> extends 1
     ? List.Length<T1[K1]> extends 1

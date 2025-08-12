@@ -42,8 +42,9 @@ export const routeSchema: z.ZodType<RouteType> = baseRouteSchema.extend({
 
 export const configSchema = z.object({
   countryCode: z.enum(countryCodes).optional(),
-  countryName: z.enum(countryNames).optional(),
+  countryName: z.enum(countryNames).optional().nullable(),
   distanceUnit: z.enum(distanceUnits).optional(),
+  enabled: z.boolean().optional(),
   languageCodes: z.array(z.enum(languageCodes)).optional(),
   locales: z.array(z.string().regex(/[a-z]{2}_[A-Z]{2}/)).optional(),
   name: z.string().optional(),

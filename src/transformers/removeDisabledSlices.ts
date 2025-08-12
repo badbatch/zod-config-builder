@@ -1,17 +1,12 @@
-import {
-  type AnyRecord,
-  NonEmumeralProperties,
-  TransformConfigHandlerAction,
-  type TransformConfigHandlerSync,
-} from '../types.ts';
+import { type AnyRecord, type TransformConfigHandlerSync } from '../types.ts';
 
 export const removeDisabledSlices: TransformConfigHandlerSync = <Config extends AnyRecord>(
   clone: Config,
   config: Config,
 ) => {
-  if (NonEmumeralProperties.DISABLED in config) {
+  if ('__disabled' in config) {
     return {
-      action: TransformConfigHandlerAction.DELETE_NODE,
+      action: 'DELETE_NODE',
     };
   }
 
