@@ -20,13 +20,18 @@ export const transformWriteConfig = async <Config extends object>(
   }
 
   const template = Handlebars.compile(
-    readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), './templates/config.ts.hbs'), { encoding: 'utf8' }),
+    readFileSync(resolve(dirname(fileURLToPath(import.meta.url)), '../templates/config.ts.hbs'), { encoding: 'utf8' }),
   );
 
-  const output = template({ config: JSON.stringify(await transformConfig(config, handlers), undefined, 2) }).replaceAll(
-    /"([A-Za-z][\dA-Za-z]+)":/g,
-    '$1:',
-  );
+  const output = template({
+    config: JSON.stringify(
+      await transformConfig(config, handlers),
+      (_k, v: unknown) => (v === undefined ? 'undefined' : v),
+      2,
+    ),
+  })
+    .replaceAll(/"([A-Za-z][\dA-Za-z]+)":/g, '$1:')
+    .replaceAll('"undefined"', 'undefined');
 
   shelljs.echo(`zcd watch => writing to file: ${outputFile}`);
   shelljs.echo(`zcd watch => content to write:\n${output}\n`);

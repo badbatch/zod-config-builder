@@ -17,18 +17,23 @@ describe('transformConfig', () => {
           "locales": [
             "en_GB",
           ],
+          "name": undefined,
           "pages": {
             "contactDetails": {
               "name": "contactDetails",
+              "path": undefined,
+              "queryParams": undefined,
               "sections": [
                 {
                   "name": "header",
+                  "sections": undefined,
                 },
                 {
                   "name": "body",
                   "sections": [
                     {
                       "name": "main",
+                      "sections": undefined,
                     },
                     {
                       "name": "sidebar",
@@ -65,8 +70,10 @@ describe('transformConfig', () => {
           },
           "routes": [
             {
+              "aliases": undefined,
               "page": "personalDetails",
               "path": "personal-details",
+              "routes": undefined,
             },
             {
               "page": "contactDetails",
@@ -100,18 +107,23 @@ describe('transformConfigSync', () => {
           "locales": [
             "en_GB",
           ],
+          "name": undefined,
           "pages": {
             "contactDetails": {
               "name": "contactDetails",
+              "path": undefined,
+              "queryParams": undefined,
               "sections": [
                 {
                   "name": "header",
+                  "sections": undefined,
                 },
                 {
                   "name": "body",
                   "sections": [
                     {
                       "name": "main",
+                      "sections": undefined,
                     },
                     {
                       "name": "sidebar",
@@ -148,8 +160,10 @@ describe('transformConfigSync', () => {
           },
           "routes": [
             {
+              "aliases": undefined,
               "page": "personalDetails",
               "path": "personal-details",
+              "routes": undefined,
             },
             {
               "page": "contactDetails",

@@ -190,6 +190,11 @@ export const createConfigBuilder = <ZodTypes>(
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const castPropertyName = propertyName as keyof Config;
 
+    if (!jsonSchema.required?.includes(propertyName) && !(propertyName in config)) {
+      // @ts-expect-error Optional properties we want to exist in the config with undefined initial values.
+      config[propertyName] = undefined;
+    }
+
     // Aimed at making it easier for Typescript to derive type.
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     configBuilder[castPropertyName] = ((value: Config[keyof Config] | DerivedValueCallback, override?: boolean) => {

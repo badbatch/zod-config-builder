@@ -62,7 +62,11 @@ describe('createConfigBuilder', () => {
     it('should copy over all values to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
+
+      const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
+        path: ({ page }) => kebabCase(page),
+      });
+
       const page = createConfigBuilder<PageType>(pageSchema);
 
       config
@@ -85,13 +89,19 @@ describe('createConfigBuilder', () => {
     it('should copy over all experiments to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
+
+      const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
+        path: ({ page }) => kebabCase(page),
+      });
+
       const page = createConfigBuilder<PageType>(pageSchema);
 
       config
         .$experiment('FEAT_ALPHA@0.0.1')
         .name('alpha')
-        .pages({ contactDetails: page.$experiment('FEAT_BRAVO@0.0.1').name('contactDetails').$flush() })
+        .pages({
+          contactDetails: page.$experiment('FEAT_BRAVO@0.0.1').name('contactDetails').$flush(),
+        })
         .routes([route.$experiment('FEAT_CHARLIE@0.0.1').page('contactDetails').$flush()]);
 
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
@@ -120,13 +130,19 @@ describe('createConfigBuilder', () => {
     it('should copy over all disabled flags to the new config', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
       const config = createConfigBuilder<ConfigType>(configSchema);
-      const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
+
+      const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
+        path: ({ page }) => kebabCase(page),
+      });
+
       const page = createConfigBuilder<PageType>(pageSchema);
 
       config
         .$disable()
         .name('alpha')
-        .pages({ contactDetails: page.$disable().name('contactDetails').$flush() })
+        .pages({
+          contactDetails: page.$disable().name('contactDetails').$flush(),
+        })
         .routes([route.$disable().page('contactDetails').$flush()]);
 
       const childConfig = createConfigBuilder<ConfigType>(configSchema);
@@ -154,12 +170,20 @@ describe('createConfigBuilder', () => {
 
     it('should copy over all derived value callbacks to the new config builder', async () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
-      const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
+
+      const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
+        path: ({ page }) => kebabCase(page),
+      });
+
       route.page('personalDetails');
       const childRoute = createConfigBuilder<RouteType>(routeSchema);
       childRoute.$extend(route);
       childRoute.page('contactDetails', true);
-      expect(childRoute.$values()).toEqual({ page: 'contactDetails', path: 'contact-details' });
+
+      expect(childRoute.$values()).toEqual({
+        page: 'contactDetails',
+        path: 'contact-details',
+      });
     });
   });
 
@@ -174,7 +198,23 @@ describe('createConfigBuilder', () => {
           });
 
           const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
-          expect(config.$values()).toEqual({ description: 'This is the description.' });
+
+          expect(config.$values()).toMatchInlineSnapshot(`
+            {
+              "countryCode": undefined,
+              "countryName": undefined,
+              "description": "This is the description.",
+              "distanceUnit": undefined,
+              "enabled": undefined,
+              "languageCodes": undefined,
+              "locales": undefined,
+              "name": undefined,
+              "pages": undefined,
+              "routes": undefined,
+              "timeouts": undefined,
+              "timezone": undefined,
+            }
+          `);
         });
       });
 
@@ -187,7 +227,27 @@ describe('createConfigBuilder', () => {
           });
 
           const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
-          expect(config.$values()).toEqual({ flags: { alpha: true, bravo: false, charlie: false } });
+
+          expect(config.$values()).toMatchInlineSnapshot(`
+            {
+              "countryCode": undefined,
+              "countryName": undefined,
+              "distanceUnit": undefined,
+              "enabled": undefined,
+              "flags": {
+                "alpha": true,
+                "bravo": false,
+                "charlie": false,
+              },
+              "languageCodes": undefined,
+              "locales": undefined,
+              "name": undefined,
+              "pages": undefined,
+              "routes": undefined,
+              "timeouts": undefined,
+              "timezone": undefined,
+            }
+          `);
         });
       });
 
@@ -200,7 +260,28 @@ describe('createConfigBuilder', () => {
           });
 
           const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
-          expect(config.$values()).toEqual({ colors: ['red', 'yellow', 'pink', 'green'] });
+
+          expect(config.$values()).toMatchInlineSnapshot(`
+            {
+              "colors": [
+                "red",
+                "yellow",
+                "pink",
+                "green",
+              ],
+              "countryCode": undefined,
+              "countryName": undefined,
+              "distanceUnit": undefined,
+              "enabled": undefined,
+              "languageCodes": undefined,
+              "locales": undefined,
+              "name": undefined,
+              "pages": undefined,
+              "routes": undefined,
+              "timeouts": undefined,
+              "timezone": undefined,
+            }
+          `);
         });
       });
 
@@ -218,7 +299,26 @@ describe('createConfigBuilder', () => {
           });
 
           const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
-          expect(config.$values()).toEqual({ flags: { alpha: true, bravo: true } });
+
+          expect(config.$values()).toMatchInlineSnapshot(`
+            {
+              "countryCode": undefined,
+              "countryName": undefined,
+              "distanceUnit": undefined,
+              "enabled": undefined,
+              "flags": {
+                "alpha": true,
+                "bravo": true,
+              },
+              "languageCodes": undefined,
+              "locales": undefined,
+              "name": undefined,
+              "pages": undefined,
+              "routes": undefined,
+              "timeouts": undefined,
+              "timezone": undefined,
+            }
+          `);
         });
       });
     });
@@ -399,7 +499,11 @@ describe('createConfigBuilder', () => {
         it('should add the value to the config', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
-          const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
+
+          const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
+            path: ({ page }) => kebabCase(page),
+          });
+
           const subRoute = route.$fork();
 
           config.routes([
@@ -428,7 +532,10 @@ describe('createConfigBuilder', () => {
         it('should be a valid config', async () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
           const config = createConfigBuilder<ConfigType>(configSchema);
-          const route = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
+
+          const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
+            path: ({ page }) => kebabCase(page),
+          });
 
           config.routes([
             route.page('personalDetails').$flush(),
@@ -483,7 +590,11 @@ describe('createConfigBuilder', () => {
             languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : [],
           );
 
-        expect(config.$values()).toEqual({ countryCode: 'GB', languageCodes: ['en'], locales: ['en_GB'] });
+        expect(config.$values()).toEqual({
+          countryCode: 'GB',
+          languageCodes: ['en'],
+          locales: ['en_GB'],
+        });
       });
 
       it('should update the value to the config automatically', async () => {
@@ -499,7 +610,11 @@ describe('createConfigBuilder', () => {
           )
           .languageCodes(['fr'], true);
 
-        expect(config.$values()).toEqual({ countryCode: 'GB', languageCodes: ['fr'], locales: ['fr_GB'] });
+        expect(config.$values()).toEqual({
+          countryCode: 'GB',
+          languageCodes: ['fr'],
+          locales: ['fr_GB'],
+        });
       });
 
       it('should be a valid config', async () => {
