@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.4 (2025-08-13)
+
+### Bug Fixes
+
+* support optional config values as undefined in cli script (6b0c378f)
+
 ## 0.3.3 (2025-08-12)
 
 ### Bug Fixes
