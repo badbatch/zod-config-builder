@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.5 (2026-07-11)
+
+### New Features
+
+* update deps (48917968)
+
 ## 0.3.4 (2025-08-13)
 
 ### Bug Fixes
