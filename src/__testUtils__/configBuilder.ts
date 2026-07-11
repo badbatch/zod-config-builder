@@ -17,6 +17,32 @@ const pageBuilder = createConfigBuilder<PageType>(pageSchema);
 const sectionBuilder = createConfigBuilder<SectionType>(sectionSchema);
 const subsectionBuilder = sectionBuilder.$fork();
 
+const contactDetailsPage = pageBuilder
+  .name('contactDetails')
+  .sections([
+    sectionBuilder.name('header').$flush(),
+    sectionBuilder
+      .name('body')
+      .sections([subsectionBuilder.name('main').$flush(), subsectionBuilder.name('sidebar').$flush()])
+      .$flush(),
+    sectionBuilder.name('footer').$flush(),
+  ])
+  .$flush();
+
+const personalDetailPage = pageBuilder
+  .name('personalDetails')
+  .sections([
+    sectionBuilder.name('header').$flush(),
+    sectionBuilder
+      .name('body')
+      .sections([subsectionBuilder.name('main').$flush(), subsectionBuilder.name('sidebar').$flush()])
+      .$flush(),
+    sectionBuilder.name('footer').$flush(),
+  ])
+  .$flush();
+
+// Required for how builder is executed
+// eslint-disable-next-line unicorn/no-top-level-side-effects
 configBuilder
   .countryCode('GB')
   // Want to test using null value
@@ -29,28 +55,8 @@ configBuilder
     languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : [],
   )
   .pages({
-    contactDetails: pageBuilder
-      .name('contactDetails')
-      .sections([
-        sectionBuilder.name('header').$flush(),
-        sectionBuilder
-          .name('body')
-          .sections([subsectionBuilder.name('main').$flush(), subsectionBuilder.name('sidebar').$flush()])
-          .$flush(),
-        sectionBuilder.name('footer').$flush(),
-      ])
-      .$flush(),
-    personalDetails: pageBuilder
-      .name('personalDetails')
-      .sections([
-        sectionBuilder.name('header').$flush(),
-        sectionBuilder
-          .name('body')
-          .sections([subsectionBuilder.name('main').$flush(), subsectionBuilder.name('sidebar').$flush()])
-          .$flush(),
-        sectionBuilder.name('footer').$flush(),
-      ])
-      .$flush(),
+    contactDetails: contactDetailsPage,
+    personalDetails: personalDetailPage,
   })
   .routes([routeBuilder.page('personalDetails').$flush(), routeBuilder.page('contactDetails').$flush()])
   .timeouts({ apollo: 10_000 })

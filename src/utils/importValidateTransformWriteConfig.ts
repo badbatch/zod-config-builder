@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import shelljs from 'shelljs';
-import { type Commands } from '../cli.ts';
+import { type CliCommands } from '../cli.ts';
 import { type ConfigBuilder } from '../createConfigBuilder.ts';
 import { type SetupExperimentsCallback } from '../types.ts';
 import { transformWriteConfig } from './transformWriteConfig.ts';
@@ -8,10 +8,12 @@ import { transformWriteConfig } from './transformWriteConfig.ts';
 export const importValidateTransformWriteConfig = (
   inputFile: string,
   outputFile: string,
-  command: Commands,
+  command: CliCommands,
   experimentCallbackFile?: string,
-) => {
+): void => {
   import(resolve(process.cwd(), inputFile))
+    // TODO: Will revisit
+    // eslint-disable-next-line unicorn/prefer-await
     .then(({ default: configBuilder }: { default: ConfigBuilder<object> }) => {
       if (!configBuilder.$validate()) {
         shelljs.echo(`zcd ${command} => invalid config`);
@@ -25,16 +27,22 @@ export const importValidateTransformWriteConfig = (
 
       if (experimentCallbackFile) {
         import(resolve(process.cwd(), experimentCallbackFile))
+          // TODO: Will revisit
+          // eslint-disable-next-line unicorn/prefer-await
           .then(({ default: experimentsCallback }: { default: SetupExperimentsCallback }) => {
             void transformWriteConfig(configBuilder.$values(), { experimentsCallback, outputFile });
           })
+          // TODO: Will revisit
+          // eslint-disable-next-line unicorn/prefer-await
           .catch((error: unknown) => {
-            if (error instanceof Error) {
-              shelljs.echo(`zcd ${command} => error message: ${error.message}`);
+            if (!(error instanceof Error)) {
+              return;
+            }
 
-              if (error.stack) {
-                shelljs.echo(`zcd ${command} => error stack:\n${error.stack}\n`);
-              }
+            shelljs.echo(`zcd ${command} => error message: ${error.message}`);
+
+            if (error.stack) {
+              shelljs.echo(`zcd ${command} => error stack:\n${error.stack}\n`);
             }
           });
 
@@ -43,13 +51,17 @@ export const importValidateTransformWriteConfig = (
 
       void transformWriteConfig(configBuilder.$values(), { outputFile });
     })
+    // TODO: Will revisit
+    // eslint-disable-next-line unicorn/prefer-await
     .catch((error: unknown) => {
-      if (error instanceof Error) {
-        shelljs.echo(`zcd ${command} => error message: ${error.message}`);
+      if (!(error instanceof Error)) {
+        return;
+      }
 
-        if (error.stack) {
-          shelljs.echo(`zcd ${command} => error stack:\n${error.stack}\n`);
-        }
+      shelljs.echo(`zcd ${command} => error message: ${error.message}`);
+
+      if (error.stack) {
+        shelljs.echo(`zcd ${command} => error stack:\n${error.stack}\n`);
       }
     });
 };

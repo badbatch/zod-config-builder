@@ -1,3 +1,3 @@
-import { type JSONSchema7 } from 'json-schema';
+import { type JSONSchema } from 'zod/v4/core';
 
-export const isSchemaValid = (schema: JSONSchema7) => schema.type !== 'object';
+export const isSchemaValid = (schema: JSONSchema.JSONSchema): boolean => schema.type !== 'object';

@@ -5,9 +5,15 @@ import yargs, { type Argv } from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import { importValidateTransformWriteConfig } from './utils/importValidateTransformWriteConfig.ts';
 
-export type Commands = 'build' | 'watch';
+export type CliCommands = 'build' | 'watch';
 
-const generateArguments = (cmdYargs: Argv) =>
+export type CliArguments = Argv<{
+  'experiments-callback-file'?: string;
+  'input-file': string;
+  'output-file': string;
+}>;
+
+const generateArguments = (cmdYargs: Argv): CliArguments =>
   cmdYargs
     .positional('input-file', {
       demandOption: true,
@@ -24,7 +30,7 @@ const generateArguments = (cmdYargs: Argv) =>
       type: 'string',
     });
 
-export const cli = () => {
+export const cli = (): void => {
   // yargs does not provide a way to pass generic to type args.
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const argv = yargs(hideBin(process.argv)) as Argv<{

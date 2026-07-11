@@ -1,5 +1,5 @@
-import { type JSONSchema7, type JSONSchema7Definition } from 'json-schema';
+import { type JSONSchema } from 'zod/v4/core';
 
 export const isValidPropertyDefinition = (
-  propertyDefinition: JSONSchema7Definition | undefined,
-): propertyDefinition is JSONSchema7 => typeof propertyDefinition === 'object';
+  propertyDefinition?: JSONSchema._JSONSchema,
+): propertyDefinition is JSONSchema.JSONSchema => !!propertyDefinition && typeof propertyDefinition === 'object';

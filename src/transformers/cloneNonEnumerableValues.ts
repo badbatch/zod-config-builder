@@ -10,7 +10,7 @@ export const cloneNonEnumerableValues: TransformConfigHandlerSync = <
   config: Config2,
 ) => {
   for (const nonEnumerableKey of NON_ENUMERABLE_KEYS) {
-    if (nonEnumerableKey in config) {
+    if (Object.hasOwn(config, nonEnumerableKey)) {
       Object.defineProperty(clone, nonEnumerableKey, {
         configurable: false,
         enumerable: false,

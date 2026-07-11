@@ -9,7 +9,7 @@ export interface ConfigReader<Config extends object> {
 }
 
 export const createConfigReader = <Config extends object>(config: Config): ConfigReader<Config> => {
-  // Aimed at reducing the amount of work for typescript to resolve type.
+  // Aimed at reducing the amount of work for TypeScript to resolve type.
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return {
     read: <P extends Path<Config>>(path: P, variables?: Record<string, string | number>) => {
@@ -32,7 +32,7 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
       }
 
       return Object.keys(variables).reduce<string>((acc, key) => {
-        return acc.replace(new RegExp(`{{${key}}}`), String(variables[key]));
+        return acc.replace(new RegExp(`{{${key}}}`), () => String(variables[key]));
       }, output);
     },
     scope: <S extends Scope<Config>>(scope: S) => {

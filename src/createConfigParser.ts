@@ -5,7 +5,7 @@ import { transformConfig } from './utils/transformConfig.ts';
 export const createConfigParser = async <Config extends object>(
   config: Config,
   { experimentsCallback }: ConfigParserOptions = {},
-) => {
+): Promise<Config> => {
   const handlers: TransformConfigHandler[] = [];
 
   if (experimentsCallback) {

@@ -1,8 +1,6 @@
-import { type JSONSchema7 } from 'json-schema';
 import { cloneDeep, merge } from 'lodash-es';
 import { v4 as uuidV4 } from 'uuid';
-import { type ZodError, type z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
+import { ZodError, z } from 'zod';
 import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValues.ts';
 import { collateDefaultValues } from './utils/collateDefaultValues.ts';
 import { isDerivedValueCallback } from './utils/isDerivedValueCallback.ts';
@@ -10,7 +8,6 @@ import { isInvalidPropertyOverride } from './utils/isInvalidPropertyOverride.ts'
 import { RESERVED_KEYWORDS, isPropertyReservedWord } from './utils/isPropertyReservedWord.ts';
 import { isSchemaValid } from './utils/isSchemaValid.ts';
 import { isValidValue } from './utils/isValidValue.ts';
-import { jsonStringifyReplacer } from './utils/jsonStringifyReplacer.ts';
 import { transformConfigSync } from './utils/transformConfig.ts';
 
 export type ConfigBuilder<ZodTypes> = {
@@ -20,7 +17,7 @@ export type ConfigBuilder<ZodTypes> = {
   ) => ConfigBuilder<ZodTypes>;
 } & {
   $disable: () => ConfigBuilder<ZodTypes>;
-  $errors: () => ZodError['errors'];
+  $errors: () => ZodError['issues'];
   $experiment: (key: string) => ConfigBuilder<ZodTypes>;
   $extend: (configBuilder: ConfigBuilder<ZodTypes>) => ConfigBuilder<ZodTypes>;
   $flush: () => ZodTypes;
@@ -38,7 +35,7 @@ export type CreateConfigBuilderOptions = {
 };
 
 export const createConfigBuilder = <ZodTypes>(
-  zodSchema: z.ZodSchema,
+  zodSchema: z.ZodType,
   options: CreateConfigBuilderOptions = {},
   derivedValueCallbacks: Partial<
     Record<
@@ -58,9 +55,7 @@ export const createConfigBuilder = <ZodTypes>(
 
   type DerivedValueCallback<K extends keyof Config = keyof Config> = (c: Config) => Config[K];
 
-  // Added to simplify type returned from zodToJsonSchema.
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const jsonSchema = zodToJsonSchema(zodSchema) as JSONSchema7;
+  const jsonSchema = z.toJSONSchema(zodSchema);
 
   if (isSchemaValid(jsonSchema)) {
     throw new Error(`The root type of a config schema must be "object", but received "${String(jsonSchema.type)}"`);
@@ -68,29 +63,31 @@ export const createConfigBuilder = <ZodTypes>(
 
   const uuid = options.overrides?.uuid ?? uuidV4;
 
-  const addNonEnumeralBaseProperties = (conf: Config) => {
-    Object.defineProperty(conf, '__zcb', {
-      configurable: false,
-      enumerable: false,
-      value: true,
-    });
-
-    Object.defineProperty(conf, '__id', {
-      configurable: false,
-      enumerable: false,
-      value: uuid(),
-    });
-
-    if (options.type) {
-      Object.defineProperty(conf, '__type', {
+  const addNonEnumeralBaseProperties = (conf: Config): void => {
+    Object.defineProperties(conf, {
+      __id: {
         configurable: false,
         enumerable: false,
-        value: options.type,
-      });
-    }
+        value: uuid(),
+      },
+      __zcb: {
+        configurable: false,
+        enumerable: false,
+        value: true,
+      },
+      ...(options.type
+        ? {
+            __type: {
+              configurable: false,
+              enumerable: false,
+              value: options.type,
+            },
+          }
+        : undefined),
+    });
   };
 
-  const createInitialConfig = () => {
+  const createInitialConfig = (): Config => {
     // Not casting here as loads of downstream impacts that make
     // subsequent typing really difficult.
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
@@ -102,7 +99,7 @@ export const createConfigBuilder = <ZodTypes>(
   let config = createInitialConfig();
   let callbacks: Partial<Record<keyof Config, DerivedValueCallback>> = { ...derivedValueCallbacks };
 
-  // Aimed at making it easier for Typescript to derive type.
+  // Aimed at making it easier for TypeScript to derive type.
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   const configBuilder = {
     $disable: () => {
@@ -119,9 +116,7 @@ export const createConfigBuilder = <ZodTypes>(
         zodSchema.parse(configBuilder.$values());
         return [];
       } catch (error: unknown) {
-        // This will always be an instance of ZodError.
-        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-        return (error as ZodError).errors;
+        return error instanceof ZodError ? error.issues : [];
       }
     },
     $experiment: (key: string) => {
@@ -136,7 +131,7 @@ export const createConfigBuilder = <ZodTypes>(
     $extend: (builder: ConfigBuilder<Config>) => {
       config = transformConfigSync<Config>(builder.$values(), [cloneNonEnumerableValues]);
       // @ts-expect-error private property
-      // As __callbacks is private property, Typescript doesn't know what type is.
+      // As __callbacks is private property, TypeScript doesn't know what type is.
       // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
       callbacks = { ...builder.__callbacks } as Partial<Record<keyof Config, DerivedValueCallback>>;
     },
@@ -146,7 +141,7 @@ export const createConfigBuilder = <ZodTypes>(
       return values;
     },
     $fork: () => createConfigBuilder<Config>(zodSchema, options, derivedValueCallbacks, initialValues),
-    $toJson: () => JSON.stringify(configBuilder.$values(), jsonStringifyReplacer, 2),
+    $toJson: () => JSON.stringify(configBuilder.$values(), undefined, 2),
     $validate: () => {
       try {
         zodSchema.parse(configBuilder.$values());
@@ -157,13 +152,15 @@ export const createConfigBuilder = <ZodTypes>(
       }
     },
     $values: () => {
-      for (const property in callbacks) {
-        const callback = callbacks[property];
+      for (const propertyName in callbacks) {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+        const castPropertyName = propertyName as keyof Config;
+        // eslint-disable-next-line unicorn/no-unsafe-property-key
+        const callback = callbacks[castPropertyName];
 
         if (callback) {
-          // Typescript not inferring property is key of Config.
-          // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-          config[property as keyof Config] = callback(config);
+          // eslint-disable-next-line unicorn/no-unsafe-property-key
+          config[castPropertyName] = callback(config);
         }
       }
 
@@ -190,12 +187,12 @@ export const createConfigBuilder = <ZodTypes>(
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const castPropertyName = propertyName as keyof Config;
 
-    if (!jsonSchema.required?.includes(propertyName) && !(propertyName in config)) {
+    if (!jsonSchema.required?.includes(propertyName) && !Object.hasOwn(config, propertyName)) {
       // @ts-expect-error Optional properties we want to exist in the config with undefined initial values.
       config[propertyName] = undefined;
     }
 
-    // Aimed at making it easier for Typescript to derive type.
+    // Aimed at making it easier for TypeScript to derive type.
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     configBuilder[castPropertyName] = ((value: Config[keyof Config] | DerivedValueCallback, override?: boolean) => {
       if (isInvalidPropertyOverride(config[castPropertyName], override)) {
@@ -206,7 +203,6 @@ export const createConfigBuilder = <ZodTypes>(
         );
       }
 
-      let propertyValue: Config[keyof Config];
       const MAX_DEPTH = 1;
 
       if (!isValidValue(value)) {
@@ -216,6 +212,8 @@ export const createConfigBuilder = <ZodTypes>(
           )}" value has a depth greater than ${String(MAX_DEPTH)}. To pass in objects with a depth greater than ${String(MAX_DEPTH)}, create a builder for that config slice.`,
         );
       }
+
+      let propertyValue: Config[keyof Config];
 
       if (isDerivedValueCallback<DerivedValueCallback>(value)) {
         callbacks[castPropertyName] = value;

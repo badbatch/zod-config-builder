@@ -1,11 +1,11 @@
-import { type JSONSchema7 } from 'json-schema';
+import { type JSONSchema } from 'zod/v4/core';
 import { arrayHasInvalidDefaults } from './arrayHasInvalidDefaults.ts';
 import { collateObjectPropertyDefaults } from './collateObjectPropertyDefaults.ts';
 import { RESERVED_KEYWORDS, isPropertyReservedWord } from './isPropertyReservedWord.ts';
 import { isValidPropertyDefinition } from './isValidPropertyDefinition.ts';
 import { recordHasInvalidDefaults } from './recordHasInvalidDefaults.ts';
 
-export const collateDefaultValues = <Config>(jsonSchema: JSONSchema7) => {
+export const collateDefaultValues = <Config>(jsonSchema: JSONSchema.JSONSchema): Partial<Config> => {
   const defaultValues: Partial<Config> = {};
 
   for (const propertyName in jsonSchema.properties) {
@@ -17,14 +17,14 @@ export const collateDefaultValues = <Config>(jsonSchema: JSONSchema7) => {
       );
     }
 
-    // Typescript not inferring property is key of Config.
+    // TypeScript not inferring property is key of Config.
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
     const castPropertyName = propertyName as keyof Config;
     const propertyDefinition = jsonSchema.properties[propertyName];
 
     if (isValidPropertyDefinition(propertyDefinition)) {
       if (propertyDefinition.default) {
-        // Typescript not inferring propertyDefinition.default is Config value.
+        // TypeScript not inferring propertyDefinition.default is Config value.
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         defaultValues[castPropertyName] = propertyDefinition.default as Config[keyof Config];
       }
@@ -49,7 +49,7 @@ export const collateDefaultValues = <Config>(jsonSchema: JSONSchema7) => {
         const propertyDefaults = collateObjectPropertyDefaults(propertyDefinition);
 
         if (propertyDefaults) {
-          // Typescript not inferring propertyDefaults is Config value.
+          // TypeScript not inferring propertyDefaults is Config value.
           // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
           defaultValues[castPropertyName] = propertyDefaults as Config[keyof Config];
         }

@@ -1,5 +1,5 @@
-import { type JSONSchema7 } from 'json-schema';
+import { type JSONSchema } from 'zod/v4/core';
 
-export const objectPropertyHasDefaults = (propertyDefinition: JSONSchema7) =>
-  propertyDefinition.properties &&
+export const objectPropertyHasDefaults = (propertyDefinition: JSONSchema.JSONSchema): boolean =>
+  !!propertyDefinition.properties &&
   Object.values(propertyDefinition.properties).some(value => typeof value === 'object' && 'default' in value);

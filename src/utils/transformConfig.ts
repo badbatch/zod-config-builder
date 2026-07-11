@@ -46,15 +46,21 @@ export const transformConfig = async <Config extends AnyRecord>(
   }
 
   for (const key in config) {
+    // TODO: Need to look at this
+    // eslint-disable-next-line unicorn/no-unsafe-property-key
     const value = config[key];
 
     if (isPlainObject(value)) {
+      // TODO: Need to look at this
+      // eslint-disable-next-line unicorn/no-unsafe-property-key
       transform[key] = await transformConfig(value, handler);
     } else if (Array.isArray(value)) {
-      // transformArraySync returns an any type.
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      // TODO: Need to look at this
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, unicorn/no-unsafe-property-key
       transform[key] = (await transformArray(value, handler)) as Config[Extract<keyof Config, string>];
     } else {
+      // TODO: Need to look at this
+      // eslint-disable-next-line unicorn/no-unsafe-property-key
       transform[key] = value;
     }
   }
@@ -107,15 +113,21 @@ export const transformConfigSync = <Config extends AnyRecord>(
   }
 
   for (const key in config) {
+    // TODO: Need to look at this
+    // eslint-disable-next-line unicorn/no-unsafe-property-key
     const value = config[key];
 
     if (isPlainObject(value)) {
+      // TODO: Need to look at this
+      // eslint-disable-next-line unicorn/no-unsafe-property-key
       transform[key] = transformConfigSync(value, handler);
     } else if (Array.isArray(value)) {
-      // transformArraySync returns an any type.
-      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+      // TODO: Need to look at this
+      // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, unicorn/no-unsafe-property-key
       transform[key] = transformArraySync(value, handler) as Config[Extract<keyof Config, string>];
     } else {
+      // TODO: Need to look at this
+      // eslint-disable-next-line unicorn/no-unsafe-property-key
       transform[key] = value;
     }
   }

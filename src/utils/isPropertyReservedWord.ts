@@ -10,4 +10,4 @@ export const RESERVED_KEYWORDS = new Set([
   '$values',
 ]);
 
-export const isPropertyReservedWord = (propertyName: string) => RESERVED_KEYWORDS.has(propertyName);
+export const isPropertyReservedWord = (propertyName: string): boolean => RESERVED_KEYWORDS.has(propertyName);

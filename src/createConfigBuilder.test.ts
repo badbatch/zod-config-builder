@@ -1,5 +1,5 @@
 import { kebabCase } from 'lodash-es';
-import { ZodType, z } from 'zod';
+import { z } from 'zod';
 import {
   type ConfigType,
   type PageType,
@@ -112,13 +112,14 @@ describe('createConfigBuilder', () => {
           __experiment: 'FEAT_ALPHA@0.0.1',
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           pages: expect.objectContaining({
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/max-nested-calls
             contactDetails: expect.objectContaining({
               __experiment: 'FEAT_BRAVO@0.0.1',
             }),
           }),
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           routes: expect.arrayContaining([
+            // eslint-disable-next-line unicorn/max-nested-calls
             expect.objectContaining({
               __experiment: 'FEAT_CHARLIE@0.0.1',
             }),
@@ -153,13 +154,14 @@ describe('createConfigBuilder', () => {
           __disabled: true,
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           pages: expect.objectContaining({
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/max-nested-calls
             contactDetails: expect.objectContaining({
               __disabled: true,
             }),
           }),
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           routes: expect.arrayContaining([
+            // eslint-disable-next-line unicorn/max-nested-calls
             expect.objectContaining({
               __disabled: true,
             }),
@@ -223,7 +225,7 @@ describe('createConfigBuilder', () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
 
           const extendedSchema = configSchema.extend({
-            flags: z.record(z.boolean()).optional().default({ alpha: true, bravo: false, charlie: false }),
+            flags: z.record(z.string(), z.boolean()).optional().default({ alpha: true, bravo: false, charlie: false }),
           });
 
           const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
@@ -329,7 +331,7 @@ describe('createConfigBuilder', () => {
           const { createConfigBuilder } = await import('./createConfigBuilder.ts');
 
           const extendedSchema = configSchema.extend({
-            flags: z.record(z.boolean().default(true)).optional(),
+            flags: z.record(z.string(), z.boolean().default(true)).optional(),
           });
 
           expect(() => createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema)).toThrow(
@@ -635,27 +637,29 @@ describe('createConfigBuilder', () => {
   });
 
   describe('when a user stringifies the config', () => {
-    describe('when a config value is a zod schema', () => {
-      it('should stringify the value to JSON schema correctly', async () => {
-        const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+    it('should stringify the value to JSON correctly', async () => {
+      const { createConfigBuilder } = await import('./createConfigBuilder.ts');
+      const config = createConfigBuilder<ConfigType>(configSchema);
 
-        const extendedSchema = configSchema.extend({
-          schema: z.instanceof(ZodType),
-        });
-
-        const config = createConfigBuilder<z.infer<typeof extendedSchema>>(extendedSchema);
-
-        config.schema(
-          z
-            .object({
-              alpha: z.string(),
-              bravo: z.boolean(),
-            })
-            .optional(),
+      config
+        .countryCode('GB')
+        .languageCodes(['en'])
+        .locales(({ countryCode, languageCodes }) =>
+          // eslint-disable-next-line jest/no-conditional-in-test
+          languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : [],
         );
 
-        expect(config.$toJson()).toMatchSnapshot();
-      });
+      expect(config.$toJson()).toMatchInlineSnapshot(`
+       "{
+         "countryCode": "GB",
+         "languageCodes": [
+           "en"
+         ],
+         "locales": [
+           "en_GB"
+         ]
+       }"
+      `);
     });
   });
 });

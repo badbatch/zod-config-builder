@@ -48,9 +48,9 @@ export const configSchema = z.object({
   languageCodes: z.array(z.enum(languageCodes)).optional(),
   locales: z.array(z.string().regex(/[a-z]{2}_[A-Z]{2}/)).optional(),
   name: z.string().optional(),
-  pages: z.record(pageSchema).optional(),
+  pages: z.record(z.string(), pageSchema).optional(),
   routes: z.array(routeSchema).optional(),
-  timeouts: z.record(z.number()).optional(),
+  timeouts: z.record(z.string(), z.number()).optional(),
   timezone: z.enum(timezones).optional(),
 });
 
