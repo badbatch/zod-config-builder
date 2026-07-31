@@ -19,6 +19,7 @@
   },
   "exports": {
     ".": {
+      "source": "./src/index.ts",
       "types": {
         "import": "./dist/types/esm/index.d.ts",
         "require": "./dist/types/cjs/index.d.cts"
@@ -27,6 +28,7 @@
       "require": "./dist/cjs/index.cjs"
     },
     "./cli": {
+      "source": "./src/cli.ts",
       "types": {
         "import": "./dist/types/esm/cli.d.ts",
         "require": "./dist/types/cjs/cli.d.cts"
@@ -69,7 +71,7 @@
     "@types/uuid": "^11.0.0",
     "@types/yargs": "^17.0.35",
     "core-js": "^3.49.0",
-    "fs-extra": "^11.3.6",
+    "fs-extra": "^11.4.0",
     "handlebars": "^4.7.9",
     "json-schema": "^0.4.0",
     "lodash-es": "^4.18.1",
@@ -78,7 +80,7 @@
     "ts-toolbelt": "^9.6.0",
     "type-fest": "^5.8.0",
     "uuid": "^14.0.1",
-    "yargs": "^18.0.0",
+    "yargs": "^18.1.0",
     "zod": "^4.4.3",
     "zod-to-json-schema": "^3.25.2"
   },
@@ -97,20 +99,20 @@
     "@repodog/syncpack-config": "^15.0.3",
     "@repodog/ts-config": "^6.0.3",
     "@rollup/plugin-swc": "^0.4.1",
-    "@swc/core": "^1.15.43",
+    "@swc/core": "^1.15.47",
     "@swc/jest": "^0.2.39",
     "@types/jest": "^30.0.0",
-    "@types/node": "^24.2.1",
+    "@types/node": "^26.1.2",
     "cts-types": "^0.0.11",
     "del-cli": "^7.0.0",
-    "eslint": "^9.39.4",
+    "eslint": "^10.8.0",
     "generate-changelog": "^1.8.0",
     "husky": "^9.1.7",
     "jest": "^30.4.2",
     "jest-environment-node": "^30.4.1",
-    "markdownlint-cli2": "^0.23.0",
-    "prettier": "^3.9.5",
-    "rollup": "^4.62.2",
+    "markdownlint-cli2": "^0.23.2",
+    "prettier": "^3.9.6",
+    "rollup": "^4.62.3",
     "suppress-experimental-warnings": "^2.0.0",
     "syncpack": "^15.3.2",
     "typescript": "^6.0.3"
