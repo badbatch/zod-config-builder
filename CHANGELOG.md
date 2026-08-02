@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.7 (2026-08-02)
+
+### Bug Fixes
+
+* vulnerability (fc19e605)
+
 ## 0.3.6 (2026-08-02)
 
 ### Chores
