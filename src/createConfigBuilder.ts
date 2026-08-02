@@ -13,7 +13,7 @@ import { transformConfigSync } from './utils/transformConfig.ts';
 export type ConfigBuilder<ZodTypes> = {
   [Key in keyof Required<ZodTypes>]: (
     value: ZodTypes[Key] | ((c: ZodTypes) => ZodTypes[Key]),
-    override?: boolean,
+    isOverride?: boolean,
   ) => ConfigBuilder<ZodTypes>;
 } & {
   $disable: () => ConfigBuilder<ZodTypes>;
@@ -75,15 +75,13 @@ export const createConfigBuilder = <ZodTypes>(
         enumerable: false,
         value: true,
       },
-      ...(options.type
-        ? {
-            __type: {
-              configurable: false,
-              enumerable: false,
-              value: options.type,
-            },
-          }
-        : undefined),
+      ...(options.type && {
+        __type: {
+          configurable: false,
+          enumerable: false,
+          value: options.type,
+        },
+      }),
     });
   };
 
@@ -155,11 +153,9 @@ export const createConfigBuilder = <ZodTypes>(
       for (const propertyName in callbacks) {
         // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
         const castPropertyName = propertyName as keyof Config;
-        // eslint-disable-next-line unicorn/no-unsafe-property-key
         const callback = callbacks[castPropertyName];
 
         if (callback) {
-          // eslint-disable-next-line unicorn/no-unsafe-property-key
           config[castPropertyName] = callback(config);
         }
       }
@@ -194,12 +190,12 @@ export const createConfigBuilder = <ZodTypes>(
 
     // Aimed at making it easier for TypeScript to derive type.
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    configBuilder[castPropertyName] = ((value: Config[keyof Config] | DerivedValueCallback, override?: boolean) => {
-      if (isInvalidPropertyOverride(config[castPropertyName], override)) {
+    configBuilder[castPropertyName] = ((value: Config[keyof Config] | DerivedValueCallback, toOverride?: boolean) => {
+      if (isInvalidPropertyOverride(config[castPropertyName], toOverride)) {
         throw new Error(
-          `A value already exists for "${String(
-            castPropertyName,
-          )}". You may be trying to add a new values before flushing the old one. If you intended to override the existing value, pass in true as the second argument.`,
+          // ESLint unable to derive value can also be symbol or number
+          // eslint-disable-next-line unicorn/no-useless-coercion
+          `A value already exists for "${String(castPropertyName)}". You may be trying to add a new values before flushing the old one. If you intended to override the existing value, pass in true as the second argument.`,
         );
       }
 
@@ -207,9 +203,9 @@ export const createConfigBuilder = <ZodTypes>(
 
       if (!isValidValue(value)) {
         throw new Error(
-          `"${String(
-            castPropertyName,
-          )}" value has a depth greater than ${String(MAX_DEPTH)}. To pass in objects with a depth greater than ${String(MAX_DEPTH)}, create a builder for that config slice.`,
+          // ESLint unable to derive value can also be symbol or number
+          // eslint-disable-next-line unicorn/no-useless-coercion
+          `"${String(castPropertyName)}" value has a depth greater than ${String(MAX_DEPTH)}. To pass in objects with a depth greater than ${String(MAX_DEPTH)}, create a builder for that config slice.`,
         );
       }
 

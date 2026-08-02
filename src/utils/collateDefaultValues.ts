@@ -1,9 +1,9 @@
 import { type JSONSchema } from 'zod/v4/core';
-import { arrayHasInvalidDefaults } from './arrayHasInvalidDefaults.ts';
 import { collateObjectPropertyDefaults } from './collateObjectPropertyDefaults.ts';
+import { hasArrayInvalidDefaults } from './hasArrayInvalidDefaults.ts';
+import { hasRecordInvalidDefaults } from './hasRecordInvalidDefaults.ts';
 import { RESERVED_KEYWORDS, isPropertyReservedWord } from './isPropertyReservedWord.ts';
 import { isValidPropertyDefinition } from './isValidPropertyDefinition.ts';
-import { recordHasInvalidDefaults } from './recordHasInvalidDefaults.ts';
 
 export const collateDefaultValues = <Config>(jsonSchema: JSONSchema.JSONSchema): Partial<Config> => {
   const defaultValues: Partial<Config> = {};
@@ -29,20 +29,20 @@ export const collateDefaultValues = <Config>(jsonSchema: JSONSchema.JSONSchema):
         defaultValues[castPropertyName] = propertyDefinition.default as Config[keyof Config];
       }
 
-      if (propertyDefinition.type === 'array' && arrayHasInvalidDefaults(propertyDefinition)) {
+      if (propertyDefinition.type === 'array' && hasArrayInvalidDefaults(propertyDefinition)) {
         throw new Error(
-          `When setting schema array defaults for the array assigned to "${String(
-            castPropertyName,
-          )}", set them on the array and not the item.`,
+          // ESLint unable to derive value can also be symbol or number
+          // eslint-disable-next-line unicorn/no-useless-coercion
+          `When setting schema array defaults for the array assigned to "${String(castPropertyName)}", set them on the array and not the item.`,
         );
       }
 
       if (propertyDefinition.type === 'object') {
-        if (recordHasInvalidDefaults(propertyDefinition)) {
+        if (hasRecordInvalidDefaults(propertyDefinition)) {
           throw new Error(
-            `When setting schema property defaults for the value of the record assigned to "${String(
-              castPropertyName,
-            )}", set them on the record and not the value.`,
+            // ESLint unable to derive value can also be symbol or number
+            // eslint-disable-next-line unicorn/no-useless-coercion
+            `When setting schema property defaults for the value of the record assigned to "${String(castPropertyName)}", set them on the record and not the value.`,
           );
         }
 

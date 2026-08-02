@@ -52,7 +52,7 @@ configBuilder
   .enabled(true)
   .languageCodes(['en'])
   .locales(({ countryCode, languageCodes }) =>
-    languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : [],
+    countryCode && languageCodes?.length ? languageCodes.map(code => `${code}_${countryCode}`) : [],
   )
   .pages({
     contactDetails: contactDetailsPage,

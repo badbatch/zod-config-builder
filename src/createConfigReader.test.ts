@@ -20,8 +20,8 @@ describe('createConfigReader', () => {
   describe('when that value is a boolean', () => {
     it('should return the correct value', () => {
       const reader = createReader();
-      const value = reader.read('enabled');
-      expect(value).toBe(true);
+      const isEnabled = reader.read('enabled');
+      expect(isEnabled).toBe(true);
     });
   });
 

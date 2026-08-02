@@ -589,7 +589,7 @@ describe('createConfigBuilder', () => {
           .languageCodes(['en'])
           .locales(({ countryCode, languageCodes }) =>
             // eslint-disable-next-line jest/no-conditional-in-test
-            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : [],
+            countryCode && languageCodes?.length ? languageCodes.map(code => `${code}_${countryCode}` as const) : [],
           );
 
         expect(config.$values()).toEqual({
@@ -608,7 +608,7 @@ describe('createConfigBuilder', () => {
           .languageCodes(['en'])
           .locales(({ countryCode, languageCodes }) =>
             // eslint-disable-next-line jest/no-conditional-in-test
-            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}` as const) : [],
+            countryCode && languageCodes?.length ? languageCodes.map(code => `${code}_${countryCode}` as const) : [],
           )
           .languageCodes(['fr'], true);
 
@@ -628,7 +628,7 @@ describe('createConfigBuilder', () => {
           .languageCodes(['en'])
           .locales(({ countryCode, languageCodes }) =>
             // eslint-disable-next-line jest/no-conditional-in-test
-            languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : [],
+            countryCode && languageCodes?.length ? languageCodes.map(code => `${code}_${countryCode}`) : [],
           );
 
         expect(config.$validate()).toBe(true);
@@ -646,7 +646,7 @@ describe('createConfigBuilder', () => {
         .languageCodes(['en'])
         .locales(({ countryCode, languageCodes }) =>
           // eslint-disable-next-line jest/no-conditional-in-test
-          languageCodes?.length && countryCode ? languageCodes.map(code => `${code}_${countryCode}`) : [],
+          countryCode && languageCodes?.length ? languageCodes.map(code => `${code}_${countryCode}`) : [],
         );
 
       expect(config.$toJson()).toMatchInlineSnapshot(`

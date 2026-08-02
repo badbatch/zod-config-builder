@@ -1,14 +1,14 @@
 import { isBoolean, isUndefined } from 'lodash-es';
 import { type Jsonifiable } from 'type-fest';
 import { type JSONSchema } from 'zod/v4/core';
-import { objectPropertyHasDefaults } from './objectPropertyHasDefaults.ts';
+import { hasObjectPropertyDefaults } from './hasObjectPropertyDefaults.ts';
 
 export const collateObjectPropertyDefaults = (
   propertyDefinition: JSONSchema.JSONSchema,
 ): Record<string, Jsonifiable> | undefined => {
   const { properties } = propertyDefinition;
 
-  if (!properties || !objectPropertyHasDefaults(propertyDefinition)) {
+  if (!properties || !hasObjectPropertyDefaults(propertyDefinition)) {
     return;
   }
 

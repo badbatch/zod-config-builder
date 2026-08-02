@@ -18,11 +18,7 @@ export const isValidValue = (value: unknown, depth = 0): boolean => {
   }
 
   if (Array.isArray(value)) {
-    if (value.every(v => isValidValue(v, depth + 1))) {
-      return true;
-    }
-
-    return false;
+    return value.every(v => isValidValue(v, depth + 1));
   }
 
   return true;
