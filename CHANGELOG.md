@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.8 (2026-08-03)
+
+### Chores
+
+* bump cts types (68a1506e)
+
 ## 0.3.7 (2026-08-02)
 
 ### Bug Fixes
