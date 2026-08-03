@@ -17,6 +17,7 @@ minimumReleaseAgeExclude:
   - '@repodog/rollup-config@4.0.18'
   - '@repodog/swc-config@1.0.16'
   - '@repodog/syncpack-config@15.0.4'
+  - cts-types@0.0.12
 
 overrides:
   'body-parser@<1.20.6': '>=1.20.6'
