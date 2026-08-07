@@ -3,21 +3,7 @@ allowBuilds:
   core-js: false
   unrs-resolver: false
 
-minimumReleaseAgeExclude:
-  - '@repodog/cli-cut@1.4.30'
-  - '@repodog/cli-new@1.6.0'
-  - '@repodog/cli-postinstall@0.4.26'
-  - '@repodog/cli-publish@1.4.30'
-  - '@repodog/cli-setup@1.4.27'
-  - '@repodog/cli-utils@1.4.25'
-  - '@repodog/cli@1.7.0'
-  - '@repodog/commitlint-config@21.0.3'
-  - '@repodog/eslint-config-jest@9.0.10'
-  - '@repodog/eslint-config@9.0.30'
-  - '@repodog/rollup-config@4.0.18'
-  - '@repodog/swc-config@1.0.16'
-  - '@repodog/syncpack-config@15.0.4'
-  - cts-types@0.0.12
+minimumReleaseAge: 0
 
 overrides:
   'body-parser@<1.20.6': '>=1.20.6'
