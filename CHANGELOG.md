@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.10 (2026-08-26)
+
+### Chores
+
+* update how we publish to npm (1658a601)
+
 ## 0.3.9 (2026-08-07)
 
 ### Chores
