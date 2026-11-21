@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.11 (2026-11-21)
+
+### New Features
+
+* type check placeholders to tt (f3d86862)
+
 ## 0.3.10 (2026-08-26)
 
 ### Chores
