@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.12 (2026-11-21)
+
+### Bug Fixes
+
+* github actions config (aefa2999)
+
 ## 0.3.11 (2026-11-21)
 
 ### New Features
