@@ -356,6 +356,8 @@ const value = scopedReader.read('name');
 
 Use to read a value out of config. If the value resolves to a string, the reader also supports the string being a template that uses double bracket notation (`{{key}}`) and passing a `vars` object of key/value pairs as the second argument. The value of each matching key in the `vars` object will be replaced in the string template.
 
+When the config contains literal string types, the reader infers placeholder names and requires those keys in `vars`. For values with no placeholders, `vars` remains optional.
+
 ```ts
 const vars = {
   name: 'Simon',

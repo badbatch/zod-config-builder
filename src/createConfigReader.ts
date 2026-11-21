@@ -3,8 +3,18 @@ import { type Get } from 'type-fest';
 import { type Path, type Scope } from './types.ts';
 import { get } from './utils/typedGet.ts';
 
+type PlaceholderNames<Value> = Value extends string
+  ? Value extends `${string}{{${infer Name}}}${infer Rest}`
+    ? Name | PlaceholderNames<Rest>
+    : never
+  : never;
+
+type TemplateVariables<Value> = [PlaceholderNames<Value>] extends [never]
+  ? [variables?: Record<string, string | number>]
+  : [variables: Record<string, string | number> & Record<PlaceholderNames<Value>, string | number>];
+
 export interface ConfigReader<Config extends object> {
-  read: <P extends Path<Config>>(path: P, variables?: Record<string, string | number>) => Get<Config, P>;
+  read: <P extends Path<Config>>(path: P, ...variables: TemplateVariables<Get<Config, P>>) => Get<Config, P>;
   scope: <S extends Scope<Config>>(scope: S) => ConfigReader<Get<Config, S>>;
 }
 
@@ -12,7 +22,8 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
   // Aimed at reducing the amount of work for TypeScript to resolve type.
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return {
-    read: <P extends Path<Config>>(path: P, variables?: Record<string, string | number>) => {
+    read: <P extends Path<Config>>(path: P, ...variables: TemplateVariables<Get<Config, P>>) => {
+      const [templateVariables] = variables;
       const output = get(config, path);
 
       if (isPlainObject(output) || (Array.isArray(output) && output.some(entry => isPlainObject(entry)))) {
@@ -21,7 +32,7 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
         );
       }
 
-      if (!variables) {
+      if (!templateVariables) {
         return output;
       }
 
@@ -31,8 +42,8 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
         );
       }
 
-      return Object.keys(variables).reduce<string>((acc, key) => {
-        return acc.replace(new RegExp(`{{${key}}}`), () => String(variables[key]));
+      return Object.keys(templateVariables).reduce<string>((acc, key) => {
+        return acc.replace(new RegExp(`{{${key}}}`), () => String(templateVariables[key]));
       }, output);
     },
     scope: <S extends Scope<Config>>(scope: S) => {
