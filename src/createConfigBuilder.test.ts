@@ -1,4 +1,5 @@
-import { kebabCase } from 'lodash-es';
+import { describe, expect, it } from '@jest/globals';
+import { toKebabCase } from 'remeda';
 import { z } from 'zod';
 import {
   type ConfigType,
@@ -64,7 +65,7 @@ describe('createConfigBuilder', () => {
       const config = createConfigBuilder<ConfigType>(configSchema);
 
       const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
-        path: ({ page }) => kebabCase(page),
+        path: ({ page }) => toKebabCase(page),
       });
 
       const page = createConfigBuilder<PageType>(pageSchema);
@@ -91,7 +92,7 @@ describe('createConfigBuilder', () => {
       const config = createConfigBuilder<ConfigType>(configSchema);
 
       const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
-        path: ({ page }) => kebabCase(page),
+        path: ({ page }) => toKebabCase(page),
       });
 
       const page = createConfigBuilder<PageType>(pageSchema);
@@ -110,14 +111,14 @@ describe('createConfigBuilder', () => {
       expect(childConfig.$values()).toEqual(
         expect.objectContaining({
           __experiment: 'FEAT_ALPHA@0.0.1',
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
           pages: expect.objectContaining({
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/max-nested-calls
+            // eslint-disable-next-line unicorn/max-nested-calls
             contactDetails: expect.objectContaining({
               __experiment: 'FEAT_BRAVO@0.0.1',
             }),
           }),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
           routes: expect.arrayContaining([
             // eslint-disable-next-line unicorn/max-nested-calls
             expect.objectContaining({
@@ -133,7 +134,7 @@ describe('createConfigBuilder', () => {
       const config = createConfigBuilder<ConfigType>(configSchema);
 
       const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
-        path: ({ page }) => kebabCase(page),
+        path: ({ page }) => toKebabCase(page),
       });
 
       const page = createConfigBuilder<PageType>(pageSchema);
@@ -152,14 +153,14 @@ describe('createConfigBuilder', () => {
       expect(childConfig.$values()).toEqual(
         expect.objectContaining({
           __disabled: true,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
           pages: expect.objectContaining({
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, unicorn/max-nested-calls
+            // eslint-disable-next-line unicorn/max-nested-calls
             contactDetails: expect.objectContaining({
               __disabled: true,
             }),
           }),
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
           routes: expect.arrayContaining([
             // eslint-disable-next-line unicorn/max-nested-calls
             expect.objectContaining({
@@ -174,7 +175,7 @@ describe('createConfigBuilder', () => {
       const { createConfigBuilder } = await import('./createConfigBuilder.ts');
 
       const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
-        path: ({ page }) => kebabCase(page),
+        path: ({ page }) => toKebabCase(page),
       });
 
       route.page('personalDetails');
@@ -503,7 +504,7 @@ describe('createConfigBuilder', () => {
           const config = createConfigBuilder<ConfigType>(configSchema);
 
           const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
-            path: ({ page }) => kebabCase(page),
+            path: ({ page }) => toKebabCase(page),
           });
 
           const subRoute = route.$fork();
@@ -536,7 +537,7 @@ describe('createConfigBuilder', () => {
           const config = createConfigBuilder<ConfigType>(configSchema);
 
           const route = createConfigBuilder<RouteType>(routeSchema, undefined, {
-            path: ({ page }) => kebabCase(page),
+            path: ({ page }) => toKebabCase(page),
           });
 
           config.routes([

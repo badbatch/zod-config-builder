@@ -1,4 +1,4 @@
-import { cloneDeep, merge } from 'lodash-es';
+import { clone, mergeDeep } from 'remeda';
 import { v4 as uuidV4 } from 'uuid';
 import { ZodError, z } from 'zod';
 import { cloneNonEnumerableValues } from './transformers/cloneNonEnumerableValues.ts';
@@ -89,7 +89,7 @@ export const createConfigBuilder = <ZodTypes>(
     // Not casting here as loads of downstream impacts that make
     // subsequent typing really difficult.
     // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-    const config = merge(cloneDeep(initialValues), collateDefaultValues(jsonSchema)) as Config;
+    const config = mergeDeep(clone(initialValues), collateDefaultValues(jsonSchema)) as Config;
     addNonEnumeralBaseProperties(config);
     return config;
   };

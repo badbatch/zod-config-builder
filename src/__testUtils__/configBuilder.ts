@@ -1,4 +1,4 @@
-import { kebabCase } from 'lodash-es';
+import { toKebabCase } from 'remeda';
 import { createConfigBuilder } from '../createConfigBuilder.ts';
 import {
   type ConfigType,
@@ -12,7 +12,7 @@ import {
 } from './schema.ts';
 
 const configBuilder = createConfigBuilder<ConfigType>(configSchema);
-const routeBuilder = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => kebabCase(page) });
+const routeBuilder = createConfigBuilder<RouteType>(routeSchema, undefined, { path: ({ page }) => toKebabCase(page) });
 const pageBuilder = createConfigBuilder<PageType>(pageSchema);
 const sectionBuilder = createConfigBuilder<SectionType>(sectionSchema);
 const subsectionBuilder = sectionBuilder.$fork();

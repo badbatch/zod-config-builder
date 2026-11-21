@@ -1,5 +1,8 @@
 {
   "extends": "@repodog/ts-config/index.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
   "include": [
     "src/**/*"
   ]

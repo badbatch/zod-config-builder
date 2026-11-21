@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import configBuilder from '../__testUtils__/configBuilder.ts';
 
 describe('transformConfig', () => {

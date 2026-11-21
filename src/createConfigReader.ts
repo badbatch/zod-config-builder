@@ -1,4 +1,4 @@
-import { isPlainObject, isString } from 'lodash-es';
+import { isArray, isObjectType, isPlainObject, isString } from 'remeda';
 import { type Get } from 'type-fest';
 import { type Path, type Scope } from './types.ts';
 import { get } from './utils/typedGet.ts';
@@ -15,7 +15,7 @@ type TemplateVariables<Value> = [PlaceholderNames<Value>] extends [never]
 
 export interface ConfigReader<Config extends object> {
   read: <P extends Path<Config>>(path: P, ...variables: TemplateVariables<Get<Config, P>>) => Get<Config, P>;
-  scope: <S extends Scope<Config>>(scope: S) => ConfigReader<Get<Config, S>>;
+  scope: <S extends Scope<Config>>(scope: S) => ConfigReader<Get<Config, S> & object>;
 }
 
 export const createConfigReader = <Config extends object>(config: Config): ConfigReader<Config> => {
@@ -49,7 +49,10 @@ export const createConfigReader = <Config extends object>(config: Config): Confi
     scope: <S extends Scope<Config>>(scope: S) => {
       const output = get(config, scope);
 
-      if (!isPlainObject(output) && !(Array.isArray(output) && output.some(entry => isPlainObject(entry)))) {
+      if (
+        !isObjectType(output) ||
+        (!isPlainObject(output) && !(isArray(output) && output.some(entry => isPlainObject(entry))))
+      ) {
         throw new Error(
           'Path resolved to a primitive or an array of primitive, but `scope` can only resolve to an object or an array of object. Use the `read` method instead.',
         );

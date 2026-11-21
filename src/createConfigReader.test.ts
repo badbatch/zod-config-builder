@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { createReader } from './__testUtils__/configReader.ts';
 
 describe('createConfigReader', () => {

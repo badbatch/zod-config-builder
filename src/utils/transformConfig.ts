@@ -1,5 +1,6 @@
-import { castArray, isPlainObject } from 'lodash-es';
-import { type AnyRecord, type TransformConfigHandler, type TransformConfigHandlerSync } from '../types.ts';
+import { isPlainObject } from 'remeda';
+import { type AnyRecord, type TransformConfigHandler, type TransformConfigHandlerSync } from '#types.ts';
+import { castArray } from '#utils/castArray.ts';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const transformArray = (list: any[], handler: TransformConfigHandler | TransformConfigHandler[]): Promise<any[]> =>
@@ -66,7 +67,6 @@ export const transformConfig = async <Config extends AnyRecord>(
 const transformArraySync = (list: any[], handler: TransformConfigHandlerSync | TransformConfigHandlerSync[]): any[] =>
   list.map(entry => {
     if (isPlainObject(entry)) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return transformConfigSync(entry, handler);
     }
 

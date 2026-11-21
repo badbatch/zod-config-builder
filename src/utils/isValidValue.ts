@@ -1,4 +1,4 @@
-import { isPlainObject } from 'lodash-es';
+import { isPlainObject } from 'remeda';
 
 export const isValidValue = (value: unknown, depth = 0): boolean => {
   if (isPlainObject(value)) {

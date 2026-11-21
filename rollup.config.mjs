@@ -18,9 +18,5 @@ export default [
   {
     ...rollupConfig({ compiler: swcPlugin({ swc: swcConfig.ts }) }),
     input: config.input.replace('index', 'cli'),
-    output: {
-      ...config.output,
-      file: config.output.file.replace('index', 'cli'),
-    },
   },
 ];

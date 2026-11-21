@@ -1,8 +1,18 @@
-import { get as untypedGet } from 'lodash-es';
+import { stringToPath } from 'remeda';
 import { type Get } from 'type-fest';
 
-export const get = <T extends object, P extends string>(obj: T, path: P): Get<T, P> => {
-  // Lodash get built-in typing is not very good.
+export const get = <Config extends object, Path extends string>(config: Config, path: Path): Get<Config, Path> => {
+  const keys = Reflect.has(config, path) ? [path] : stringToPath<string>(path);
+
+  const value = keys.reduce<unknown>((current, key) => {
+    if (current === null || current === undefined) {
+      return;
+    }
+
+    return Reflect.get(new Object(current), key);
+  }, config);
+
+  // The runtime path lookup cannot infer the value type for a generic path.
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  return untypedGet(obj, path) as Get<T, P>;
+  return value as Get<Config, Path>;
 };
