@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.13 (2026-11-21)
+
+### Chores
+
+* update deps and fix type errors (ec2b899a)
+
 ## 0.3.12 (2026-11-21)
 
 ### Bug Fixes
